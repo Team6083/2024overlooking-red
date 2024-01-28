@@ -30,15 +30,15 @@ public class Shooter extends SubsystemBase {
     shootDownMotor.setVoltage(DownMotorVoltage);
   }
 
-  public void stopMotor(){
+  public void stopMotor() {
     shootUpMotor.setVoltage(0.0);
     shootDownMotor.setVoltage(0.0);
   }
 
-  public void setShooterCondition(){
-    if(shootCondition){
+  public void setShooterCondition() {
+    if (shootCondition) {
       setVoltage();
-    }else{
+    } else {
       stopMotor();
     }
     shootCondition = !shootCondition;
@@ -51,7 +51,9 @@ public class Shooter extends SubsystemBase {
 
   public void putDashboard() {
     SmartDashboard.putNumber("UpMotorVoltage", UpMotorVoltage);
-     SmartDashboard.putNumber("DownMotorVoltage", DownMotorVoltage);
+    SmartDashboard.putNumber("DownMotorVoltage", DownMotorVoltage);
+    SmartDashboard.putNumber("Output_UpVoltage", shootUpMotor.get() * 12.0);
+    SmartDashboard.putNumber("Output_DownVoltage", shootDownMotor.get() * 12.0);
   }
 
   @Override
