@@ -10,6 +10,7 @@ import frc.robot.Subsystem.ShooterSubsystem;
 public class StartShootCmd extends Command {
   /** Creates a new StartShoot. */
   private final ShooterSubsystem shooter;
+
   public StartShootCmd(ShooterSubsystem shooter) {
     this.shooter = shooter;
     addRequirements(this.shooter);
@@ -17,8 +18,24 @@ public class StartShootCmd extends Command {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
+ 
+  @Override
+  public void initialize(){
+    shooter.stopMotor();
+  }
+ 
   @Override
   public void execute() {
-    shooter.setShooterCondition();
+    shooter.setVoltage();
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    shooter.stopMotor();
+  }
+
+  @Override
+  public boolean isFinished() {
+    return false;
   }
 }

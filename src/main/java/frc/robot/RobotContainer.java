@@ -13,18 +13,20 @@ import frc.robot.Subsystem.IntakeSubsystem;
 import frc.robot.Subsystem.ShooterSubsystem;
 
 public class RobotContainer {
-  private final CommandXboxController main  = new CommandXboxController(0);
+  private final CommandXboxController main = new CommandXboxController(0);
   private final ShooterSubsystem shooter = new ShooterSubsystem();
   private final IntakeSubsystem intake = new IntakeSubsystem();
-  public RobotContainer() {
-    main.x().onTrue(new StartShootCmd(shooter));
-    intake.setDefaultCommand(new StartIntakeCmd(intake));
-    configureBindings();
-    
-  }
-  
 
-  private void configureBindings() {}
+  public RobotContainer() {
+    // intake.setDefaultCommand(new StartIntakeCmd(intake));
+    configureBindings();
+
+  }
+
+  private void configureBindings() {
+    main.x().toggleOnTrue(new StartShootCmd(shooter));
+    main.b().toggleOnTrue(new StartIntakeCmd(intake));
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
