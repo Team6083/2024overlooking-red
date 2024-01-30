@@ -27,10 +27,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setVoltage() {
-    shootUpMotor.setVoltage(6);
-    shootDownMotor.setVoltage(6);
-    // shootUpMotor.setVoltage(SmartDashboard.getNumber("UpMotorVoltage", 3));
-    // shootDownMotor.setVoltage(SmartDashboard.getNumber("DownMotorVoltage", 3));
+    shootUpMotor.setVoltage(SmartDashboard.getNumber("UpMotorVoltage", 0));
+    shootDownMotor.setVoltage(SmartDashboard.getNumber("DownMotorVoltage", 0));
   }
 
   public void stopMotor() {
@@ -39,18 +37,18 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setShooterCondition() {
-    // if (shootCondition) {
-    //   setVoltage();
-    // } else {
-    //   stopMotor();
-    // }
-    // shootCondition = !shootCondition;
+    if (shootCondition) {
+      setVoltage();
+    } else {
+      stopMotor();
+    }
+    shootCondition = !shootCondition;
   }
 
-  // public void getDashboard() {
-  // SmartDashboard.getNumber("UpMotorVoltage", 0.0);
-  // SmartDashboard.getNumber("DownMotorVoltage", 0.0);
-  // }
+  public void getDashboard() {
+  SmartDashboard.getNumber("UpMotorVoltage", 0.0);
+  SmartDashboard.getNumber("DownMotorVoltage", 0.0);
+  }
 
   public void putDashboard() {
     SmartDashboard.putNumber("Output_UpVoltage", shootUpMotor.get() * 12.0);
@@ -61,6 +59,6 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     putDashboard();
-    // getDashboard();
+    getDashboard();
   }
 }
