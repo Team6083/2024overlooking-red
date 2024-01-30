@@ -24,8 +24,13 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setVoltage() {
-    intakeMotor1.setVoltage(5);
-    intakeMotor2.setVoltage(5);
+    intakeMotor1.setVoltage(4);
+    intakeMotor2.setVoltage(4);
+  }
+
+  public void stopVoltage(){
+    intakeMotor1.setVoltage(0);
+    intakeMotor2.setVoltage(0);
   }
 
   @Override
