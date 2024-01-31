@@ -28,8 +28,8 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setVoltage() {
-    intakeMotor1.setVoltage(SmartDashboard.getNumber("setIntakeMotor1Voltage", 0));
-    intakeMotor2.setVoltage(SmartDashboard.getNumber("setIntakeMotor2Voltage", 0));
+    intakeMotor1.setVoltage(setIntakeMotor1age);
+    intakeMotor2.setVoltage(setIntakeMotor2age);
   }
 
   public void stopVoltage() {
@@ -47,8 +47,8 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void getDashboard() {
-    SmartDashboard.getNumber("setIntakeMotor1Voltage", 0.0);
-    SmartDashboard.getNumber("setIntakeMotor2Voltage", 0.0);
+    setIntakeMotor1age = SmartDashboard.getNumber("setIntakeMotor1Voltage", 0.0);
+    setIntakeMotor2age = SmartDashboard.getNumber("setIntakeMotor2Voltage", 0.0);
 
   }
 

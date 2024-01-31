@@ -27,8 +27,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setVoltage() {
-    shootUpMotor.setVoltage(SmartDashboard.getNumber("UpMotorVoltage", 0));
-    shootDownMotor.setVoltage(SmartDashboard.getNumber("DownMotorVoltage", 0));
+    shootUpMotor.setVoltage(UpMotorVoltage);
+    shootDownMotor.setVoltage(DownMotorVoltage);
   }
 
   public void stopMotor() {
@@ -46,8 +46,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void getDashboard() {
-  SmartDashboard.getNumber("UpMotorVoltage", 0.0);
-  SmartDashboard.getNumber("DownMotorVoltage", 0.0);
+    UpMotorVoltage = SmartDashboard.getNumber("UpMotorVoltage", 0.0);
+    DownMotorVoltage = SmartDashboard.getNumber("DownMotorVoltage", 0.0);
   }
 
   public void putDashboard() {
