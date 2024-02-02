@@ -4,41 +4,48 @@
 
 package frc.robot.Subsystem;
 
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.motorcontrol.Victor;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.RiseShooterConstants;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new Shooter. */
-  private final VictorSP shootUpMotor;
-  private final VictorSP shootDownMotor;
-  private double UpMotorVoltage = 0.0;
-  private double DownMotorVoltage = 0.0;
+  private final VictorSPX shootUpMotor;
+  private final VictorSPX shootDownMotor;
+
+  private double UpMotorPercentage = 0.0;
+  private double DownMotorPercentage = 0.0;
   private Boolean shootCondition = true;
 
   public ShooterSubsystem() {
-    shootUpMotor = new VictorSP(ShooterConstants.kUpPWMID);
-    shootDownMotor = new VictorSP(ShooterConstants.kDownPWMID);
+    shootUpMotor = new VictorSPX(ShooterConstants.kUpPWMID);
+    shootDownMotor = new VictorSPX(ShooterConstants.kDownPWMID);
     shootUpMotor.setInverted(ShooterConstants.kUpMotorInvert);
     shootDownMotor.setInverted(ShooterConstants.kDownMotorInvert);
-    SmartDashboard.putNumber("UpMotorVoltage", UpMotorVoltage);
-    SmartDashboard.putNumber("DownMotorVoltage", DownMotorVoltage);
+    SmartDashboard.putNumber("UpMotorPercentage", UpMotorPercentage);
+    SmartDashboard.putNumber("DownMotorPercentage", DownMotorPercentage);
   }
 
-  public void setVoltage() {
-    shootUpMotor.setVoltage(UpMotorVoltage);
-    shootDownMotor.setVoltage(DownMotorVoltage);
-  }
+  public void setPercentage() {
+    shootUpMotor.set(ControlMode.PercentOutput,UpMotorPercentage );
+    shootDownMotor.set(ControlMode.PercentOutput,DownMotorPercentage );}
 
   public void stopMotor() {
-    shootUpMotor.setVoltage(0.0);
-    shootDownMotor.setVoltage(0.0);
+    shootUpMotor.set(ControlMode.PercentOutput, 0);
+    shootDownMotor.set(ControlMode.PercentOutput,0 );
   }
 
   public void setShooterCondition() {
     if (shootCondition) {
-      setVoltage();
+      setPercentage();
     } else {
       stopMotor();
     }
@@ -46,19 +53,15 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void getDashboard() {
-    UpMotorVoltage = SmartDashboard.getNumber("UpMotorVoltage", 0.0);
-    DownMotorVoltage = SmartDashboard.getNumber("DownMotorVoltage", 0.0);
+    UpMotorPercentage = SmartDashboard.getNumber("UpMotorPercentage", 0.0);
+    DownMotorPercentage = SmartDashboard.getNumber("DownMotorPercentage", 0.0);
   }
 
-  public void putDashboard() {
-    SmartDashboard.putNumber("Output_UpVoltage", shootUpMotor.get() * 12.0);
-    SmartDashboard.putNumber("Output_DownVoltage", shootDownMotor.get() * 12.0);
-  }
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    putDashboard();
     getDashboard();
   }
 }

@@ -26,7 +26,7 @@ public class StartShootCmd extends Command {
  
   @Override
   public void execute() {
-    shooter.setVoltage();
+    shooter.setPercentage();
   }
 
   @Override
