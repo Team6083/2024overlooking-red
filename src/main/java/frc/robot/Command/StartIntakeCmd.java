@@ -21,19 +21,19 @@ public class StartIntakeCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.stopVoltage();
+    intake.stopMotor();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.setVoltage();
+    intake.setpersentage();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.stopVoltage();
+    intake.stopMotor();
   }
 
   // Returns true when the command should end.

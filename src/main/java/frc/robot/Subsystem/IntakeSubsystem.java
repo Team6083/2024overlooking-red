@@ -4,6 +4,9 @@
 
 package frc.robot.Subsystem;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,57 +14,51 @@ import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
-  private final VictorSP intakeMotor1;
-  private final VictorSP intakeMotor2;
+  private final VictorSPX intakeMotor1;
+  private final VictorSPX intakeMotor2;
   private double setIntakeMotor1age = 0.0;
   private double setIntakeMotor2age = 0.0;
   private boolean intakecondition = true;
 
   public IntakeSubsystem() {
-    intakeMotor1 = new VictorSP(IntakeConstants.kintakeonePWMID);
-    intakeMotor2 = new VictorSP(IntakeConstants.kintaketwoPWMID);
+    intakeMotor1 = new VictorSPX(IntakeConstants.kintakeonePWMID);
+    intakeMotor2 = new VictorSPX(IntakeConstants.kintaketwoPWMID);
     intakeMotor1.setInverted(IntakeConstants.kintakeoneInvert);
     intakeMotor2.setInverted(IntakeConstants.kintaketwoInvert);
-    SmartDashboard.putNumber("setIntakeMotor1Voltage", setIntakeMotor1age);
-    SmartDashboard.putNumber("setIntakeMotor2Voltage", setIntakeMotor2age);
+    SmartDashboard.putNumber("setIntakeMotor1persentage", setIntakeMotor1age);
+    SmartDashboard.putNumber("setIntakeMotor2persentage", setIntakeMotor2age);
 
   }
 
-  public void setVoltage() {
-    intakeMotor1.setVoltage(setIntakeMotor1age);
-    intakeMotor2.setVoltage(setIntakeMotor2age);
+  public void setpersentage() {
+    intakeMotor1.set(ControlMode.PercentOutput,setIntakeMotor1age);
+    intakeMotor2.set(ControlMode.PercentOutput,setIntakeMotor2age);
   }
 
-  public void stopVoltage() {
-    intakeMotor1.setVoltage(0);
-    intakeMotor2.setVoltage(0);
+  public void stopMotor() {
+    intakeMotor1.set(ControlMode.PercentOutput,0);
+    intakeMotor2.set(ControlMode.PercentOutput,0);
   }
 
   public void setIntakecondition() {
     if (intakecondition) {
-      setVoltage();
+      setpersentage();
     } else {
-      stopVoltage();
+      stopMotor();
     }
     intakecondition = !intakecondition;
   }
 
   public void getDashboard() {
-    setIntakeMotor1age = SmartDashboard.getNumber("setIntakeMotor1Voltage", 0.0);
-    setIntakeMotor2age = SmartDashboard.getNumber("setIntakeMotor2Voltage", 0.0);
+    setIntakeMotor1age = SmartDashboard.getNumber("setIntakeMotor1presentage", 0.0);
+    setIntakeMotor2age = SmartDashboard.getNumber("setIntakeMotor2persentage", 0.0);
 
   }
 
-  public void putDashboard() {
-    SmartDashboard.putNumber("out_putsetIntakeMotor1Voltage", intakeMotor1.get() * 12.0);
-    SmartDashboard.putNumber("out_putsetIntakeMotor2Voltage", intakeMotor2.get() * 12.0);
-
-  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    putDashboard();
     getDashboard();
   }
 }
