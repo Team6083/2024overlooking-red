@@ -28,8 +28,8 @@ public class RobotContainer {
 
   private void configureBindings() {
     main.x().toggleOnTrue(new StartShootCmd(shooter));
-    main.b().toggleOnTrue(new StartIntakeCmd(intake));
-    main.pov(0).whileTrue(new RiseStooterCmd(RiseMotor));
+    // main.b().toggleOnTrue(new StartIntakeCmd(intake));
+    // main.pov(0).whileTrue(new RiseStooterCmd(RiseMotor));
   }
 
   public Command getAutonomousCommand() {
