@@ -4,19 +4,13 @@
 
 package frc.robot.Subsystem;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.motorcontrol.Victor;
-import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.RiseShooterConstants;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -28,28 +22,39 @@ public class ShooterSubsystem extends SubsystemBase {
   private final PIDController upPidController;
   private final PIDController downPidController;
 
-  private double UpMotorPercentage = 0.0;
-  private double DownMotorPercentage = 0.0;
+  private double inputUpMotorPercentage = 0.0;
+  private double inputDownMotorPercentage = 0.0;
+  private double rateToUpMotorPower =  0.0;
+  private double rateToDownMotorPower = 0.0;
   private double controlUpRate = 0.0;
   private double controlDownRate = 0.0;
-  private Boolean shootCondition = true;
 
   public ShooterSubsystem() {
+
     shootUpMotor = new VictorSPX(ShooterConstants.kUpPWMID);
     shootDownMotor = new VictorSPX(ShooterConstants.kDownPWMID);
+
     upEncoder = new Encoder(0, 1);
     downEncoder = new Encoder(3, 4);
-    upPidController = new PIDController(0.5, 0, 0);
-    downPidController = new PIDController(0.5, 0, 0);
+
+    upPidController = new PIDController(0.01, 0, 0);
+    downPidController = new PIDController(0.01, 0, 0);
+
     shootUpMotor.setInverted(ShooterConstants.kUpMotorInvert);
     shootDownMotor.setInverted(ShooterConstants.kDownMotorInvert);
-    SmartDashboard.putNumber("UpMotorPercentage", UpMotorPercentage);
-    SmartDashboard.putNumber("DownMotorPercentage", DownMotorPercentage);
+
+    SmartDashboard.putNumber("UpMotorPercentage", inputUpMotorPercentage);
+    SmartDashboard.putNumber("DownMotorPercentage", inputDownMotorPercentage);
+    SmartDashboard.putNumber("controlUpRate", controlUpRate);
+    SmartDashboard.putNumber("controlDownRate", controlDownRate);
+
+    upEncoder.reset();
+    downEncoder.reset();
   }
 
   public void setPercentage() {
-    shootUpMotor.set(ControlMode.PercentOutput, UpMotorPercentage);
-    shootDownMotor.set(ControlMode.PercentOutput, DownMotorPercentage);
+    shootUpMotor.set(ControlMode.PercentOutput, inputUpMotorPercentage);
+    shootDownMotor.set(ControlMode.PercentOutput, inputDownMotorPercentage);
   }
 
   public void stopMotor() {
@@ -58,23 +63,19 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setPIDControl() {
-    shootUpMotor.set(ControlMode.PercentOutput, upPidController.calculate(upEncoder.getRate(), controlUpRate));
-    shootDownMotor.set(ControlMode.PercentOutput, downPidController.calculate(downEncoder.getRate(), controlDownRate));
+    rateToUpMotorPower += upPidController.calculate(upEncoder.getRate(), controlUpRate);
+    rateToDownMotorPower += downPidController.calculate(downEncoder.getRate(), controlDownRate);
+    shootUpMotor.set(ControlMode.PercentOutput, rateToUpMotorPower);
+    shootDownMotor.set(ControlMode.PercentOutput, rateToDownMotorPower);
 
-  }
-
-  public void setShooterCondition() {
-    if (shootCondition) {
-      setPercentage();
-    } else {
-      stopMotor();
-    }
-    shootCondition = !shootCondition;
   }
 
   public void getDashboard() {
-    UpMotorPercentage = SmartDashboard.getNumber("UpMotorPercentage", 0.0);
-    DownMotorPercentage = SmartDashboard.getNumber("DownMotorPercentage", 0.0);
+    inputUpMotorPercentage = SmartDashboard.getNumber("UpMotorPercentage", 0.0);
+    inputDownMotorPercentage = SmartDashboard.getNumber("DownMotorPercentage", 0.0);
+    controlUpRate = SmartDashboard.getNumber("controlUpRate", 0.0);
+    controlDownRate = SmartDashboard.getNumber("controlDownRate", 0.0);
+
   }
 
   @Override

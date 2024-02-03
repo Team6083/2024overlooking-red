@@ -7,7 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Command.StartShootCmd;
+import frc.robot.Command.ShootManualCmd;
+import frc.robot.Command.ShootPIDCmd;
 import frc.robot.Subsystem.ShooterSubsystem;
 
 public class RobotContainer {
@@ -17,15 +18,13 @@ public class RobotContainer {
   // private final RiseShooterSubsytem RiseMotor = new RiseShooterSubsytem();
 
   public RobotContainer() {
-    // intake.setDefaultCommand(new StartIntakeCmd(intake));
     configureBindings();
 
   }
 
   private void configureBindings() {
-    main.x().toggleOnTrue(new StartShootCmd(shooter));
-    // main.b().toggleOnTrue(new StartIntakeCmd(intake));
-    // main.pov(0).whileTrue(new RiseStooterCmd(RiseMotor));
+    main.x().and(main.a()).toggleOnTrue(new ShootManualCmd(shooter));
+    main.x().and(main.a().negate()).toggleOnTrue(new ShootPIDCmd(shooter));
   }
 
   public Command getAutonomousCommand() {

@@ -7,11 +7,11 @@ package frc.robot.Command;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystem.ShooterSubsystem;
 
-public class StartShootCmd extends Command {
+public class ShootManualCmd extends Command {
   /** Creates a new StartShoot. */
   private final ShooterSubsystem shooter;
 
-  public StartShootCmd(ShooterSubsystem shooter) {
+  public ShootManualCmd(ShooterSubsystem shooter) {
     this.shooter = shooter;
     addRequirements(this.shooter);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -26,7 +26,7 @@ public class StartShootCmd extends Command {
  
   @Override
   public void execute() {
-    shooter.setPercentage();
+    shooter.setPercentage();;
   }
 
   @Override
