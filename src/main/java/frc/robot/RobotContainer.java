@@ -7,18 +7,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Command.RiseStooterCmd;
-import frc.robot.Command.StartIntakeCmd;
 import frc.robot.Command.StartShootCmd;
-import frc.robot.Subsystem.IntakeSubsystem;
-import frc.robot.Subsystem.RiseShooterSubsytem;
 import frc.robot.Subsystem.ShooterSubsystem;
 
 public class RobotContainer {
   private final CommandXboxController main = new CommandXboxController(0);
   private final ShooterSubsystem shooter = new ShooterSubsystem();
-  private final IntakeSubsystem intake = new IntakeSubsystem();
-  private final RiseShooterSubsytem RiseMotor = new RiseShooterSubsytem();
+  // private final IntakeSubsystem intake = new IntakeSubsystem();
+  // private final RiseShooterSubsytem RiseMotor = new RiseShooterSubsytem();
 
   public RobotContainer() {
     // intake.setDefaultCommand(new StartIntakeCmd(intake));
