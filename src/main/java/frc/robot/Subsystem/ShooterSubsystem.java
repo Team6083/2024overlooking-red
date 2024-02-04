@@ -36,8 +36,8 @@ public class ShooterSubsystem extends SubsystemBase {
     upEncoder = new Encoder(0, 1);
     downEncoder = new Encoder(3, 4);
 
-    upPidController = new PIDController(0.01, 0, 0);
-    downPidController = new PIDController(0.01, 0, 0);
+    upPidController = new PIDController(0.002, 0, 0);
+    downPidController = new PIDController(0.002, 0, 0);
 
     shootUpMotor.setInverted(ShooterConstants.kUpMotorInvert);
     shootDownMotor.setInverted(ShooterConstants.kDownMotorInvert);
@@ -66,7 +66,6 @@ public class ShooterSubsystem extends SubsystemBase {
     rateToDownMotorPower += downPidController.calculate(downEncoder.getRate(), controlDownRate);
     shootUpMotor.set(ControlMode.PercentOutput, rateToUpMotorPower);
     shootDownMotor.set(ControlMode.PercentOutput, rateToDownMotorPower);
-
   }
 
   public void getDashboard() {
