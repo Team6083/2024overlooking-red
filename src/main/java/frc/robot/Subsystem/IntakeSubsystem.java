@@ -5,23 +5,22 @@
 package frc.robot.Subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
-import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
-  private final VictorSP intakeMotor1;
-  private final VictorSP intakeMotor2;
+  private final VictorSPX intakeMotor1;
+  private final VictorSPX intakeMotor2;
   private double setIntakeMotor1age = 0.0;
   private double setIntakeMotor2age = 0.0;
   private boolean intakecondition = true;
 
   public IntakeSubsystem() {
-    intakeMotor1 = new VictorSP(IntakeConstants.kintakeonePWMID);
-    intakeMotor2 = new VictorSP(IntakeConstants.kintaketwoPWMID);
+    intakeMotor1 = new VictorSPX(IntakeConstants.kintakeonePWMID);
+    intakeMotor2 = new VictorSPX(IntakeConstants.kintaketwoPWMID);
     intakeMotor1.setInverted(IntakeConstants.kintakeoneInvert);
     intakeMotor2.setInverted(IntakeConstants.kintaketwoInvert);
     SmartDashboard.putNumber("setIntakeMotor1persentage", setIntakeMotor1age);
