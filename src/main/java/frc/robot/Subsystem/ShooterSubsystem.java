@@ -5,18 +5,18 @@
 package frc.robot.Subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new Shooter. */
-  private final VictorSPX shootUpMotor;
-  private final VictorSPX shootDownMotor;
+  private final VictorSP shootUpMotor;
+  private final VictorSP shootDownMotor;
   private final Encoder upEncoder;
   private final Encoder downEncoder;
   private final PIDController upPidController;
@@ -31,8 +31,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public ShooterSubsystem() {
 
-    shootUpMotor = new VictorSPX(ShooterConstants.kUpPWMID);
-    shootDownMotor = new VictorSPX(ShooterConstants.kDownPWMID);
+    shootUpMotor = new VictorSP(ShooterConstants.kUpPWMID);
+    shootDownMotor = new VictorSP(ShooterConstants.kDownPWMID);
 
     upEncoder = new Encoder(0, 1);
     downEncoder = new Encoder(3, 4);
