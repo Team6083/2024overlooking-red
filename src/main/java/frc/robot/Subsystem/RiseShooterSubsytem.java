@@ -7,6 +7,8 @@ package frc.robot.Subsystem;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
@@ -15,9 +17,16 @@ import frc.robot.Constants.RiseShooterConstants;
 public class RiseShooterSubsytem extends SubsystemBase {
   /** Creates a new RiseShooterSubsytem. */
   private final VictorSPX RiseMotor;
+  private final Encoder turnEncoder;
+  private final PIDController turnController;
 
   public RiseShooterSubsytem() {
     RiseMotor = new VictorSPX(RiseShooterConstants.kRiseShooterPWMID);
+
+    turnEncoder = new Encoder(0, 0);
+
+    turnController = new PIDController(0, 0, 0);
+
     RiseMotor.setInverted(RiseShooterConstants.kRiseShooterInvert);
   }
 

@@ -18,7 +18,6 @@ public final class Constants {
     public static class RiseShooterConstants {
         public static final int kRiseShooterPWMID = 11;
         public static final Boolean kRiseShooterInvert = false;
-
     }
 
     public static class DrivebaseConstants {
