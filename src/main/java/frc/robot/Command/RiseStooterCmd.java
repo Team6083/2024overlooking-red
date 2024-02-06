@@ -11,35 +11,34 @@ import frc.robot.Subsystem.RiseShooterSubsytem;
 public class RiseStooterCmd extends Command {
   /** Creates a new RiseStooterCmd. */
   private final RiseShooterSubsytem riseShooterSubsytem;
-  private final RiseShooterConstants riseShooterConstants;
   private double leftTriggerValue;
   private double rightTriggerValue;
 
-  public RiseStooterCmd(RiseShooterSubsytem riseShooterSubsytem,double mainLeftTrigger,double mainrightTrigger) {
+  public RiseStooterCmd(RiseShooterSubsytem riseShooterSubsytem, double mainLeftTrigger, double mainRightTrigger) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.riseShooterSubsytem=riseShooterSubsytem;
+    this.riseShooterSubsytem = riseShooterSubsytem;
     this.leftTriggerValue = mainLeftTrigger;
-    this.rightTriggerValue = mainrightTrigger;
-    addRequirements(this.riseMotor);
+    this.rightTriggerValue = mainRightTrigger;
+    addRequirements(this.riseShooterSubsytem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    riseMotor.stopMotor();
+    riseShooterSubsytem.stopMotor();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double risePower = (leftTriggerValue - rightTriggerValue)*RiseShooterConstants.kriseTriggerValue;
-    riseMotor.riseShooterControl(risePower);
+    double risePower = (leftTriggerValue - rightTriggerValue) * RiseShooterConstants.kriseTriggerValue;
+    riseShooterSubsytem.riseShooterControl(risePower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    riseMotor.stopMotor();
+    riseShooterSubsytem.stopMotor();
   }
 
   // Returns true when the command should end.
