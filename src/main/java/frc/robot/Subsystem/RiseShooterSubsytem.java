@@ -52,7 +52,7 @@ public class RiseShooterSubsytem extends SubsystemBase {
     SmartDashboard.putNumber("rise_volt", modifiedRiseVolt);
   }
 
-  public double getSetpoint(){
+  public double getSetpoint() {
     return risePID.getSetpoint();
   }
 
