@@ -65,7 +65,7 @@ public class RiseShooterSubsytem extends SubsystemBase {
     }
     risePID.setSetpoint(setpoint);
 
-    // 
+    // add calculate 
   }
 
   public double getAngleDegree() {
