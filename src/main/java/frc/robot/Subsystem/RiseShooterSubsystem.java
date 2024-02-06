@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RiseShooterConstants;
 
-public class RiseShooterSubsytem extends SubsystemBase {
+public class RiseShooterSubsystem extends SubsystemBase {
   /** Creates a new RiseShooterSubsytem. */
   private final VictorSPX riseMotor;
   private final Encoder riseEncoder;
   private double angleDegreeOffset;
   private final PIDController risePID;
 
-  public RiseShooterSubsytem() {
+  public RiseShooterSubsystem() {
     riseMotor = new VictorSPX(RiseShooterConstants.kRiseShooterPWMID);
 
     riseEncoder = new Encoder(0, 1);
@@ -66,6 +66,10 @@ public class RiseShooterSubsytem extends SubsystemBase {
     risePID.setSetpoint(setpoint);
 
     // add calculate 
+  }
+  public void setAngleSetpoint(double angleSetPoint) {
+    setSetpoint(angleSetPoint);
+    return;
   }
 
   public double getAngleDegree() {

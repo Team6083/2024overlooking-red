@@ -16,14 +16,14 @@ import frc.robot.Command.IntakeCmd;
 import frc.robot.Constants.XboxControllerConstants;
 import frc.robot.Subsystem.DrivebaseSubsystem;
 import frc.robot.Subsystem.IntakeSubsystem;
-import frc.robot.Subsystem.RiseShooterSubsytem;
+import frc.robot.Subsystem.RiseShooterSubsystem;
 import frc.robot.Subsystem.ShooterSubsystem;
 
 public class RobotContainer {
   private final CommandXboxController main;
   private final ShooterSubsystem shooter;
   private final IntakeSubsystem intake;
-  private final RiseShooterSubsytem riseMotor;
+  private final RiseShooterSubsystem riseMotor;
   private final DrivebaseSubsystem drivebase;
 
   double mainLeftTriggerValue;
@@ -33,7 +33,7 @@ public class RobotContainer {
     main = new CommandXboxController(XboxControllerConstants.kxbox);
     shooter = new ShooterSubsystem();
     intake = new IntakeSubsystem();
-    riseMotor = new RiseShooterSubsytem();
+    riseMotor = new RiseShooterSubsystem();
     drivebase = new DrivebaseSubsystem();
 
     mainLeftTriggerValue = main.getLeftTriggerAxis();
@@ -46,7 +46,6 @@ public class RobotContainer {
     main.y().and(main.y()).toggleOnTrue(new IntakeCmd(intake));
     main.a().and(main.a()).toggleOnTrue(new ShootManualCmd(shooter));
     main.a().and(main.a().negate()).toggleOnTrue(new ShootPIDCmd(shooter));
-    // main.x().and(main.x()).toggleOnTrue(new RiseShooterCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
     riseMotor.setDefaultCommand(new RiseShooterCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
     drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
     main.b().onTrue(new GyroresetCmd(drivebase) );

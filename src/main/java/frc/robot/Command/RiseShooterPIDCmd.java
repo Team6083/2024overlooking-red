@@ -5,40 +5,40 @@
 package frc.robot.Command;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.RiseShooterConstants;
 import frc.robot.Subsystem.RiseShooterSubsystem;
 
-public class RiseShooterCmd extends Command {
-  /** Creates a new RiseStooterCmd. */
-  private final RiseShooterSubsystem riseShooterSubsytem;
+public class RiseShooterPIDCmd extends Command {
+  private final RiseShooterSubsystem riseShooterSubsystem;
   private double leftTriggerValue;
   private double rightTriggerValue;
-
-  public RiseShooterCmd(RiseShooterSubsystem riseShooterSubsytem, double mainLeftTrigger, double mainRightTrigger) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.riseShooterSubsytem = riseShooterSubsytem;
+  private double armAngleModify;
+  /** Creates a new RiseShooterPIDCmd. */
+  public RiseShooterPIDCmd(RiseShooterSubsystem riseShooterSubsystem, double mainLeftTrigger, double mainRightTrigger) {
+    this.riseShooterSubsystem = riseShooterSubsystem;
     this.leftTriggerValue = mainLeftTrigger;
     this.rightTriggerValue = mainRightTrigger;
-    addRequirements(this.riseShooterSubsytem);
+    addRequirements(this.riseShooterSubsystem);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    riseShooterSubsytem.stopMotor();
+    riseShooterSubsystem.stopMotor();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double risePower = (leftTriggerValue - rightTriggerValue) * RiseShooterConstants.kriseTriggerValue;
-    riseShooterSubsytem.riseShooterControl(risePower);
+    armAngleModify = (leftTriggerValue - rightTriggerValue) * -0.7;
+    riseShooterSubsystem.setAngleSetpoint(riseShooterSubsystem.getSetpoint() + armAngleModify);
+    riseShooterSubsystem.pidControl();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    riseShooterSubsytem.stopMotor();
+    riseShooterSubsystem.stopMotor();
   }
 
   // Returns true when the command should end.
