@@ -10,7 +10,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Command.RiseShooterCmd;
 import frc.robot.Command.ShootManualCmd;
 import frc.robot.Command.ShootPIDCmd;
-import frc.robot.Command.StartIntakeCmd;
+import frc.robot.Command.SwerveJoystickCmd;
+import frc.robot.Command.IntakeCmd;
 import frc.robot.Constants.XboxControllerConstants;
 import frc.robot.Subsystem.IntakeSubsystem;
 import frc.robot.Subsystem.RiseShooterSubsytem;
@@ -21,6 +22,7 @@ public class RobotContainer {
   private final ShooterSubsystem shooter;
   private final IntakeSubsystem intake;
   private final RiseShooterSubsytem riseMotor;
+  
 
   double mainLeftTriggerValue;
   double mainRightTrigggerValue;
@@ -38,10 +40,11 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    main.y().and(main.y()).toggleOnTrue(new StartIntakeCmd(intake));
+    main.y().and(main.y()).toggleOnTrue(new IntakeCmd(intake));
     main.a().and(main.a()).toggleOnTrue(new ShootManualCmd(shooter));
     main.a().and(main.a().negate()).toggleOnTrue(new ShootPIDCmd(shooter));
-    main.x().and(main.x()).toggleOnTrue(new RiseShooterCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
+    // main.x().and(main.x()).toggleOnTrue(new RiseShooterCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
+    riseMotor.setDefaultCommand(new RiseShooterCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
   }
 
   public Command getAutonomousCommand() {
