@@ -25,8 +25,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private double inputDownMotorPercentage = 0.0;
   private double rateToUpMotorPower =  0.0;
   private double rateToDownMotorPower = 0.0;
-  private double controlUpRate = 0.0;
-  private double controlDownRate = 0.0;
 
   public ShooterSubsystem() {
 
@@ -44,8 +42,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("UpMotorPercentage", inputUpMotorPercentage);
     SmartDashboard.putNumber("DownMotorPercentage", inputDownMotorPercentage);
-    SmartDashboard.putNumber("controlUpRate", controlUpRate);
-    SmartDashboard.putNumber("controlDownRate", controlDownRate);
 
     upEncoder.reset();
     downEncoder.reset();
@@ -62,18 +58,20 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setPIDControl() {
-    rateToUpMotorPower += upPidController.calculate(upEncoder.getRate(), controlUpRate);
-    rateToDownMotorPower += downPidController.calculate(downEncoder.getRate(), controlDownRate);
+    rateToUpMotorPower += upPidController.calculate(upEncoder.getRate());
+    rateToDownMotorPower += downPidController.calculate(downEncoder.getRate());
     shootUpMotor.set(ControlMode.PercentOutput, rateToUpMotorPower);
     shootDownMotor.set(ControlMode.PercentOutput, rateToDownMotorPower);
+  }
+
+  public void setSetpoint(double distance){
+    upPidController.setSetpoint(distance);
+    downPidController.setSetpoint(distance);
   }
 
   public void getDashboard() {
     inputUpMotorPercentage = SmartDashboard.getNumber("UpMotorPercentage", 0.0);
     inputDownMotorPercentage = SmartDashboard.getNumber("DownMotorPercentage", 0.0);
-    controlUpRate = SmartDashboard.getNumber("controlUpRate", 0.0);
-    controlDownRate = SmartDashboard.getNumber("controlDownRate", 0.0);
-
   }
 
   @Override

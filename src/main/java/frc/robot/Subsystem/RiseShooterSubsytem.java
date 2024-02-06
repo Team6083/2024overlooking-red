@@ -43,7 +43,7 @@ public class RiseShooterSubsytem extends SubsystemBase {
     if (Math.abs(modifiedRiseVolt) > RiseShooterConstants.kriseVoltLimit) {
       modifiedRiseVolt = RiseShooterConstants.kriseVoltLimit * (riseVolt > 0 ? 1 : -1);
     }
-    riseMotor.set(ControlMode.PercentOutput, 0.0);
+    riseMotor.set(ControlMode.PercentOutput, riseVolt);
 
     SmartDashboard.putNumber("rise_volt", modifiedRiseVolt);
   }
@@ -64,6 +64,8 @@ public class RiseShooterSubsytem extends SubsystemBase {
       setpoint = RiseShooterConstants.kriseAngleMax;
     }
     risePID.setSetpoint(setpoint);
+
+    // 
   }
 
   public double getAngleDegree() {
