@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -11,8 +12,11 @@ import frc.robot.Command.RiseShooterCmd;
 import frc.robot.Command.ShootManualCmd;
 import frc.robot.Command.ShootPIDCmd;
 import frc.robot.Command.SwerveJoystickCmd;
+import frc.robot.Command.GyroresetCmd;
 import frc.robot.Command.IntakeCmd;
+import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.XboxControllerConstants;
+import frc.robot.Subsystem.DrivebaseSubsystem;
 import frc.robot.Subsystem.IntakeSubsystem;
 import frc.robot.Subsystem.RiseShooterSubsytem;
 import frc.robot.Subsystem.ShooterSubsystem;
@@ -22,7 +26,10 @@ public class RobotContainer {
   private final ShooterSubsystem shooter;
   private final IntakeSubsystem intake;
   private final RiseShooterSubsytem riseMotor;
-  
+  private final DrivebaseSubsystem drivebase;
+
+  private final PowerDistribution pd ;
+  private double[] chassisSpeeds;
 
   double mainLeftTriggerValue;
   double mainRightTrigggerValue;
@@ -32,6 +39,8 @@ public class RobotContainer {
     shooter = new ShooterSubsystem();
     intake = new IntakeSubsystem();
     riseMotor = new RiseShooterSubsytem();
+    pd = new PowerDistribution();
+    chassisSpeeds = new double[3];
 
     mainLeftTriggerValue = main.getLeftTriggerAxis();
     mainRightTrigggerValue = main.getRightTriggerAxis();
@@ -45,6 +54,8 @@ public class RobotContainer {
     main.a().and(main.a().negate()).toggleOnTrue(new ShootPIDCmd(shooter));
     // main.x().and(main.x()).toggleOnTrue(new RiseShooterCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
     riseMotor.setDefaultCommand(new RiseShooterCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
+    drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
+    main.b().onTrue(new GyroresetCmd(drivebase) );
   }
 
   public Command getAutonomousCommand() {

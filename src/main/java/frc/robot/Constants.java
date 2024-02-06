@@ -29,6 +29,10 @@ public final class Constants {
         public static final double kriseTriggerValue = 0.15;
     }
 
+    public static class OperatorConstants {
+        public static final int kDriverControllerPort = 0;
+      }
+
     public static class DrivebaseConstants {
         public static final double kMaxSpeed = 5;
         public static final double kMinSpeed = 0.25;
