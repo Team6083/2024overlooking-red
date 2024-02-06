@@ -5,6 +5,8 @@
 package frc.robot.Subsystem;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -36,7 +38,7 @@ public class RiseShooterSubsytem extends SubsystemBase {
   }
 
   public void riseShooterControl(double RiseSpeed) {
-    riseMotor.set(RiseSpeed);
+    riseMotor.set(ControlMode.PercentOutput, RiseSpeed);;
     risePID.setSetpoint(getAngleDegree());
   }
 
@@ -47,7 +49,7 @@ public class RiseShooterSubsytem extends SubsystemBase {
     if (Math.abs(modifiedRiseVolt) > RiseShooterConstants.kriseVoltLimit) {
       modifiedRiseVolt = RiseShooterConstants.kriseVoltLimit * (riseVolt > 0 ? 1 : -1);
     }
-    riseMotor.setVoltage(modifiedRiseVolt);
+    riseMotor.set(ControlMode.PercentOutput,0.0);
 
     SmartDashboard.putNumber("rise_volt", modifiedRiseVolt);
   }
@@ -85,7 +87,7 @@ public class RiseShooterSubsytem extends SubsystemBase {
   }
 
   public void stopMotor(){
-    riseMotor.set(0);
+    riseMotor.set(ControlMode.PercentOutput,0.0);
   }
   private int isPhyLimitExceed(double angle) {
     return (angle < RiseShooterConstants.kriseAngleMin ? -1 : (angle > RiseShooterConstants.kriseAngleMax ? 1 : 0));
@@ -94,7 +96,7 @@ public class RiseShooterSubsytem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putData("rise_PID", risePID);
-    SmartDashboard.putData("rise_motor", riseMotor);
+    // SmartDashboard.putData("rise_motor", riseMotor);
     // This method will be called once per scheduler run
   }
 }
