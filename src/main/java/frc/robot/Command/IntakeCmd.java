@@ -7,11 +7,11 @@ package frc.robot.Command;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystem.IntakeSubsystem;
 
-public class StartIntakeCmd extends Command {
+public class IntakeCmd extends Command {
   /** Creates a new StartIntake. */
   private final IntakeSubsystem intake;
 
-  public StartIntakeCmd(IntakeSubsystem intake) {
+  public IntakeCmd(IntakeSubsystem intake) {
     this.intake = intake;
     addRequirements(this.intake);
 
