@@ -14,47 +14,23 @@ public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
   private final VictorSPX intakeMotor1;
   private final VictorSPX intakeMotor2;
-  private double setIntakeMotor1age = 0.0;
-  private double setIntakeMotor2age = 0.0;
-  private boolean intakecondition = true;
 
   public IntakeSubsystem() {
     intakeMotor1 = new VictorSPX(IntakeConstants.kintakeonePWMID);
     intakeMotor2 = new VictorSPX(IntakeConstants.kintaketwoPWMID);
-    SmartDashboard.putNumber("setIntakeMotor1persentage", setIntakeMotor1age);
-    SmartDashboard.putNumber("setIntakeMotor2persentage", setIntakeMotor2age);
-
+    intakeMotor2.follow(intakeMotor1);
   }
 
   public void setpersentage() {
     intakeMotor1.set(ControlMode.PercentOutput,setIntakeMotor1age);
-    intakeMotor2.set(ControlMode.PercentOutput,setIntakeMotor2age);
   }
 
   public void stopMotor() {
     intakeMotor1.set(ControlMode.PercentOutput,0);
-    intakeMotor2.set(ControlMode.PercentOutput,0);
   }
-
-  public void setIntakecondition() {
-    if (intakecondition) {
-      setpersentage();
-    } else {
-      stopMotor();
-    }
-    intakecondition = !intakecondition;
-  }
-
-  public void getDashboard() {
-    setIntakeMotor1age = SmartDashboard.getNumber("setIntakeMotor1presentage", 0.0);
-    setIntakeMotor2age = SmartDashboard.getNumber("setIntakeMotor2persentage", 0.0);
-
-  }
-
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    getDashboard();
   }
 }

@@ -4,17 +4,12 @@
 
 package frc.robot.Subsystem;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RiseShooterConstants;
 
 public class RiseShooterSubsytem extends SubsystemBase {
@@ -27,10 +22,10 @@ public class RiseShooterSubsytem extends SubsystemBase {
   public RiseShooterSubsytem() {
     riseMotor = new VictorSPX(RiseShooterConstants.kRiseShooterPWMID);
 
-    riseEncoder = new Encoder(0, 0);
+    riseEncoder = new Encoder(0, 1);
     angleDegreeOffset = RiseShooterConstants.kriseInitAngleDegree;
 
-    risePID = new PIDController(0, 0, 0);
+    risePID = new PIDController(1, 0, 0);
 
     riseMotor.setInverted(RiseShooterConstants.kRiseShooterInvert);
 
@@ -38,18 +33,17 @@ public class RiseShooterSubsytem extends SubsystemBase {
   }
 
   public void riseShooterControl(double RiseSpeed) {
-    riseMotor.set(ControlMode.PercentOutput, RiseSpeed);;
+    riseMotor.set(ControlMode.PercentOutput, RiseSpeed);
     risePID.setSetpoint(getAngleDegree());
   }
 
   public void pidControl() {
-    var riseVolt = risePID.calculate(getAngleDegree());
-
+    double riseVolt = risePID.calculate(getAngleDegree());
     double modifiedRiseVolt = riseVolt;
     if (Math.abs(modifiedRiseVolt) > RiseShooterConstants.kriseVoltLimit) {
       modifiedRiseVolt = RiseShooterConstants.kriseVoltLimit * (riseVolt > 0 ? 1 : -1);
     }
-    riseMotor.set(ControlMode.PercentOutput,0.0);
+    riseMotor.set(ControlMode.PercentOutput, 0.0);
 
     SmartDashboard.putNumber("rise_volt", modifiedRiseVolt);
   }
@@ -59,7 +53,7 @@ public class RiseShooterSubsytem extends SubsystemBase {
   }
 
   public void setSetpoint(double setpoint) {
-    final var currentSetpoint = getSetpoint();
+    final double currentSetpoint = getSetpoint();
     if (isPhyLimitExceed(currentSetpoint) != 0) {
       return;
     }
@@ -86,9 +80,10 @@ public class RiseShooterSubsytem extends SubsystemBase {
     risePID.setSetpoint(0);
   }
 
-  public void stopMotor(){
-    riseMotor.set(ControlMode.PercentOutput,0.0);
+  public void stopMotor() {
+    riseMotor.set(ControlMode.PercentOutput, 0.0);
   }
+
   private int isPhyLimitExceed(double angle) {
     return (angle < RiseShooterConstants.kriseAngleMin ? -1 : (angle > RiseShooterConstants.kriseAngleMax ? 1 : 0));
   }
@@ -96,7 +91,5 @@ public class RiseShooterSubsytem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putData("rise_PID", risePID);
-    // SmartDashboard.putData("rise_motor", riseMotor);
-    // This method will be called once per scheduler run
   }
 }
