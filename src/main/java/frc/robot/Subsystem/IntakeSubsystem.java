@@ -21,8 +21,6 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     intakeMotor1 = new VictorSPX(IntakeConstants.kintakeonePWMID);
     intakeMotor2 = new VictorSPX(IntakeConstants.kintaketwoPWMID);
-    intakeMotor1.setInverted(IntakeConstants.kintakeoneInvert);
-    intakeMotor2.setInverted(IntakeConstants.kintaketwoInvert);
     SmartDashboard.putNumber("setIntakeMotor1persentage", setIntakeMotor1age);
     SmartDashboard.putNumber("setIntakeMotor2persentage", setIntakeMotor2age);
 
