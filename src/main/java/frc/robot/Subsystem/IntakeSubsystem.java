@@ -6,7 +6,6 @@ package frc.robot.Subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -19,10 +18,11 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotor1 = new VictorSPX(IntakeConstants.kintakeonePWMID);
     intakeMotor2 = new VictorSPX(IntakeConstants.kintaketwoPWMID);
     intakeMotor2.follow(intakeMotor1);
+  
   }
 
   public void setpersentage() {
-    intakeMotor1.set(ControlMode.PercentOutput,setIntakeMotor1age);
+    intakeMotor1.set(ControlMode.PercentOutput,0.5);
   }
 
   public void stopMotor() {

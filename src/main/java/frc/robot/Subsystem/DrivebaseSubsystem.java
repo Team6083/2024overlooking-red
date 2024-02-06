@@ -5,6 +5,8 @@
 package frc.robot.Subsystem;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -76,6 +78,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   public void resetgyro() {
     gyro.reset();
+  }
+  public Rotation2d getRotation2d() {
+    return Rotation2d.fromDegrees(DrivebaseConstants.kGyroOffSet+((DrivebaseConstants.kGyroInverted) ? (360.0 - gyro.getRotation2d().getDegrees())
+        : gyro.getRotation2d().getDegrees()));
   }
 
   /**
