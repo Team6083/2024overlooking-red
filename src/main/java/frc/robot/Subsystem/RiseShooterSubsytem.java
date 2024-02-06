@@ -26,13 +26,13 @@ public class RiseShooterSubsytem extends SubsystemBase {
     riseMotor = new VictorSPX(RiseShooterConstants.kRiseShooterPWMID);
 
     riseEncoder = new Encoder(0, 0);
-    angleDegreeOffset = RiseShooterConstants.riseInitAngleDegree;
+    angleDegreeOffset = RiseShooterConstants.kriseInitAngleDegree;
 
     risePID = new PIDController(0, 0, 0);
 
     riseMotor.setInverted(RiseShooterConstants.kRiseShooterInvert);
 
-    riseEncoder.setDistancePerPulse(360 / RiseShooterConstants.riseEncoderPulse);
+    riseEncoder.setDistancePerPulse(360 / RiseShooterConstants.kriseEncoderPulse);
   }
 
   public void riseShooterControl(double RiseSpeed) {
@@ -44,8 +44,8 @@ public class RiseShooterSubsytem extends SubsystemBase {
     var riseVolt = risePID.calculate(getAngleDegree());
 
     double modifiedRiseVolt = riseVolt;
-    if (Math.abs(modifiedRiseVolt) > RiseShooterConstants.riseVoltLimit) {
-      modifiedRiseVolt = RiseShooterConstants.riseVoltLimit * (riseVolt > 0 ? 1 : -1);
+    if (Math.abs(modifiedRiseVolt) > RiseShooterConstants.kriseVoltLimit) {
+      modifiedRiseVolt = RiseShooterConstants.kriseVoltLimit * (riseVolt > 0 ? 1 : -1);
     }
     riseMotor.setVoltage(modifiedRiseVolt);
 
@@ -63,9 +63,9 @@ public class RiseShooterSubsytem extends SubsystemBase {
     }
 
     if (isPhyLimitExceed(setpoint) == -1) {
-      setpoint = RiseShooterConstants.riseAngleMin;
+      setpoint = RiseShooterConstants.kriseAngleMin;
     } else if (isPhyLimitExceed(setpoint) == 1) {
-      setpoint = RiseShooterConstants.riseAngleMax;
+      setpoint = RiseShooterConstants.kriseAngleMax;
     }
     risePID.setSetpoint(setpoint);
   }
@@ -84,8 +84,11 @@ public class RiseShooterSubsytem extends SubsystemBase {
     risePID.setSetpoint(0);
   }
 
+  public void stopMotor(){
+    riseMotor.set(0);
+  }
   private int isPhyLimitExceed(double angle) {
-    return (angle < RiseShooterConstants.riseAngleMin ? -1 : (angle > RiseShooterConstants.riseAngleMax ? 1 : 0));
+    return (angle < RiseShooterConstants.kriseAngleMin ? -1 : (angle > RiseShooterConstants.kriseAngleMax ? 1 : 0));
   }
 
   @Override
