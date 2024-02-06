@@ -18,6 +18,11 @@ public final class Constants {
     public static class RiseShooterConstants {
         public static final int kRiseShooterPWMID = 11;
         public static final Boolean kRiseShooterInvert = false;
+        public static final double riseVoltLimit = 4;
+        public static final double riseAngleMin = 0;
+        public static final double riseAngleMax = 45;
+        public static final double riseEncoderPulse = 2048;
+        public static final double riseInitAngleDegree = 0;
     }
 
     public static class DrivebaseConstants {
