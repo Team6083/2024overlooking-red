@@ -36,7 +36,7 @@ public class RiseShooterSubsytem extends SubsystemBase {
   }
 
   public void riseShooterControl(double RiseSpeed) {
-    riseMotor.set(RiseSpeed);
+    riseMotor.set(ControlMode.PercentOutput,RiseSpeed);
     risePID.setSetpoint(getAngleDegree());
   }
 
@@ -47,7 +47,7 @@ public class RiseShooterSubsytem extends SubsystemBase {
     if (Math.abs(modifiedRiseVolt) > RiseShooterConstants.kriseVoltLimit) {
       modifiedRiseVolt = RiseShooterConstants.kriseVoltLimit * (riseVolt > 0 ? 1 : -1);
     }
-    riseMotor.setVoltage(modifiedRiseVolt);
+    riseMotor.setVoltage(ControlMode.PercentOutput,modifiedRiseVolt);
 
     SmartDashboard.putNumber("rise_volt", modifiedRiseVolt);
   }
@@ -85,7 +85,7 @@ public class RiseShooterSubsytem extends SubsystemBase {
   }
 
   public void stopMotor(){
-    riseMotor.set(0);
+    riseMotor.set(ControlMode.PercentOutput,0);
   }
   private int isPhyLimitExceed(double angle) {
     return (angle < RiseShooterConstants.kriseAngleMin ? -1 : (angle > RiseShooterConstants.kriseAngleMax ? 1 : 0));
