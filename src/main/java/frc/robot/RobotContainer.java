@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Command.RiseStooterCmd;
+import frc.robot.Command.RiseShooterCmd;
 import frc.robot.Command.ShootManualCmd;
 import frc.robot.Command.ShootPIDCmd;
 import frc.robot.Command.StartIntakeCmd;
@@ -20,13 +20,19 @@ public class RobotContainer {
   private final CommandXboxController main;
   private final ShooterSubsystem shooter;
   private final IntakeSubsystem intake;
-  private final RiseShooterSubsytem RiseMotor;
+  private final RiseShooterSubsytem riseMotor;
+
+  double mainLeftTriggerValue;
+  double mainRightTrigggerValue;
 
   public RobotContainer() {
     main = new CommandXboxController(XboxControllerConstants.kxbox);
     shooter = new ShooterSubsystem();
     intake = new IntakeSubsystem();
-    RiseMotor = new RiseShooterSubsytem();
+    riseMotor = new RiseShooterSubsytem();
+
+    mainLeftTriggerValue = main.getLeftTriggerAxis();
+    mainRightTrigggerValue = main.getRightTriggerAxis();
     configureBindings();
 
   }
@@ -35,7 +41,7 @@ public class RobotContainer {
     main.y().and(main.y()).toggleOnTrue(new StartIntakeCmd(intake));
     main.a().and(main.a()).toggleOnTrue(new ShootManualCmd(shooter));
     main.a().and(main.a().negate()).toggleOnTrue(new ShootPIDCmd(shooter));
-    main.x().and(main.x()).toggleOnTrue(new RiseStooterCmd(RiseMotor));
+    main.x().and(main.x()).toggleOnTrue(new RiseShooterCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
   }
 
   public Command getAutonomousCommand() {
