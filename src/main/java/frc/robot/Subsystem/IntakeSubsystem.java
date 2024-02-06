@@ -22,7 +22,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setpersentage() {
-    intakeMotor1.set(ControlMode.PercentOutput,0.5);
+    intakeMotor1.set(ControlMode.PercentOutput,IntakeConstants.IntakePresentage);
   }
 
   public void stopMotor() {
