@@ -67,10 +67,6 @@ public class RiseShooterSubsystem extends SubsystemBase {
 
     // add calculate 
   }
-  public void setAngleSetpoint(double angleSetPoint) {
-    setSetpoint(angleSetPoint);
-    return;
-  }
 
   public double getAngleDegree() {
     SmartDashboard.putNumber("riseEncoderPos", riseEncoder.getDistance());
