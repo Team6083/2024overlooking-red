@@ -31,7 +31,7 @@ public class RiseShooterPIDCmd extends Command {
   @Override
   public void execute() {
     armAngleModify = (leftTriggerValue - rightTriggerValue) * -0.7;
-    riseShooterSubsystem.setAngleSetpoint(riseShooterSubsystem.getSetpoint() + armAngleModify);
+    riseShooterSubsystem.setSetpoint(riseShooterSubsystem.getSetpoint() + armAngleModify);
     riseShooterSubsystem.pidControl();
   }
 
