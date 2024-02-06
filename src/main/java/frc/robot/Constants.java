@@ -1,6 +1,9 @@
 package frc.robot;
 
 public final class Constants {
+    public static class XboxControllerConstants {
+        public static final int kxbox = 0;
+    }
     public static class ShooterConstants {
         public static final int kUpPWMID = 1;
         public static final int kDownPWMID = 3;
