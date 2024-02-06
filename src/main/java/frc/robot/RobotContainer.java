@@ -28,9 +28,6 @@ public class RobotContainer {
   private final RiseShooterSubsytem riseMotor;
   private final DrivebaseSubsystem drivebase;
 
-  private final PowerDistribution pd ;
-  private double[] chassisSpeeds;
-
   double mainLeftTriggerValue;
   double mainRightTrigggerValue;
 
@@ -39,8 +36,7 @@ public class RobotContainer {
     shooter = new ShooterSubsystem();
     intake = new IntakeSubsystem();
     riseMotor = new RiseShooterSubsytem();
-    pd = new PowerDistribution();
-    chassisSpeeds = new double[3];
+    drivebase = new DrivebaseSubsystem();
 
     mainLeftTriggerValue = main.getLeftTriggerAxis();
     mainRightTrigggerValue = main.getRightTriggerAxis();
