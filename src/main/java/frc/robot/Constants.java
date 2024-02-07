@@ -20,7 +20,7 @@ public final class Constants {
         public static final double kIntakePrecentage = 0.5;
 
         public static final Boolean kIntakeOneInverted = false;
-        public static final Boolean kIntakeTwoInverted = false;
+        public static final Boolean kIntakeTwoInverted = true;
     }
 
     public static class RiseShooterConstants {
