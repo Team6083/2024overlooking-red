@@ -21,9 +21,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private final PIDController upPidController;
   private final PIDController downPidController;
 
-  private double rateToUpMotorPower = 0.0;
-  private double rateToDownMotorPower = 0.0;
-
   public ShooterSubsystem() {
 
     shootUpMotor = new VictorSPX(ShooterConstants.kUpPWMID);
@@ -58,8 +55,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setPIDRate() {
-    rateToUpMotorPower += upPidController.calculate(upEncoder.getRate());
-    rateToDownMotorPower += downPidController.calculate(downEncoder.getRate());
+    final double rateToUpMotorPower = shootUpMotor.getMotorOutputPercent()+upPidController.calculate(upEncoder.getRate());
+    final double rateToDownMotorPower = shootDownMotor.getMotorOutputPercent()+downPidController.calculate(downEncoder.getRate());
     shootUpMotor.set(ControlMode.PercentOutput, rateToUpMotorPower);
     shootDownMotor.set(ControlMode.PercentOutput, rateToDownMotorPower);
   }

@@ -21,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
   
   }
 
-  public void setPercentage() {
+  public void setPrecentage() {
     intakeMotor1.set(ControlMode.PercentOutput,IntakeConstants.kIntakePrecentage);
   }
 
