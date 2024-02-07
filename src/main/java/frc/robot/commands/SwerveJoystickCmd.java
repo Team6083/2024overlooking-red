@@ -2,13 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Command;
+package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DrivebaseConstants;
-import frc.robot.Subsystem.DrivebaseSubsystem;
+import frc.robot.subsystems.DrivebaseSubsystem;
 
 public class SwerveJoystickCmd extends Command {
   /** Creates a new SwerveTest1ManualCmd. */

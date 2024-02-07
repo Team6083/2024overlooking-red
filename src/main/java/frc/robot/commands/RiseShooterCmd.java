@@ -2,43 +2,43 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Command;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystem.RiseShooterSubsystem;
+import frc.robot.Constants.RiseShooterConstants;
+import frc.robot.subsystems.RiseShooterSubsystem;
 
-public class RiseShooterPIDCmd extends Command {
-  private final RiseShooterSubsystem riseShooterSubsystem;
+public class RiseShooterCmd extends Command {
+  /** Creates a new RiseStooterCmd. */
+  private final RiseShooterSubsystem riseShooterSubsytem;
   private double leftTriggerValue;
   private double rightTriggerValue;
-  private double armAngleModify;
-  /** Creates a new RiseShooterPIDCmd. */
-  public RiseShooterPIDCmd(RiseShooterSubsystem riseShooterSubsystem, double mainLeftTrigger, double mainRightTrigger) {
-    this.riseShooterSubsystem = riseShooterSubsystem;
+
+  public RiseShooterCmd(RiseShooterSubsystem riseShooterSubsytem, double mainLeftTrigger, double mainRightTrigger) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this.riseShooterSubsytem = riseShooterSubsytem;
     this.leftTriggerValue = mainLeftTrigger;
     this.rightTriggerValue = mainRightTrigger;
-    addRequirements(this.riseShooterSubsystem);
-    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(this.riseShooterSubsytem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    riseShooterSubsystem.stopMotor();
+    riseShooterSubsytem.stopMotor();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armAngleModify = (leftTriggerValue - rightTriggerValue) * -0.7;
-    riseShooterSubsystem.setSetpoint(riseShooterSubsystem.getSetpoint() + armAngleModify);
-    riseShooterSubsystem.pidControl();
+    double risePower = (leftTriggerValue - rightTriggerValue) * RiseShooterConstants.kriseTriggerValue;
+    riseShooterSubsytem.riseShooterControl(risePower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    riseShooterSubsystem.stopMotor();
+    riseShooterSubsytem.stopMotor();
   }
 
   // Returns true when the command should end.
