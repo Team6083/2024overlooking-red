@@ -32,9 +32,29 @@ public class RiseShooterSubsystem extends SubsystemBase {
     riseEncoder.setDistancePerPulse(360 / RiseShooterConstants.kriseEncoderPulse);
   }
 
-  public void riseShooterControl(double RiseSpeed) {
+  public void manualControl(double RiseSpeed) {
     riseMotor.set(ControlMode.PercentOutput, RiseSpeed);
     risePID.setSetpoint(getAngleDegree());
+  }
+
+  public double getSetpoint() {
+    return risePID.getSetpoint();
+  }
+
+  public void setSetpoint(double setpoint) {
+    final double currentSetpoint = getSetpoint();
+    if (isPhyLimitExceed(currentSetpoint) != 0) {
+      risePID.setSetpoint((isPhyLimitExceed(currentSetpoint)) == 1 ? RiseShooterConstants.kriseAngleMax
+          : RiseShooterConstants.kriseAngleMin);
+      return;
+    }
+    setpoint += currentSetpoint;
+    if (isPhyLimitExceed(setpoint) == -1) {
+      setpoint = RiseShooterConstants.kriseAngleMin;
+    } else if (isPhyLimitExceed(setpoint) == 1) {
+      setpoint = RiseShooterConstants.kriseAngleMax;
+    }
+    risePID.setSetpoint(setpoint);
   }
 
   public void pidControl() {
@@ -46,26 +66,6 @@ public class RiseShooterSubsystem extends SubsystemBase {
     riseMotor.set(ControlMode.PercentOutput, riseVolt);
 
     SmartDashboard.putNumber("rise_volt", modifiedRiseVolt);
-  }
-
-  public double getSetpoint() {
-    return risePID.getSetpoint();
-  }
-
-  public void setSetpoint(double setpoint) {
-    final double currentSetpoint = getSetpoint();
-    if (isPhyLimitExceed(currentSetpoint) != 0) {
-      return;
-    }
-
-    if (isPhyLimitExceed(setpoint) == -1) {
-      setpoint = RiseShooterConstants.kriseAngleMin;
-    } else if (isPhyLimitExceed(setpoint) == 1) {
-      setpoint = RiseShooterConstants.kriseAngleMax;
-    }
-    risePID.setSetpoint(setpoint);
-
-    // add calculate 
   }
 
   public double getAngleDegree() {

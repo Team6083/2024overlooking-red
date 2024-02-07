@@ -10,6 +10,8 @@ public final class Constants {
         public static final int kDownPWMID = 3;
         public static final Boolean kUpMotorInvert = false;
         public static final Boolean kDownMotorInvert = false;
+        public static final double kUpMotorPower = 0.8;
+        public static final double kDownMotorPower = 0.8;
     }
 
     public static class IntakeConstants {

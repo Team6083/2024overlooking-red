@@ -21,9 +21,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private final PIDController upPidController;
   private final PIDController downPidController;
 
-  private double inputUpMotorPercentage = 0.0;
-  private double inputDownMotorPercentage = 0.0;
-  private double rateToUpMotorPower =  0.0;
+  private double rateToUpMotorPower = 0.0;
   private double rateToDownMotorPower = 0.0;
 
   public ShooterSubsystem() {
@@ -40,16 +38,30 @@ public class ShooterSubsystem extends SubsystemBase {
     shootUpMotor.setInverted(ShooterConstants.kUpMotorInvert);
     shootDownMotor.setInverted(ShooterConstants.kDownMotorInvert);
 
-    SmartDashboard.putNumber("UpMotorPercentage", inputUpMotorPercentage);
-    SmartDashboard.putNumber("DownMotorPercentage", inputDownMotorPercentage);
-
     upEncoder.reset();
     downEncoder.reset();
   }
 
-  public void setPercentage() {
-    shootUpMotor.set(ControlMode.PercentOutput, inputUpMotorPercentage);
-    shootDownMotor.set(ControlMode.PercentOutput, inputDownMotorPercentage);
+  public void setManualPercentage() {
+    shootUpMotor.set(ControlMode.PercentOutput, ShooterConstants.kUpMotorPower);
+    shootDownMotor.set(ControlMode.PercentOutput, ShooterConstants.kDownMotorPower);
+  }
+
+  public void setPIDPercentage(double distance) {
+    shootUpMotor.set(ControlMode.PercentOutput, distance);
+    shootDownMotor.set(ControlMode.PercentOutput, distance);
+  }
+
+  public void setSetpoint(double distance) {
+    upPidController.setSetpoint(distance);
+    downPidController.setSetpoint(distance);
+  }
+
+  public void setPIDRate() {
+    rateToUpMotorPower += upPidController.calculate(upEncoder.getRate());
+    rateToDownMotorPower += downPidController.calculate(downEncoder.getRate());
+    shootUpMotor.set(ControlMode.PercentOutput, rateToUpMotorPower);
+    shootDownMotor.set(ControlMode.PercentOutput, rateToDownMotorPower);
   }
 
   public void stopMotor() {
@@ -57,27 +69,9 @@ public class ShooterSubsystem extends SubsystemBase {
     shootDownMotor.set(ControlMode.PercentOutput, 0);
   }
 
-  public void setPIDControl() {
-    rateToUpMotorPower += upPidController.calculate(upEncoder.getRate());
-    rateToDownMotorPower += downPidController.calculate(downEncoder.getRate());
-    shootUpMotor.set(ControlMode.PercentOutput, rateToUpMotorPower);
-    shootDownMotor.set(ControlMode.PercentOutput, rateToDownMotorPower);
-  }
-
-  public void setSetpoint(double distance){
-    upPidController.setSetpoint(distance);
-    downPidController.setSetpoint(distance);
-  }
-
-  public void getDashboard() {
-    inputUpMotorPercentage = SmartDashboard.getNumber("UpMotorPercentage", 0.0);
-    inputDownMotorPercentage = SmartDashboard.getNumber("DownMotorPercentage", 0.0);
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    getDashboard();
     SmartDashboard.putNumber("upRate", upEncoder.getRate() / 2048.0);
     SmartDashboard.putNumber("downRate", downEncoder.getRate() / 2048.0);
   }
