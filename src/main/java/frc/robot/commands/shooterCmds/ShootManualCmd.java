@@ -2,11 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-<<<<<<<< HEAD:src/main/java/frc/robot/commands/ShootManualCmd.java
-package frc.robot.commands;
-========
-package frc.robot.Command.ShooterCommand;
->>>>>>>> 43c1ff3 ([mod] check):src/main/java/frc/robot/Command/ShooterCommand/ShootManualCmd.java
+package frc.robot.commands.shooterCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;

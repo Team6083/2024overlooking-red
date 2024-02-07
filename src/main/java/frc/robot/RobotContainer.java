@@ -7,17 +7,17 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Command.SwerveJoystickCmd;
-import frc.robot.Command.RiseShooterCommand.RiseShooterCmd;
-import frc.robot.Command.ShooterCommand.ShootManualCmd;
-import frc.robot.Command.ShooterCommand.ShootPIDCmd;
-import frc.robot.Command.GyroresetCmd;
-import frc.robot.Command.IntakeCmd;
+import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
+import frc.robot.commands.shooterCmds.ShootManualCmd;
+import frc.robot.commands.shooterCmds.ShootPIDCmd;
+import frc.robot.commands.GyroresetCmd;
+import frc.robot.commands.IntakeCmd;
 import frc.robot.Constants.XboxControllerConstants;
-import frc.robot.Subsystem.DrivebaseSubsystem;
-import frc.robot.Subsystem.IntakeSubsystem;
-import frc.robot.Subsystem.RiseShooterSubsystem;
-import frc.robot.Subsystem.ShooterSubsystem;
+import frc.robot.subsystems.DrivebaseSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.RiseShooterSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class RobotContainer {
   private final CommandXboxController main;
@@ -46,7 +46,7 @@ public class RobotContainer {
     main.y().toggleOnTrue(new IntakeCmd(intake));
     main.x().and(main.a()).toggleOnTrue(new ShootManualCmd(shooter));
     main.x().and(main.a().negate()).toggleOnTrue(new ShootPIDCmd(shooter));
-    riseMotor.setDefaultCommand(new RiseShooterCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
+    riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
     drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
     main.b().onTrue(new GyroresetCmd(drivebase) );
   }
