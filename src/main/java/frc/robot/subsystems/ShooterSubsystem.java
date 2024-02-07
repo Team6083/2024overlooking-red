@@ -35,13 +35,17 @@ public class ShooterSubsystem extends SubsystemBase {
     shootUpMotor.setInverted(ShooterConstants.kUpMotorInverted);
     shootDownMotor.setInverted(ShooterConstants.kDownMotorInverted);
 
-    upEncoder.reset();
-    downEncoder.reset();
+    resetEncoder();
   }
 
   public void setManualPercentage() {
     shootUpMotor.set(ControlMode.PercentOutput, ShooterConstants.kUpMotorPower);
     shootDownMotor.set(ControlMode.PercentOutput, ShooterConstants.kDownMotorPower);
+  }
+
+  public void resetEncoder() {
+    upEncoder.reset();
+    downEncoder.reset();
   }
 
   public void setPIDPercentage(double distance) {
@@ -55,8 +59,10 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setPIDRate() {
-    final double rateToUpMotorPower = shootUpMotor.getMotorOutputPercent()+upPidController.calculate(upEncoder.getRate());
-    final double rateToDownMotorPower = shootDownMotor.getMotorOutputPercent()+downPidController.calculate(downEncoder.getRate());
+    final double rateToUpMotorPower = shootUpMotor.getMotorOutputPercent()
+        + upPidController.calculate(upEncoder.getRate());
+    final double rateToDownMotorPower = shootDownMotor.getMotorOutputPercent()
+        + downPidController.calculate(downEncoder.getRate());
     shootUpMotor.set(ControlMode.PercentOutput, rateToUpMotorPower);
     shootDownMotor.set(ControlMode.PercentOutput, rateToDownMotorPower);
   }
