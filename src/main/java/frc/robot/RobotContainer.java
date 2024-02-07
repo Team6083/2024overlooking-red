@@ -30,7 +30,7 @@ public class RobotContainer {
   double mainRightTrigggerValue;
 
   public RobotContainer() {
-    main = new CommandXboxController(XboxControllerConstants.kxbox);
+    main = new CommandXboxController(XboxControllerConstants.kMain);
     shooter = new ShooterSubsystem();
     intake = new IntakeSubsystem();
     riseMotor = new RiseShooterSubsystem();

@@ -6,9 +6,9 @@ package frc.robot.commands.riseShooterCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class riseShooterTrakingCmd extends Command {
+public class RiseShooterTrakingCmd extends Command {
   /** Creates a new riseShooterTrakingCmd. */
-  public riseShooterTrakingCmd() {
+  public RiseShooterTrakingCmd() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

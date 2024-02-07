@@ -23,13 +23,13 @@ public class RiseShooterSubsystem extends SubsystemBase {
     riseMotor = new VictorSPX(RiseShooterConstants.kRiseShooterPWMID);
 
     riseEncoder = new Encoder(0, 1);
-    angleDegreeOffset = RiseShooterConstants.kriseInitAngleDegree;
+    angleDegreeOffset = RiseShooterConstants.kRiseInitAngleDegree;
 
     risePID = new PIDController(1, 0, 0);
 
-    riseMotor.setInverted(RiseShooterConstants.kRiseShooterInvert);
+    riseMotor.setInverted(RiseShooterConstants.kRiseShooterInverted);
 
-    riseEncoder.setDistancePerPulse(360 / RiseShooterConstants.kriseEncoderPulse);
+    riseEncoder.setDistancePerPulse(360 / RiseShooterConstants.kRiseEncoderPulse);
   }
 
   public void manualControl(double RiseSpeed) {
@@ -44,15 +44,15 @@ public class RiseShooterSubsystem extends SubsystemBase {
   public void setSetpoint(double setpoint) {
     final double currentSetpoint = getSetpoint();
     if (isPhyLimitExceed(currentSetpoint) != 0) {
-      risePID.setSetpoint((isPhyLimitExceed(currentSetpoint)) == 1 ? RiseShooterConstants.kriseAngleMax
-          : RiseShooterConstants.kriseAngleMin);
+      risePID.setSetpoint((isPhyLimitExceed(currentSetpoint)) == 1 ? RiseShooterConstants.kRiseAngleMax
+          : RiseShooterConstants.kRiseAngleMin);
       return;
     }
     setpoint += currentSetpoint;
     if (isPhyLimitExceed(setpoint) == -1) {
-      setpoint = RiseShooterConstants.kriseAngleMin;
+      setpoint = RiseShooterConstants.kRiseAngleMin;
     } else if (isPhyLimitExceed(setpoint) == 1) {
-      setpoint = RiseShooterConstants.kriseAngleMax;
+      setpoint = RiseShooterConstants.kRiseAngleMax;
     }
     risePID.setSetpoint(setpoint);
   }
@@ -60,8 +60,8 @@ public class RiseShooterSubsystem extends SubsystemBase {
   public void pidControl() {
     double riseVolt = risePID.calculate(getAngleDegree());
     double modifiedRiseVolt = riseVolt;
-    if (Math.abs(modifiedRiseVolt) > RiseShooterConstants.kriseVoltLimit) {
-      modifiedRiseVolt = RiseShooterConstants.kriseVoltLimit * (riseVolt > 0 ? 1 : -1);
+    if (Math.abs(modifiedRiseVolt) > RiseShooterConstants.kRiseVoltLimit) {
+      modifiedRiseVolt = RiseShooterConstants.kRiseVoltLimit * (riseVolt > 0 ? 1 : -1);
     }
     riseMotor.set(ControlMode.PercentOutput, riseVolt);
 
@@ -87,7 +87,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   private int isPhyLimitExceed(double angle) {
-    return (angle < RiseShooterConstants.kriseAngleMin ? -1 : (angle > RiseShooterConstants.kriseAngleMax ? 1 : 0));
+    return (angle < RiseShooterConstants.kRiseAngleMin ? -1 : (angle > RiseShooterConstants.kRiseAngleMax ? 1 : 0));
   }
 
   @Override

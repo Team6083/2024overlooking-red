@@ -15,14 +15,14 @@ public class IntakeSubsystem extends SubsystemBase {
   private final VictorSPX intakeMotor2;
 
   public IntakeSubsystem() {
-    intakeMotor1 = new VictorSPX(IntakeConstants.kintakeonePWMID);
-    intakeMotor2 = new VictorSPX(IntakeConstants.kintaketwoPWMID);
+    intakeMotor1 = new VictorSPX(IntakeConstants.kIntakeOnePWMID);
+    intakeMotor2 = new VictorSPX(IntakeConstants.kIntakeTwoPWMID);
     intakeMotor2.follow(intakeMotor1);
   
   }
 
-  public void setpersentage() {
-    intakeMotor1.set(ControlMode.PercentOutput,IntakeConstants.IntakePresentage);
+  public void setPercentage() {
+    intakeMotor1.set(ControlMode.PercentOutput,IntakeConstants.kIntakePrecentage);
   }
 
   public void stopMotor() {

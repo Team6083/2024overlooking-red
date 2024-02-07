@@ -2,36 +2,36 @@ package frc.robot;
 
 public final class Constants {
     public static class XboxControllerConstants {
-        public static final int kxbox = 0;
+        public static final int kMain = 0;
     }
 
     public static class ShooterConstants {
         public static final int kUpPWMID = 1;
         public static final int kDownPWMID = 3;
-        public static final Boolean kUpMotorInvert = false;
-        public static final Boolean kDownMotorInvert = false;
+        public static final Boolean kUpMotorInverted = false;
+        public static final Boolean kDownMotorInverted = false;
         public static final double kUpMotorPower = 0.8;
         public static final double kDownMotorPower = 0.8;
     }
 
     public static class IntakeConstants {
-        public static final int kintakeonePWMID = 2;
-        public static final int kintaketwoPWMID = 0;
-        public static final double IntakePresentage = 0.5;
+        public static final int kIntakeOnePWMID = 2;
+        public static final int kIntakeTwoPWMID = 0;
+        public static final double kIntakePrecentage = 0.5;
 
-        public static final Boolean kintakeoneInvert = false;
-        public static final Boolean kintaketwoInvert = false;
+        public static final Boolean kIntakeOneInverted = false;
+        public static final Boolean kIntakeTwoInverted = false;
     }
 
     public static class RiseShooterConstants {
         public static final int kRiseShooterPWMID = 11;
-        public static final Boolean kRiseShooterInvert = false;
-        public static final double kriseVoltLimit = 4;
-        public static final double kriseAngleMin = 0;
-        public static final double kriseAngleMax = 45;
-        public static final double kriseEncoderPulse = 2048;
-        public static final double kriseInitAngleDegree = 0;
-        public static final double kriseTriggerValue = 0.15;
+        public static final Boolean kRiseShooterInverted = false;
+        public static final double kRiseVoltLimit = 4;
+        public static final double kRiseAngleMin = 0;
+        public static final double kRiseAngleMax = 45;
+        public static final double kRiseEncoderPulse = 2048;
+        public static final double kRiseInitAngleDegree = 0;
+        public static final double kRiseTriggerValue = 0.15;
     }
 
     public static class OperatorConstants {

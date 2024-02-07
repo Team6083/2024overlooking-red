@@ -35,8 +35,8 @@ public class ShooterSubsystem extends SubsystemBase {
     upPidController = new PIDController(0.002, 0, 0);
     downPidController = new PIDController(0.002, 0, 0);
 
-    shootUpMotor.setInverted(ShooterConstants.kUpMotorInvert);
-    shootDownMotor.setInverted(ShooterConstants.kDownMotorInvert);
+    shootUpMotor.setInverted(ShooterConstants.kUpMotorInverted);
+    shootDownMotor.setInverted(ShooterConstants.kDownMotorInverted);
 
     upEncoder.reset();
     downEncoder.reset();

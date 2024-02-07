@@ -31,7 +31,7 @@ public class RiseShooterManualCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double risePower = (leftTriggerValue - rightTriggerValue) * RiseShooterConstants.kriseTriggerValue;
+    double risePower = (leftTriggerValue - rightTriggerValue) * RiseShooterConstants.kRiseTriggerValue;
     riseShooterSubsytem.manualControl(risePower);
   }
 
