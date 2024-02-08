@@ -23,12 +23,12 @@ import frc.robot.subsystems.drive.DrivebaseSubsystem;
 public class RobotContainer {
   private final CommandXboxController main;
   private final ShooterSubsystem shooter;
-  private final IntakeSubsystem intake;
-  private final RiseShooterSubsystem riseMotor;
-  private final DrivebaseSubsystem drivebase;
+  // private final IntakeSubsystem intake;
+  // private final RiseShooterSubsystem riseMotor;
+  // private final DrivebaseSubsystem drivebase;
 
-  double mainLeftTriggerValue;
-  double mainRightTrigggerValue;
+  // double mainLeftTriggerValue;
+  // double mainRightTrigggerValue;
 
   public RobotContainer() {
     main = new CommandXboxController(XboxControllerConstants.kMain);
