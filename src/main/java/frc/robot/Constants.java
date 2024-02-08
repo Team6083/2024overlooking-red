@@ -6,18 +6,22 @@ public final class Constants {
     }
 
     public static class ShooterConstants {
-        public static final int kShooterUpChannel = 4;
-        public static final int kShooterDownChannel = 5;
+        public static final int kShooterUpChannel = 3;
+        public static final int kShooterDownChannel = 2;
         public static final Boolean kUpMotorInverted = false;
-        public static final Boolean kDownMotorInverted = true;
+        public static final Boolean kDownMotorInverted = false;
         public static final double kUpMotorPower = 0.8;
         public static final double kDownMotorPower = 0.8;
     }
 
+    public static class TransportConstants{
+        public static final int kTrantsportChannel = 1;
+    }
+
     public static class IntakeConstants {
-        public static final int kIntakeUpChannel = 2;
+        public static final int kIntakeUpChannel = 4;
         public static final int kIntakeDownChannel = 0;
-        public static final double kIntakePrecentage = 0.5;
+        public static final double kIntakePrecentage = -0.4;
         public static final Boolean kIntakeUpInverted = false;
         public static final Boolean kIntakeDownInverted = true;
     }

@@ -46,7 +46,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setManualPercentage() {
-    double voltage = SmartDashboard.getNumber("shooter_Voltage", 0.0);
+    double voltage = 10;
     shootUpMotor.setVoltage(voltage);
     shootDownMotor.setVoltage(voltage);
   }
