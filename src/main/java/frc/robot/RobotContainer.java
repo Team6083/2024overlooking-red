@@ -11,6 +11,7 @@ import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.shooterCmds.ShootManualCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
+import frc.robot.commands.shooterCmds.ShooterTestCmd;
 import frc.robot.commands.GyroresetCmd;
 import frc.robot.commands.IntakeCmd;
 import frc.robot.Constants.XboxControllerConstants;
@@ -32,23 +33,24 @@ public class RobotContainer {
   public RobotContainer() {
     main = new CommandXboxController(XboxControllerConstants.kMain);
     shooter = new ShooterSubsystem();
-    intake = new IntakeSubsystem();
-    riseMotor = new RiseShooterSubsystem();
-    drivebase = new DrivebaseSubsystem();
+    // intake = new IntakeSubsystem();
+    // riseMotor = new RiseShooterSubsystem();
+    // drivebase = new DrivebaseSubsystem();
 
-    mainLeftTriggerValue = main.getLeftTriggerAxis();
-    mainRightTrigggerValue = main.getRightTriggerAxis();
+    // mainLeftTriggerValue = main.getLeftTriggerAxis();
+    // mainRightTrigggerValue = main.getRightTriggerAxis();
     configureBindings();
 
   }
 
   private void configureBindings() {
-    main.y().toggleOnTrue(new IntakeCmd(intake));
-    main.x().and(main.a()).toggleOnTrue(new ShootManualCmd(shooter));
-    main.x().and(main.a().negate()).toggleOnTrue(new ShootPIDCmd(shooter));
-    riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
-    drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
-    main.b().onTrue(new GyroresetCmd(drivebase) );
+    // main.y().toggleOnTrue(new IntakeCmd(intake));
+    // main.x().and(main.a()).toggleOnTrue(new ShootManualCmd(shooter));
+    // main.x().and(main.a().negate()).toggleOnTrue(new ShootPIDCmd(shooter));
+    // riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
+    // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
+    // main.b().onTrue(new GyroresetCmd(drivebase) );
+    main.x().toggleOnTrue(new ShooterTestCmd(shooter));
   }
 
   public Command getAutonomousCommand() {

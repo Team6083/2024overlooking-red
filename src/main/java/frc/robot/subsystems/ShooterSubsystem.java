@@ -36,6 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
     shootDownMotor.setInverted(ShooterConstants.kDownMotorInverted);
 
     resetEncoder();
+    SmartDashboard.putNumber("shooter_rate", 0);
   }
 
   public void setManualPercentage() {
@@ -56,6 +57,10 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setSetpoint(double distance) {
     upPidController.setSetpoint(distance);
     downPidController.setSetpoint(distance);
+  }
+
+  public void setTestRate(){
+    double rate = SmartDashboard.getNumber("shooter_rate", 0.0);
   }
 
   public void setPIDRate() {
