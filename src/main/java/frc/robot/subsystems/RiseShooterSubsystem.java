@@ -6,6 +6,9 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,13 +17,13 @@ import frc.robot.Constants.RiseShooterConstants;
 
 public class RiseShooterSubsystem extends SubsystemBase {
   /** Creates a new RiseShooterSubsytem. */
-  private final VictorSPX riseMotor;
+  private final CANSparkMax riseMotor;
   private final Encoder riseEncoder;
   private double angleDegreeOffset;
   private final PIDController risePID;
 
   public RiseShooterSubsystem() {
-    riseMotor = new VictorSPX(RiseShooterConstants.kRiseShooterPWMID);
+    riseMotor = new CANSparkMax(RiseShooterConstants.kRiseShooterChannel, MotorType.kBrushless);
 
     riseEncoder = new Encoder(0, 1);
     angleDegreeOffset = RiseShooterConstants.kRiseInitAngleDegree;
@@ -33,7 +36,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   public void manualControl(double RiseSpeed) {
-    riseMotor.set(ControlMode.PercentOutput, RiseSpeed);
+    riseMotor.set(RiseSpeed);
     risePID.setSetpoint(getAngleDegree());
   }
 
@@ -63,7 +66,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
     if (Math.abs(modifiedRiseVolt) > RiseShooterConstants.kRiseVoltLimit) {
       modifiedRiseVolt = RiseShooterConstants.kRiseVoltLimit * (riseVolt > 0 ? 1 : -1);
     }
-    riseMotor.set(ControlMode.PercentOutput, riseVolt);
+    riseMotor.set(riseVolt);
 
     SmartDashboard.putNumber("rise_volt", modifiedRiseVolt);
   }
@@ -83,7 +86,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   public void stopMotor() {
-    riseMotor.set(ControlMode.PercentOutput, 0.0);
+    riseMotor.set(0.0);
   }
 
   private int isPhyLimitExceed(double angle) {

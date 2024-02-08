@@ -15,11 +15,11 @@ public class IntakeSubsystem extends SubsystemBase {
   private final VictorSPX intakeMotor2;
 
   public IntakeSubsystem() {
-    intakeMotor1 = new VictorSPX(IntakeConstants.kIntakeOnePWMID);
-    intakeMotor2 = new VictorSPX(IntakeConstants.kIntakeTwoPWMID);
+    intakeMotor1 = new VictorSPX(IntakeConstants.kIntakeUpChannel);
+    intakeMotor2 = new VictorSPX(IntakeConstants.kIntakeDownChannel);
     intakeMotor2.follow(intakeMotor1);
-    intakeMotor1.setInverted(IntakeConstants.kIntakeOneInverted);
-    intakeMotor2.setInverted(IntakeConstants.kIntakeTwoInverted);
+    intakeMotor1.setInverted(IntakeConstants.kIntakeUpInverted);
+    intakeMotor2.setInverted(IntakeConstants.kIntakeDownInverted);
   
   }
 

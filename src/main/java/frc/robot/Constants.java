@@ -6,8 +6,8 @@ public final class Constants {
     }
 
     public static class ShooterConstants {
-        public static final int kUpPWMID = 4;
-        public static final int kDownPWMID = 5;
+        public static final int kShooterUpChannel = 4;
+        public static final int kShooterDownChannel = 5;
         public static final Boolean kUpMotorInverted = false;
         public static final Boolean kDownMotorInverted = true;
         public static final double kUpMotorPower = 0.8;
@@ -15,16 +15,15 @@ public final class Constants {
     }
 
     public static class IntakeConstants {
-        public static final int kIntakeOnePWMID = 2;
-        public static final int kIntakeTwoPWMID = 0;
+        public static final int kIntakeUpChannel = 2;
+        public static final int kIntakeDownChannel = 0;
         public static final double kIntakePrecentage = 0.5;
-
-        public static final Boolean kIntakeOneInverted = false;
-        public static final Boolean kIntakeTwoInverted = true;
+        public static final Boolean kIntakeUpInverted = false;
+        public static final Boolean kIntakeDownInverted = true;
     }
 
     public static class RiseShooterConstants {
-        public static final int kRiseShooterPWMID = 11;
+        public static final int kRiseShooterChannel = 11;
         public static final Boolean kRiseShooterInverted = false;
         public static final double kRiseVoltLimit = 4;
         public static final double kRiseAngleMin = 0;
@@ -34,8 +33,8 @@ public final class Constants {
         public static final double kRiseTriggerValue = 0.15;
     }
 
-    public static class OperatorConstants {
-        public static final int kDriverControllerPort = 0;
+    public static class HookConstants{
+        public static final int kHookLineChannel = 12;
     }
 
     public static class DrivebaseConstants {

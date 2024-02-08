@@ -13,8 +13,10 @@ import frc.robot.commands.shooterCmds.ShootManualCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.shooterCmds.ShooterTestCmd;
 import frc.robot.commands.GyroresetCmd;
+import frc.robot.commands.HookManualCmd;
 import frc.robot.commands.IntakeCmd;
 import frc.robot.Constants.XboxControllerConstants;
+import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -23,6 +25,7 @@ import frc.robot.subsystems.drive.DrivebaseSubsystem;
 public class RobotContainer {
   private final CommandXboxController main;
   private final ShooterSubsystem shooter;
+  private final HookSubsystem hook;
   // private final IntakeSubsystem intake;
   // private final RiseShooterSubsystem riseMotor;
   // private final DrivebaseSubsystem drivebase;
@@ -33,6 +36,7 @@ public class RobotContainer {
   public RobotContainer() {
     main = new CommandXboxController(XboxControllerConstants.kMain);
     shooter = new ShooterSubsystem();
+    hook = new HookSubsystem();
     // intake = new IntakeSubsystem();
     // riseMotor = new RiseShooterSubsystem();
     // drivebase = new DrivebaseSubsystem();
@@ -50,7 +54,8 @@ public class RobotContainer {
     // riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
     // main.b().onTrue(new GyroresetCmd(drivebase) );
-    main.x().toggleOnTrue(new ShootManualCmd(shooter));
+    // main.x().toggleOnTrue(new ShootManualCmd(shooter));
+    main.y().whileTrue(new HookManualCmd(hook));
   }
 
   public Command getAutonomousCommand() {

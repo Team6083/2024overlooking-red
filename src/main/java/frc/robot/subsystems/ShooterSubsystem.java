@@ -26,8 +26,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public ShooterSubsystem() {
 
-    shootUpMotor = new VictorSP(ShooterConstants.kUpPWMID);
-    shootDownMotor = new VictorSP(ShooterConstants.kDownPWMID);
+    shootUpMotor = new VictorSP(ShooterConstants.kShooterUpChannel);
+    shootDownMotor = new VictorSP(ShooterConstants.kShooterDownChannel);
 
     upEncoder = new Encoder(0, 1);
     downEncoder = new Encoder(2, 3);
