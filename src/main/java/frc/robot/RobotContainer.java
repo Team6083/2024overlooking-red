@@ -50,7 +50,7 @@ public class RobotContainer {
     // riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
     // main.b().onTrue(new GyroresetCmd(drivebase) );
-    main.x().toggleOnTrue(new ShooterTestCmd(shooter));
+    main.x().toggleOnTrue(new ShootManualCmd(shooter));
   }
 
   public Command getAutonomousCommand() {

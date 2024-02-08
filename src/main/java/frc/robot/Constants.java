@@ -6,10 +6,10 @@ public final class Constants {
     }
 
     public static class ShooterConstants {
-        public static final int kUpPWMID = 1;
-        public static final int kDownPWMID = 3;
+        public static final int kUpPWMID = 4;
+        public static final int kDownPWMID = 5;
         public static final Boolean kUpMotorInverted = false;
-        public static final Boolean kDownMotorInverted = false;
+        public static final Boolean kDownMotorInverted = true;
         public static final double kUpMotorPower = 0.8;
         public static final double kDownMotorPower = 0.8;
     }
