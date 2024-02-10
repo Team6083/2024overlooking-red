@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionTrackingConstants;
 
-public class VisionTracking extends SubsystemBase {
+public class AprilTagTracking extends SubsystemBase {
     public NetworkTable table;
     public NetworkTableEntry tx;// = table.getEntry("tx");// table.getEntry("tx");
     public NetworkTableEntry ty;// = table.getEntry("ty");
