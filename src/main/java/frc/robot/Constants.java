@@ -96,6 +96,11 @@ public final class Constants {
         public static final double kDRotController = 0.0004;
     }
 
+    public static final class VisionTrackingConstants {
+        public static final int A_pipeline = 0;
+        public static final double klimelightLensHeightInches = 0;
+        public static final double klimelightMountAngleDegrees = 0;
+      }
 
     }
 
