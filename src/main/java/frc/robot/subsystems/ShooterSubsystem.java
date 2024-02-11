@@ -4,8 +4,8 @@
 
 package frc.robot.subsystems;
 
-//import com.ctre.phoenix.motorcontrol.ControlMode;
-//import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Encoder;
@@ -20,9 +20,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private final VictorSP shootDownMotor;
   private final Encoder upEncoder;
   private final Encoder downEncoder;
-  private final PIDController upPidController;
-  private final PIDController downPidController;
-  private final SimpleMotorFeedforward rateControl;
+  private final PIDController ratePidController;
+  private final SimpleMotorFeedforward rateFeedForwardControl;
 
   public ShooterSubsystem() {
 
@@ -32,20 +31,22 @@ public class ShooterSubsystem extends SubsystemBase {
     upEncoder = new Encoder(0, 1);
     downEncoder = new Encoder(2, 3);
 
-    upPidController = new PIDController(0.002, 0, 0);
-    downPidController = new PIDController(0.002, 0, 0);
+    upEncoder.setReverseDirection(ShooterConstants.kUpEncoderInverted);
+    downEncoder.setReverseDirection(ShooterConstants.kDownEncoderInverted);
+
+    ratePidController = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
 
     shootUpMotor.setInverted(ShooterConstants.kUpMotorInverted);
     shootDownMotor.setInverted(ShooterConstants.kDownMotorInverted);
 
-    rateControl = new SimpleMotorFeedforward(0, 0.23, 0.71);
+    rateFeedForwardControl = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV, ShooterConstants.kA);
 
     resetEncoder();
     SmartDashboard.putNumber("shooter_rate", 0);
     SmartDashboard.putNumber("shooter_Voltage", 0);
   }
 
-  public void setManualPercentage() {
+  public void setManual() {
     double voltage = 10;
     shootUpMotor.setVoltage(voltage);
     shootDownMotor.setVoltage(voltage);
@@ -56,26 +57,20 @@ public class ShooterSubsystem extends SubsystemBase {
     downEncoder.reset();
   }
 
-  public void setPIDPercentage(double distance) {
-    shootUpMotor.set(distance);
-    shootDownMotor.set(distance);
-  }
-
   public void setSetpoint(double distance) {
-    upPidController.setSetpoint(distance);
-    downPidController.setSetpoint(distance);
+    ratePidController.setSetpoint(distance);
   }
 
-  public void setTestRate() {
+  public void setFeedForwardRate() {
     double rate = SmartDashboard.getNumber("shooter_rate", 0.0);
-    rate = rateControl.calculate(rate);
+    rate = rateFeedForwardControl.calculate(rate);
     shootUpMotor.setVoltage(rate);
     shootDownMotor.setVoltage(rate);
   }
 
   public void setPIDRate() {
-    final double rateToUpMotorPower = upPidController.calculate(-upEncoder.getRate()/2048.0);
-    final double rateToDownMotorPower = downPidController.calculate(-downEncoder.getRate()/2048.0);
+    final double rateToUpMotorPower = ratePidController.calculate(getUpEncoderRate());
+    final double rateToDownMotorPower = ratePidController.calculate(getDownEncoderRate());
     shootUpMotor.set(rateToUpMotorPower);
     shootDownMotor.set(rateToDownMotorPower);
     SmartDashboard.putNumber("rateToUpMotorPower", rateToUpMotorPower);
@@ -87,11 +82,19 @@ public class ShooterSubsystem extends SubsystemBase {
     shootDownMotor.set(0);
   }
 
+  public double getUpEncoderRate(){
+    return upEncoder.getRate()/2048.0;
+  }
+
+  public double getDownEncoderRate(){
+    return downEncoder.getRate()/2048.0;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("upRate", -upEncoder.getRate() / 2048.0);
-    SmartDashboard.putNumber("downRate", -downEncoder.getRate() / 2048.0);
+    SmartDashboard.putNumber("upRate", getUpEncoderRate());
+    SmartDashboard.putNumber("downRate", getDownEncoderRate());
     SmartDashboard.putNumber("upPower", shootUpMotor.get());
     SmartDashboard.putNumber("downPower", shootDownMotor.get());
   }

@@ -26,7 +26,7 @@ public class ShootManualCmd extends Command {
  
   @Override
   public void execute() {
-    shooter.setManualPercentage();
+    shooter.setManual();
   }
 
   @Override

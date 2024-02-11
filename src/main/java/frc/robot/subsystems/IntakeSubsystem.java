@@ -13,33 +13,30 @@ import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
-  private final VictorSP intakeMotor1;
-  private final VictorSP intakeMotor2;
-  private final VictorSP trans;
+  private final VictorSP intakeUpMotor;
+  private final VictorSP intakeDownMotor;
 
   public IntakeSubsystem() {
-    intakeMotor1 = new VictorSP(IntakeConstants.kIntakeUpChannel);
-    intakeMotor2 = new VictorSP(IntakeConstants.kIntakeDownChannel);
-    trans = new VictorSP(1);
-    intakeMotor1.setInverted(IntakeConstants.kIntakeUpInverted);
-    intakeMotor2.setInverted(IntakeConstants.kIntakeDownInverted);
+    intakeUpMotor = new VictorSP(IntakeConstants.kIntakeUpChannel);
+    intakeDownMotor = new VictorSP(IntakeConstants.kIntakeDownChannel);
+    intakeUpMotor.setInverted(IntakeConstants.kIntakeUpInverted);
+    intakeDownMotor.setInverted(IntakeConstants.kIntakeDownInverted);
   
   }
 
-  public void setPrecentage() {
-    intakeMotor1.set(IntakeConstants.kIntakePrecentage);
-    intakeMotor2.set(IntakeConstants.kIntakePrecentage);
-    trans.set(-0.2);
+  public void setIntaking() {
+    intakeUpMotor.set(IntakeConstants.kIntakePrecentage);
+    intakeDownMotor.set(IntakeConstants.kIntakePrecentage);
   }
 
-  public void setTrans(){
-    trans.set(-0.3);
+  public void setThrowing(){
+    intakeUpMotor.set(IntakeConstants.kThrowPrecentage);
+    intakeDownMotor.set(IntakeConstants.kThrowPrecentage);
   }
 
   public void stopMotor() {
-    intakeMotor1.set(0);
-    intakeMotor2.set(0);
-    trans.set(0);
+    intakeUpMotor.set(0);
+    intakeDownMotor.set(0);
   }
 
   @Override
