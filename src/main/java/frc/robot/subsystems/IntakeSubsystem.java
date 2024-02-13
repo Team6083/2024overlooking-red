@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
@@ -13,30 +14,30 @@ import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
-  private final VictorSP intakeUpMotor;
-  private final VictorSP intakeDownMotor;
+  private final VictorSPX intakeUpMotor;
+  private final VictorSPX intakeDownMotor;
 
   public IntakeSubsystem() {
-    intakeUpMotor = new VictorSP(IntakeConstants.kIntakeUpChannel);
-    intakeDownMotor = new VictorSP(IntakeConstants.kIntakeDownChannel);
+    intakeUpMotor = new VictorSPX(IntakeConstants.kIntakeUpChannel);
+    intakeDownMotor = new VictorSPX(IntakeConstants.kIntakeDownChannel);
     intakeUpMotor.setInverted(IntakeConstants.kIntakeUpInverted);
     intakeDownMotor.setInverted(IntakeConstants.kIntakeDownInverted);
   
   }
 
   public void setIntaking() {
-    intakeUpMotor.set(IntakeConstants.kIntakePrecentage);
-    intakeDownMotor.set(IntakeConstants.kIntakePrecentage);
+    intakeUpMotor.set(VictorSPXControlMode.PercentOutput, IntakeConstants.kIntakePrecentage);
+    intakeDownMotor.set(VictorSPXControlMode.PercentOutput, IntakeConstants.kIntakePrecentage);
   }
 
   public void setThrowing(){
-    intakeUpMotor.set(IntakeConstants.kThrowPrecentage);
-    intakeDownMotor.set(IntakeConstants.kThrowPrecentage);
+    intakeUpMotor.set(VictorSPXControlMode.PercentOutput, IntakeConstants.kThrowPrecentage);
+    intakeDownMotor.set(VictorSPXControlMode.PercentOutput, IntakeConstants.kThrowPrecentage);
   }
 
   public void stopMotor() {
-    intakeUpMotor.set(0);
-    intakeDownMotor.set(0);
+    intakeUpMotor.set(VictorSPXControlMode.PercentOutput,0);
+    intakeDownMotor.set(VictorSPXControlMode.PercentOutput,0);
   }
 
   @Override

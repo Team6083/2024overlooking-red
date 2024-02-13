@@ -7,28 +7,28 @@ public final class Constants {
 
     public static class ShooterConstants {
         public static final int kShooterUpChannel = 3;
-        public static final int kShooterDownChannel = 2;
+        public static final int kShooterDownChannel = 5;
         public static final Boolean kUpMotorInverted = false;
         public static final Boolean kDownMotorInverted = false;
         public static final Boolean kUpEncoderInverted = true;
         public static final Boolean kDownEncoderInverted = true;
         public static final double kUpMotorPower = 0.8;
         public static final double kDownMotorPower = 0.8;
-        public static final double kP = 0.002;
+        public static final double kP = 0.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
-        public static final double kS = 0.0;
-        public static final double kV = 0.23;
-        public static final double kA = 0.71;
+        public static final double kS = 0.756;
+        public static final double kV = 0.149;
+        public static final double kA = 0.0;
     }
 
     public static class TransportConstants{
-        public static final int kTrantsportChannel = 1;
+        public static final int kTrantsportChannel = 4;
     }
 
     public static class IntakeConstants {
-        public static final int kIntakeUpChannel = 4;
-        public static final int kIntakeDownChannel = 0;
+        public static final int kIntakeUpChannel = 2;
+        public static final int kIntakeDownChannel = 1;
         public static final double kIntakePrecentage = 0.4;
         public static final double kThrowPrecentage = -0.4;
         public static final Boolean kIntakeUpInverted = true;
@@ -36,7 +36,7 @@ public final class Constants {
     }
 
     public static class RiseShooterConstants {
-        public static final int kRiseShooterChannel = 11;
+        public static final int kRiseShooterChannel = 21;
         public static final Boolean kRiseShooterInverted = false;
         public static final double kRiseVoltLimit = 4;
         public static final double kRiseAngleMin = 0;
@@ -47,7 +47,7 @@ public final class Constants {
     }
 
     public static class HookConstants{
-        public static final int kHookLineChannel = 12;
+        public static final int kHookLineChannel = 22;
     }
 
     public static class DrivebaseConstants {

@@ -25,7 +25,7 @@ public class ShooterTestCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooterSubsystem.setFeedForwardRate();
+    shooterSubsystem.setRateToPower();
   }
 
   // Called once the command ends or is interrupted.
