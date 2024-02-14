@@ -37,7 +37,7 @@ public class SwerveModule extends SubsystemBase {
 
   public SwerveModule(int driveMotorChannel,
       int turningMotorChannel,
-      int turningEncoderChannelA, boolean driveInverted) {
+      int turningEncoderChannelA, boolean driveInverted, double canCoderMagOffset) {
 
     driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
@@ -45,21 +45,23 @@ public class SwerveModule extends SubsystemBase {
     turningEncoder = new CANcoder(turningEncoderChannelA);
     CANcoderConfiguration turningEncoderConfiguration = new CANcoderConfiguration();
     turningEncoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    turningEncoderConfiguration.MagnetSensor.MagnetOffset = canCoderMagOffset;
     turningEncoder.getConfigurator().apply(turningEncoderConfiguration);
 
     driveEncoder = driveMotor.getEncoder();
 
     driveMotor.setInverted(driveInverted);
 
-    turningMotor.setInverted(false);
+    turningMotor.setInverted(true);
 
     driveMotor.setSmartCurrentLimit(10, 80);
     driveMotor.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus0, 40);
     driveMotor.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus1, 150);
     driveMotor.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus2, 150);
-    driveMotor.setClosedLoopRampRate(ModuleConstants.kClosedLoopRampRate);
+    driveMotor.setClosedLoopRampRate(ModuleConstants.kDriveClosedLoopRampRate);
+
     turningMotor.setSmartCurrentLimit(20);
-    driveMotor.setClosedLoopRampRate(0.25);
+    turningMotor.setClosedLoopRampRate(ModuleConstants.kDriveClosedLoopRampRate);
 
     driveMotor.setIdleMode(IdleMode.kBrake);
     turningMotor.setIdleMode(IdleMode.kBrake);
@@ -73,7 +75,6 @@ public class SwerveModule extends SubsystemBase {
     resetAllEncoder();
     clearSticklyFault();
     stopModule();
-    SmartDashboard.putNumber("degree", 0);
   }
 
   public void configDriveMotor() {
@@ -135,15 +136,14 @@ public class SwerveModule extends SubsystemBase {
     } else {
       var moduleState = optimizeOutputVoltage(desiredState, getRotation());
       driveMotor.setVoltage(moduleState[0]);
-      turningMotor.setVoltage(-moduleState[1]);
-      SmartDashboard.putNumber(turningEncoder + "_voltage", moduleState[0]);
+      turningMotor.setVoltage(moduleState[1]);
+      SmartDashboard.putNumber("turningEncoder_ID" + turningEncoder.getDeviceID() + "_voltage", moduleState[0]);
     }
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber(turningEncoder + "_degree", getRotation());
+    SmartDashboard.putNumber("turningEncoder_ID" + turningEncoder.getDeviceID() + "_degree", getRotation());
   }
-
 }
