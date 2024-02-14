@@ -32,7 +32,7 @@ public class RobotContainer {
   // private final HookSubsystem hook;
   private final IntakeSubsystem intake;
   // private final RiseShooterSubsystem riseMotor;
-  // private final DrivebaseSubsystem drivebase;
+  private final DrivebaseSubsystem drivebase;
 
   // double mainLeftTriggerValue;
   // double mainRightTrigggerValue;
@@ -44,7 +44,7 @@ public class RobotContainer {
     // hook = new HookSubsystem();
     intake = new IntakeSubsystem();
     // riseMotor = new RiseShooterSubsystem();
-    // drivebase = new DrivebaseSubsystem();
+    drivebase = new DrivebaseSubsystem();
     
 
     // mainLeftTriggerValue = main.getLeftTriggerAxis();
@@ -58,7 +58,7 @@ public class RobotContainer {
     // main.x().and(main.a()).toggleOnTrue(new ShootManualCmd(shooter));
     // main.x().and(main.a().negate()).toggleOnTrue(new ShootPIDCmd(shooter));
     // riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
-    // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
+    drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
     // main.b().onTrue(new GyroresetCmd(drivebase) );
     main.a().toggleOnTrue(new ShootPIDCmd(shooter));
     main.x().toggleOnTrue(new TransCmd(trans));

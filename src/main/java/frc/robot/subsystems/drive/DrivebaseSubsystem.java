@@ -43,10 +43,18 @@ public class DrivebaseSubsystem extends SubsystemBase {
     backLeftLocation = new Translation2d(-0.3, 0.3);
     backRightLocation = new Translation2d(-0.3, -0.3);
 
-    frontLeft = new SwerveModule(10, 11, 5, DrivebaseConstants.kFrontLeftDriveMotorInverted);
-    frontRight = new SwerveModule(12, 13, 4, DrivebaseConstants.kFrontRightDriveMotorInverted);
-    backLeft = new SwerveModule(14, 15, 2, DrivebaseConstants.kBackLeftDriveMotorInverted);
-    backRight = new SwerveModule(16, 17, 3, DrivebaseConstants.kBackRightDriveMotorInverted);
+    frontLeft = new SwerveModule(DrivebaseConstants.kFrontLeftDriveMotorChannel,
+    DrivebaseConstants.kFrontLeftTurningMotorChannel, DrivebaseConstants.kFrontLeftTurningEncoderChannel,
+    DrivebaseConstants.kFrontLeftDriveMotorInverted, DrivebaseConstants.kFrontLeftCanCoderMagOffset);
+frontRight = new SwerveModule(DrivebaseConstants.kFrontRightDriveMotorChannel,
+    DrivebaseConstants.kFrontRightTurningMotorChannel, DrivebaseConstants.kFrontRightTurningEncoderChannel,
+    DrivebaseConstants.kFrontRightDriveMotorInverted, DrivebaseConstants.kFrontRightCanCoderMagOffset);
+backLeft = new SwerveModule(DrivebaseConstants.kBackLeftDriveMotorChannel,
+    DrivebaseConstants.kBackLeftTurningMotorChannel, DrivebaseConstants.kBackLeftTurningEncoderChannel,
+    DrivebaseConstants.kBackLeftDriveMotorInverted, DrivebaseConstants.kBackLeftCanCoderMagOffset);
+backRight = new SwerveModule(DrivebaseConstants.kBackRightDriveMotorChannel,
+    DrivebaseConstants.kBackRightTurningMotorChannel, DrivebaseConstants.kBackRightTurningEncoderChannel,
+    DrivebaseConstants.kBackRightDriveMotorInverted, DrivebaseConstants.kBackRightCanCoderMagOffset);
 
     SmartDashboard.putData("frontLeft", frontLeft);
     SmartDashboard.putData("frontRight", frontRight);

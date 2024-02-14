@@ -30,7 +30,7 @@ public class ShooterSubsystem extends SubsystemBase {
     shootDownMotor = new VictorSPX(ShooterConstants.kShooterDownChannel);
 
     upEncoder = new Encoder(2, 3);
-    downEncoder = new Encoder(5, 6);
+    downEncoder = new Encoder(4, 5);
 
     upEncoder.setReverseDirection(ShooterConstants.kUpEncoderInverted);
     downEncoder.setReverseDirection(ShooterConstants.kDownEncoderInverted);

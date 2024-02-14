@@ -14,11 +14,11 @@ public final class Constants {
         public static final Boolean kDownEncoderInverted = true;
         public static final double kUpMotorPower = 0.8;
         public static final double kDownMotorPower = 0.8;
-        public static final double kP = 0.0;
-        public static final double kI = 0.0;
+        public static final double kP = 1.3;
+        public static final double kI = 0.2;
         public static final double kD = 0.0;
-        public static final double kS = 0.756;
-        public static final double kV = 0.149;
+        public static final double kS = 0.0;//0.756;
+        public static final double kV = 0.0;//0.149;
         public static final double kA = 0.0;
     }
 
@@ -97,7 +97,8 @@ public final class Constants {
         public static final double kWheelDiameterMeters = 0.15;
         public static final double kLimitModuleDriveVoltage = 7.0;
         public static final double kMaxModuleDriveVoltage = 12.0;
-        public static final double kClosedLoopRampRate = 0.25;// 1 second 1 unit
+        public static final double kDriveClosedLoopRampRate = 0.8;// 1 second 1 unit
+        public static final double kTurningClosedLoopRampRate = 0.25;
         public static final double kDesireSpeedtoMotorVoltage = kMaxModuleDriveVoltage / DrivebaseConstants.kMaxSpeed;
         public static final double kMaxModuleTuringVoltage = 7.0;
         public static final double kMaxSpeedTurningDegree = 180.0;
