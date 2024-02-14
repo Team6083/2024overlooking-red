@@ -10,25 +10,50 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TransportConstants;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.revrobotics.*;
+import com.revrobotics.Rev2mDistanceSensor.Port;
+
 public class TransportSubsystem extends SubsystemBase {
+
   /** Creates a new TransportSubsystem. */
   private final VictorSPX trans;
+
+  private Rev2mDistanceSensor dist;
+
   public TransportSubsystem() {
     trans = new VictorSPX(TransportConstants.kTrantsportChannel);
     trans.setInverted(true);
+    dist = new Rev2mDistanceSensor(Port.kOnboard);
+    dist.setAutomaticMode(true);
   }
 
-  public void setTrans(){
-    trans.set(VictorSPXControlMode.PercentOutput, 0.3);
+  public void setTrans() {
+    trans.set(VictorSPXControlMode.PercentOutput, 0.5);
   }
 
-  public void setReTrans(){
+  public void setReTrans() {
     trans.set(VictorSPXControlMode.PercentOutput, -0.3);
   }
 
-  public void stopMotor(){
+  public void stopMotor() {
     trans.set(VictorSPXControlMode.PercentOutput, 0);
   }
+
+  public void distanceSensor() {
+    if (dist.isRangeValid()) {
+      SmartDashboard.putNumber("Range dist", dist.getRange());
+      SmartDashboard.putNumber("Timestamp dist", dist.getTimestamp());
+    }   
+    if(dist.getRange()<=8){
+      trans.set(VictorSPXControlMode.PercentOutput, 0);
+  }
+    }
+
+  
+
+  
 
   @Override
   public void periodic() {
