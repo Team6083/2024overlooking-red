@@ -70,7 +70,7 @@ public class ShooterSubsystem extends SubsystemBase {
     final double rateToUpMotorPower = (rateFeedForwardControl.calculate(rate)
         + ratePidController.calculate(getUpEncoderRate())) / getUpMotorBusVoltage();
     final double rateToDownMotorPower = (rateFeedForwardControl.calculate(rate)
-        + ratePidController.calculate(getDownEncoderRate())) / getDownMotorBusVoltage();
+        + ratePidController.calculate(getDownEncoderRate())+0.1) / getDownMotorBusVoltage();
     shootUpMotor.set(VictorSPXControlMode.PercentOutput, rateToUpMotorPower);
     shootDownMotor.set(VictorSPXControlMode.PercentOutput, rateToDownMotorPower);
     SmartDashboard.putNumber("rateToUpMotorPower", rateToUpMotorPower);

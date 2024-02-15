@@ -11,6 +11,8 @@ import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.TransportCmds.ReTransCmd;
 import frc.robot.commands.TransportCmds.TransCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
+import frc.robot.commands.riseShooterCmds.riseManual;
+import frc.robot.commands.riseShooterCmds.riseReManual;
 import frc.robot.commands.shooterCmds.ShootManualCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.shooterCmds.ShooterTestCmd;
@@ -30,25 +32,25 @@ public class RobotContainer {
   private final ShooterSubsystem shooter;
   private final TransportSubsystem trans;
   // private final HookSubsystem hook;
-  private final IntakeSubsystem intake;
-  // private final RiseShooterSubsystem riseMotor;
+  // private final IntakeSubsystem intake;
+  private final RiseShooterSubsystem riseMotor;
   private final DrivebaseSubsystem drivebase;
 
-  // double mainLeftTriggerValue;
-  // double mainRightTrigggerValue;
+  double mainLeftTriggerValue;
+  double mainRightTrigggerValue;
 
   public RobotContainer() {
     main = new CommandXboxController(XboxControllerConstants.kMain);
     shooter = new ShooterSubsystem();
     trans = new TransportSubsystem();
     // hook = new HookSubsystem();
-    intake = new IntakeSubsystem();
-    // riseMotor = new RiseShooterSubsystem();
+    // intake = new IntakeSubsystem();
+    riseMotor = new RiseShooterSubsystem();
     drivebase = new DrivebaseSubsystem();
     
 
-    // mainLeftTriggerValue = main.getLeftTriggerAxis();
-    // mainRightTrigggerValue = main.getRightTriggerAxis();
+    mainLeftTriggerValue = main.getLeftTriggerAxis();
+    mainRightTrigggerValue = main.getRightTriggerAxis();
     configureBindings();
 
   }

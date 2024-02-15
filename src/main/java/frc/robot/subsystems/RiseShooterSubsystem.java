@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -19,7 +17,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
   /** Creates a new RiseShooterSubsytem. */
   private final CANSparkMax riseMotor;
   private final Encoder riseEncoder;
-  private double angleDegreeOffset;
+  private final double angleDegreeOffset;
   private final PIDController risePID;
 
   public RiseShooterSubsystem() {
@@ -32,12 +30,22 @@ public class RiseShooterSubsystem extends SubsystemBase {
 
     riseMotor.setInverted(RiseShooterConstants.kRiseShooterInverted);
 
-    riseEncoder.setDistancePerPulse(360 / RiseShooterConstants.kRiseEncoderPulse);
+    riseMotor.setSmartCurrentLimit(40);
+
+    riseEncoder.setDistancePerPulse(360.0 / RiseShooterConstants.kRiseEncoderPulse);
   }
 
-  public void manualControl(double RiseSpeed) {
-    riseMotor.set(RiseSpeed);
+  public void manualControl(double riseSpeed) {
+    riseMotor.set(riseSpeed);
     risePID.setSetpoint(getAngleDegree());
+  }
+
+  public void manual(){
+    riseMotor.set(0.4);
+  }
+
+  public void reManual(){
+    riseMotor.set(-0.4);
   }
 
   public double getSetpoint() {
@@ -51,7 +59,6 @@ public class RiseShooterSubsystem extends SubsystemBase {
           : RiseShooterConstants.kRiseAngleMin);
       return;
     }
-    setpoint += currentSetpoint;
     if (isPhyLimitExceed(setpoint) == -1) {
       setpoint = RiseShooterConstants.kRiseAngleMin;
     } else if (isPhyLimitExceed(setpoint) == 1) {
@@ -72,12 +79,12 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   public double getAngleDegree() {
-    SmartDashboard.putNumber("riseEncoderPos", riseEncoder.getDistance());
-    return (riseEncoder.getDistance()) + angleDegreeOffset;
+    double degree =  ((riseEncoder.getDistance()) + angleDegreeOffset)%360.0;
+    SmartDashboard.putNumber("riseShooterDegree", degree);
+    return degree;
   }
 
   public void resetEncoder() {
-    angleDegreeOffset = 0;
     riseEncoder.reset();
   }
 

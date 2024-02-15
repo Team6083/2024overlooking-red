@@ -14,11 +14,11 @@ public final class Constants {
         public static final Boolean kDownEncoderInverted = true;
         public static final double kUpMotorPower = 0.8;
         public static final double kDownMotorPower = 0.8;
-        public static final double kP = 1.3;
-        public static final double kI = 0.2;
-        public static final double kD = 0.0;
-        public static final double kS = 0.0;//0.756;
-        public static final double kV = 0.0;//0.149;
+        public static final double kP = 0.0;//1.3;
+        public static final double kI = 0.0;//0.2;
+        public static final double kD = 0.0;//0.1
+        public static final double kS = 0.756;
+        public static final double kV = 0.149;
         public static final double kA = 0.0;
     }
 
@@ -36,18 +36,18 @@ public final class Constants {
     }
 
     public static class RiseShooterConstants {
-        public static final int kRiseShooterChannel = 21;
+        public static final int kRiseShooterChannel = 22;
         public static final Boolean kRiseShooterInverted = false;
         public static final double kRiseVoltLimit = 4;
         public static final double kRiseAngleMin = 0;
         public static final double kRiseAngleMax = 45;
         public static final double kRiseEncoderPulse = 2048;
         public static final double kRiseInitAngleDegree = 0;
-        public static final double kRiseTriggerValue = 0.15;
+        public static final double kRiseTriggerValue = 0.4;
     }
 
     public static class HookConstants{
-        public static final int kHookLineChannel = 22;
+        public static final int kHookLineChannel = 21;
     }
 
     public static class DrivebaseConstants {
