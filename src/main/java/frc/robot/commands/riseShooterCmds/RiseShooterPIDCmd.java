@@ -7,14 +7,14 @@ package frc.robot.commands.riseShooterCmds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.RiseShooterSubsystem;
 
-public class RiseShooterManualPIDCmd extends Command {
+public class RiseShooterPIDCmd extends Command {
   private final RiseShooterSubsystem riseShooterSubsystem;
   private double leftTriggerValue;
   private double rightTriggerValue;
   private double armAngleModify;
 
   /** Creates a new RiseShooterPIDCmd. */
-  public RiseShooterManualPIDCmd(RiseShooterSubsystem riseShooterSubsystem, double mainLeftTrigger, double mainRightTrigger) {
+  public RiseShooterPIDCmd(RiseShooterSubsystem riseShooterSubsystem, double mainLeftTrigger, double mainRightTrigger) {
     this.riseShooterSubsystem = riseShooterSubsystem;
     this.leftTriggerValue = mainLeftTrigger;
     this.rightTriggerValue = mainRightTrigger;
