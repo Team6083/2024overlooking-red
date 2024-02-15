@@ -40,14 +40,6 @@ public class RiseShooterSubsystem extends SubsystemBase {
     risePID.setSetpoint(getAngleDegree());
   }
 
-  public void manual(){
-    riseMotor.set(0.4);
-  }
-
-  public void reManual(){
-    riseMotor.set(-0.4);
-  }
-
   public double getSetpoint() {
     return risePID.getSetpoint();
   }
