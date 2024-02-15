@@ -4,18 +4,14 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+
 import frc.robot.Constants.HookConstants;
 
 public class HookSubsystem extends SubsystemBase {
@@ -38,8 +34,8 @@ public class HookSubsystem extends SubsystemBase {
     HookPID.setSetpoint(getHookposition());
   }
 
-  public void controlmanul(double riseSpeed) {
-    line.set(riseSpeed);
+  public void controlmanul(double Speed) {
+    line.set(Speed);
     HookPID.setSetpoint(HookConstants.kInitSetpoint);
   }
 
@@ -49,15 +45,15 @@ public class HookSubsystem extends SubsystemBase {
 
   public void setHooksetpoint(double setSetpoint) {
     final double tureSetpoint = gethooksetpoint();
-    if (islineExceed(tureSetpoint) != 0) {
+    if (isPhylineExceed(tureSetpoint) != 0) {
       HookPID.setSetpoint(
-          (islineExceed(tureSetpoint)) == 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
+          (isPhylineExceed(tureSetpoint)) == 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
       return;
     }
     setSetpoint += tureSetpoint;
-    if (islineExceed(setSetpoint) == -1) {
+    if (isPhylineExceed(setSetpoint) == -1) {
       setSetpoint = HookConstants.kHookPositionMin;
-    } else if (islineExceed(setSetpoint) == 1) {
+    } else if (isPhylineExceed(setSetpoint) == 1) {
       setSetpoint = HookConstants.kHookPositionMax;
     }
 
@@ -90,7 +86,7 @@ public class HookSubsystem extends SubsystemBase {
     lineEncoder.setPosition(0);
   }
 
-  private int islineExceed(double position) {
+  private int isPhylineExceed(double position) {
     return (position < HookConstants.kHookPositionMin ? -1 : (position > HookConstants.kHookPositionMax) ? 1 : 0);
 
   }
@@ -98,6 +94,6 @@ public class HookSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-  SmartDashboard.putData("HookPID", HookPID);
+    SmartDashboard.putData("HookPID", HookPID);
   }
 }
