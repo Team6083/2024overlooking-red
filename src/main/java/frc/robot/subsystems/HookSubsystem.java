@@ -46,8 +46,8 @@ public class HookSubsystem extends SubsystemBase {
   public void setHookSetpoint(double setSetpoint) { // 單駝峰
     final double trueSetpoint = gethookSetpoint();  // true
     if (isPhylineExceed(trueSetpoint) != 0) {
-      hookPID.setSetpoint(
-          (isPhylineExceed(trueSetpoint)) == 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
+      // hookPID.setSetpoint(
+      //     (isPhylineExceed(trueSetpoint)) == 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
       return;
     }
     // setSetpoint += trueSetpoint;  // 這樣setpoint最後的數值就不是當初放進函式的，我不太理解為甚麼要判斷trueSetpoint的值以及把setSetpoint的值與trueSetpoint相加
