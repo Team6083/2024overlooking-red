@@ -8,13 +8,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.TransportCmds.IntakeTransCmd;
 import frc.robot.commands.TransportCmds.ReTransCmd;
 import frc.robot.commands.TransportCmds.TransCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.shooterCmds.ShootManualCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.shooterCmds.ShooterTestCmd;
-import frc.robot.commands.GyroresetCmd;
+import frc.robot.commands.GyroResetCmd;
 import frc.robot.commands.hookCmds.HookManualCmd;
 import frc.robot.commands.hookCmds.HookManualPIDCmd;
 import frc.robot.commands.IntakeCmd;
@@ -58,9 +59,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // main.y().toggleOnTrue(new IntakeCmd(intake));
+    // main.y().toggleOnTrue(new IntakeCmd(intake).alongWith(new IntakeTransCmd(trans)));
     // main.x().and(main.a()).toggleOnTrue(new ShootManualCmd(shooter));
-    // main.x().and(main.a().negate()).toggleOnTrue(new ShootPIDCmd(shooter));
     // riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
     // main.b().onTrue(new GyroresetCmd(drivebase) );

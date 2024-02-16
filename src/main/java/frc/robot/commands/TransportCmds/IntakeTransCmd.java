@@ -3,11 +3,11 @@ package frc.robot.commands.TransportCmds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TransportSubsystem;
 
-public class DistanceSensorCmd extends Command{
+public class IntakeTransCmd extends Command{
     
   /** Creates a new ReTrans. */
   private final TransportSubsystem transportSubsystem;
-  public DistanceSensorCmd(TransportSubsystem transportSubsystem) {
+  public IntakeTransCmd(TransportSubsystem transportSubsystem) {
     this.transportSubsystem = transportSubsystem;
     addRequirements(this.transportSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -22,7 +22,7 @@ public class DistanceSensorCmd extends Command{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    transportSubsystem.distanceSensor();
+    transportSubsystem.intakeTrans();
   }
 
   // Called once the command ends or is interrupted.

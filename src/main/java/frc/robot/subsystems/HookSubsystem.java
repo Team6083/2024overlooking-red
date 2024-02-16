@@ -24,7 +24,7 @@ public class HookSubsystem extends SubsystemBase {
   public HookSubsystem() {
     line = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
     hookPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
-    lineEncoder = line.getEncoder();
+    lineEncoder = line.getEncoder();//這邊忘記設定lineEncoder的PositionConversionFactor，這你算出來的值一定不會是正確的喔，你可以查查要怎麼設定
     line.setInverted(HookConstants.kHookMotorInverted);
 
   }
@@ -73,7 +73,7 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public double getHookPosition() {
-    SmartDashboard.putNumber("", lineEncoder.getPosition());
+    SmartDashboard.putNumber("", lineEncoder.getPosition());//""之間要有名稱喔
     return (lineEncoder.getPosition()) + positionOffset; // TO DO -> positionOffset
 
   }

@@ -11,11 +11,9 @@ public class HookManualCmd extends Command {
   /** Creates a new HookCmd. */
   private final HookSubsystem hookSubsystem;
   
-
   public HookManualCmd(HookSubsystem hookSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.hookSubsystem = hookSubsystem;
-    
     addRequirements(this.hookSubsystem);
   }
 
@@ -28,7 +26,7 @@ public class HookManualCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.controlManul(0.25);
+    hookSubsystem.controlManul(0.25);//建議改成一個constants
 
   }
 
