@@ -48,13 +48,13 @@ public final class Constants {
 
     public static class HookConstants{
         public static final int kHookLineChannel = 22;
-        public static final double HP=0.0;
-        public static final double HI=0.0;
-        public static final double HD=0.0;
+        public static final double kP=0.0;
+        public static final double kI=0.0;
+        public static final double kD=0.0;
         public static final double kHookPositionMax=60.0;
         public static final double kHookPositionMin=0.0;
         public static final double kHookPower=0;
-        public static final boolean kHookMotoInverted=false;
+        public static final boolean kHookMotorInverted=false;
         public static final double kInitSetpoint=0.0;
 
 

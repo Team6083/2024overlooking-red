@@ -26,7 +26,7 @@ public class HookManualPIDCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.setHooksetpoint(hookSubsystem.gethooksetpoint());
+    hookSubsystem.setHookSetpoint(hookSubsystem.gethookSetpoint());
     hookSubsystem.PIDControl();
   }
 

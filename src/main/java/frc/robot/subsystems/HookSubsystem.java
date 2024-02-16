@@ -16,65 +16,65 @@ import frc.robot.Constants.HookConstants;
 
 public class HookSubsystem extends SubsystemBase {
   /** Creates a new HookSubsystem. */
-  private final PIDController HookPID;
+  private final PIDController hookPID;
   private final CANSparkMax line;
   private final RelativeEncoder lineEncoder;
-  private double positionoffset;  // 單駝峰
+  private double positionOffset;  // 單駝峰
 
   public HookSubsystem() {
     line = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
-    HookPID = new PIDController(HookConstants.HP, HookConstants.HI, HookConstants.HD);  // 常數用 kP kI kD ， hookPID
+    hookPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);  // 常數用 kP kI kD ， hookPID
     lineEncoder = line.getEncoder();
-    line.setInverted(HookConstants.kHookMotoInverted); // 少一個 r
+    line.setInverted(HookConstants.kHookMotorInverted); // r
 
   }
 
-  public void controlhook(double hookcontrolspeed) { // 單駝峰
-    line.set(hookcontrolspeed);
-    HookPID.setSetpoint(getHookposition());
+  public void controlhook(double hookControlspeed) { // 單駝峰
+    line.set(hookControlspeed);
+    hookPID.setSetpoint(getHookposition());
   }
 
-  public void controlmanul(double Speed) { // 單駝峰 (首字母小寫)
-    line.set(Speed);
-    HookPID.setSetpoint(HookConstants.kInitSetpoint); // setpoint不能直接這樣設，應該是要得hook的position
+  public void controlmanul(double speed) { // 單駝峰 (首字母小寫)
+    line.set(speed);
+    hookPID.setSetpoint(getHookposition()); // setpoint不能直接這樣設，應該是要得hook的position
   }
 
-  public double gethooksetpoint() { // 單駝峰
-    return HookPID.getSetpoint();
+  public double gethookSetpoint() { // 單駝峰
+    return hookPID.getSetpoint();
   }
 
-  public void setHooksetpoint(double setSetpoint) { // 單駝峰
-    final double tureSetpoint = gethooksetpoint();  // true
-    if (isPhylineExceed(tureSetpoint) != 0) {
-      HookPID.setSetpoint(
-          (isPhylineExceed(tureSetpoint)) == 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
+  public void setHookSetpoint(double setSetpoint) { // 單駝峰
+    final double trueSetpoint = gethookSetpoint();  // true
+    if (isPhylineExceed(trueSetpoint) != 0) {
+      hookPID.setSetpoint(
+          (isPhylineExceed(trueSetpoint)) == 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
       return;
     }
-    setSetpoint += tureSetpoint;  // 這樣setpoint最後的數值就不是當初放進函式的，我不太理解為甚麼要判斷trueSetpoint的值以及把setSetpoint的值與trueSetpoint相加
+    // setSetpoint += trueSetpoint;  // 這樣setpoint最後的數值就不是當初放進函式的，我不太理解為甚麼要判斷trueSetpoint的值以及把setSetpoint的值與trueSetpoint相加
     if (isPhylineExceed(setSetpoint) == -1) {
       setSetpoint = HookConstants.kHookPositionMin;
     } else if (isPhylineExceed(setSetpoint) == 1) {
       setSetpoint = HookConstants.kHookPositionMax;
     }
 
-    HookPID.setSetpoint(setSetpoint);
+    hookPID.setSetpoint(setSetpoint);
 
   }
 
   public void PIDControl() {
-    double linepower = HookPID.calculate(getHookposition()); // 單駝峰
-    double modifiedlinepower = linepower; // 單駝峰
-    if (Math.abs(modifiedlinepower) > HookConstants.kHookPower) {
-      modifiedlinepower = HookConstants.kHookPower * (linepower > 0 ? 1 : 1); // kHookPower值是之後再調嗎
+    double linePower = hookPID.calculate(getHookposition()); // 單駝峰
+    double modifiedLinepower = linePower; // 單駝峰
+    if (Math.abs(modifiedLinepower) > HookConstants.kHookPower) {
+      modifiedLinepower = HookConstants.kHookPower * (linePower > 0 ? 1 : 1); // kHookPower值是之後再調嗎
     }
-    line.set(linepower);
-    SmartDashboard.putNumber("linepower", modifiedlinepower);
+    line.set(linePower);
+    SmartDashboard.putNumber("linepower", modifiedLinepower);
 
   }
 
   public double getHookposition() {
     SmartDashboard.putNumber("", lineEncoder.getPosition());
-    return (lineEncoder.getPosition()) + positionoffset; // positionoffset 現在沒有數值
+    return (lineEncoder.getPosition()) + positionOffset; // positionoffset 現在沒有數值
 
   }
 
@@ -94,6 +94,6 @@ public class HookSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putData("HookPID", HookPID);
+    SmartDashboard.putData("HookPID", hookPID);
   }
 }
