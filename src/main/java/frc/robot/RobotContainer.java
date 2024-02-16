@@ -51,7 +51,6 @@ public class RobotContainer {
     // drivebase = new DrivebaseSubsystem();
     hook = new HookSubsystem();
     
-
     // mainLeftTriggerValue = main.getLeftTriggerAxis();
     // mainRightTrigggerValue = main.getRightTriggerAxis();
     configureBindings();
