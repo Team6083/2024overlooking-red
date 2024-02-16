@@ -19,32 +19,32 @@ public class HookSubsystem extends SubsystemBase {
   private final PIDController hookPID;
   private final CANSparkMax line;
   private final RelativeEncoder lineEncoder;
-  private double positionOffset;  // 單駝峰
+  private double positionOffset;
 
   public HookSubsystem() {
     line = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
-    hookPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);  // 常數用 kP kI kD ， hookPID
+    hookPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     lineEncoder = line.getEncoder();
-    line.setInverted(HookConstants.kHookMotorInverted); // r
+    line.setInverted(HookConstants.kHookMotorInverted);
 
   }
 
-  public void controlhook(double hookControlspeed) { // 單駝峰
-    line.set(hookControlspeed);
-    hookPID.setSetpoint(getHookposition());
+  public void controlHook(double hookControlSpeed) {
+    line.set(hookControlSpeed);
+    hookPID.setSetpoint(getHookPosition());
   }
 
-  public void controlmanul(double speed) { // 單駝峰 (首字母小寫)
+  public void controlManul(double speed) {
     line.set(speed);
-    hookPID.setSetpoint(getHookposition()); // setpoint不能直接這樣設，應該是要得hook的position
+    hookPID.setSetpoint(getHookPosition());
   }
 
-  public double gethookSetpoint() { // 單駝峰
+  public double getHookSetpoint() {
     return hookPID.getSetpoint();
   }
 
-  public void setHookSetpoint(double setSetpoint) { // 單駝峰
-    final double trueSetpoint = gethookSetpoint();  // true
+  public void setHookSetpoint(double setSetpoint) {
+    final double trueSetpoint = getHookSetpoint();
     if (isPhylineExceed(trueSetpoint) != 0) {
       // hookPID.setSetpoint(
       //     (isPhylineExceed(trueSetpoint)) == 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
@@ -62,19 +62,19 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void PIDControl() {
-    double linePower = hookPID.calculate(getHookposition()); // 單駝峰
-    double modifiedLinepower = linePower; // 單駝峰
-    if (Math.abs(modifiedLinepower) > HookConstants.kHookPower) {
-      modifiedLinepower = HookConstants.kHookPower * (linePower > 0 ? 1 : 1); // kHookPower值是之後再調嗎
+    double linePower = hookPID.calculate(getHookPosition());
+    double modifiedLinePower = linePower;
+    if (Math.abs(modifiedLinePower) > HookConstants.kHookPower) {
+      modifiedLinePower = HookConstants.kHookPower * (linePower > 0 ? 1 : 1); // TO DO -> kHookPower
     }
     line.set(linePower);
-    SmartDashboard.putNumber("linepower", modifiedLinepower);
+    SmartDashboard.putNumber("linepower", modifiedLinePower);
 
   }
 
-  public double getHookposition() {
+  public double getHookPosition() {
     SmartDashboard.putNumber("", lineEncoder.getPosition());
-    return (lineEncoder.getPosition()) + positionOffset; // positionoffset 現在沒有數值
+    return (lineEncoder.getPosition()) + positionOffset; // TO DO -> positionOffset
 
   }
 

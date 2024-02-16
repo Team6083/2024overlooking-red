@@ -28,7 +28,7 @@ public class HookManualCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.controlmanul(0.25);
+    hookSubsystem.controlManul(0.25);
 
   }
 
