@@ -24,6 +24,9 @@ public final class Constants {
 
     public static class TransportConstants{
         public static final int kTrantsportChannel = 4;
+        public static final double kSetTrans = 0.3;
+        public static final double kSetReTrans = -0.3;
+        public static final double kDistRange = 8.0;
     }
 
     public static class IntakeConstants {

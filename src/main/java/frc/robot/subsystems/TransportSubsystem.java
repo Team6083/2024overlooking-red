@@ -27,11 +27,12 @@ public class TransportSubsystem extends SubsystemBase {
   }
 
   public void setTrans() {
-    trans.set(VictorSPXControlMode.PercentOutput, 0.3);//value變成constants
+  
+    trans.set(VictorSPXControlMode.PercentOutput,TransportConstants.kSetTrans);//value變成constants
   }
 
   public void setReTrans() {
-    trans.set(VictorSPXControlMode.PercentOutput, -0.3);//同上
+    trans.set(VictorSPXControlMode.PercentOutput, TransportConstants.kSetReTrans);//同上
   }
 
   public void intakeTrans(){
@@ -39,7 +40,7 @@ public class TransportSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Range dist", dist.getRange());
       SmartDashboard.putNumber("Timestamp dist", dist.getTimestamp());
     }
-    if(dist.getRange()<=8.0){//同上
+    if(dist.getRange()<= TransportConstants.kDistRange){//同上
       stopMotor();
     }else{
       setTrans();
