@@ -9,13 +9,9 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.PubSub;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants.HookConstants;
 
 public class HookSubsystem extends SubsystemBase {
@@ -30,14 +26,13 @@ public class HookSubsystem extends SubsystemBase {
 
   public HookSubsystem() {
     line = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
-    hookMotor1 = new VictorSPX(HookConstants.kHookmotor1Cnannel);
-    hookMotor2 = new VictorSPX(HookConstants.kHookmotor2Cnannel);
+    hookMotor1 = new VictorSPX(HookConstants.kHookMotor1Cnannel);
+    hookMotor2 = new VictorSPX(HookConstants.kHookMotor2Cnannel);
     linePID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     hookMotorPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     lineEncoder = line.getEncoder();// 這邊忘記設定lineEncoder的PositionConversionFactor，這你算出來的值一定不會是正確的喔，你可以查查要怎麼設定
     lineEncoder.setPositionConversionFactor(HookConstants.kHookPositionConversionfactor);
-    line.setInverted(HookConstants.kHookMotorInverted);
-    hookMotor1.follow(hookMotor2);
+    line.setInverted(HookConstants.kHookMotor1Inverted);
 
   }
 
@@ -60,26 +55,26 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void setLineSetpoint(double setSetpoint) {
-   final double trueSetpoint = setSetpoint;
+   final double currentSetpoint = setSetpoint;
 
-    if (isPhylineExceed(trueSetpoint) != 0) {
+    if (isPhyLineExceed(currentSetpoint) != 0) {
       linePID.setSetpoint(
-          (isPhylineExceed(trueSetpoint)) >= 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
+          (isPhyLineExceed(currentSetpoint)) >= 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
       return;
     }
 
-    linePID.setSetpoint(trueSetpoint);
+    linePID.setSetpoint(currentSetpoint);
 
   }
 
   public void setHookMotorsetpoint(double motorSetpoint) {
-    final double tureMotorsetpoint = motorSetpoint;
-    if (isPhylineExceed(tureMotorsetpoint) != 0) {
+    final double currentSetpoint = motorSetpoint;
+    if (isPhyLineExceed(currentSetpoint) != 0) {
       hookMotorPID.setSetpoint(
-          (isPhylineExceed(tureMotorsetpoint)) == 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
+          (isPhyLineExceed(currentSetpoint)) == 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
       return;
     }
-    hookMotorPID.setSetpoint(tureMotorsetpoint);
+    hookMotorPID.setSetpoint(currentSetpoint);
 
   }
 
@@ -114,13 +109,14 @@ public class HookSubsystem extends SubsystemBase {
   public void stopMotor() {
     line.set(0.0);
     hookMotor1.set(VictorSPXControlMode.PercentOutput, 0.0);
+    hookMotor2.follow(hookMotor1);
   }
 
   public void resetHookEncoder() {
     lineEncoder.setPosition(0);
   }
 
-  private int isPhylineExceed(double position) {
+  private int isPhyLineExceed(double position) {
     return (position < HookConstants.kHookPositionMin ? -1 : (position > HookConstants.kHookPositionMax) ? 1 : 0);
 
   }
