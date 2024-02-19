@@ -4,8 +4,6 @@
 
 package frc.robot.commands.hookCmds;
 
-import javax.sound.sampled.Line;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.HookSubsystem;
 
@@ -28,7 +26,7 @@ public class LinePIDCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.setLineSetpoint(hookSubsystem.getLineSetpoint());//邏輯有問題，如果你的setpoint永遠是你的setpoint，那不就不會收線嗎
+    hookSubsystem.setHookMotorsetpoint(hookSubsystem.getLineSetpoint());//邏輯有問題，如果你的setpoint永遠是你的setpoint，那不就不會收線嗎
     hookSubsystem.linePIDControl();
   }
 

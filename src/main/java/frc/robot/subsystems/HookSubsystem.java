@@ -4,11 +4,15 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.PubSub;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -16,70 +20,100 @@ import frc.robot.Constants.HookConstants;
 
 public class HookSubsystem extends SubsystemBase {
   /** Creates a new HookSubsystem. */
-  private final PIDController hookPID;
+  private final PIDController linePID;
+  private final PIDController hookMotorPID;
   private final CANSparkMax line;
+  public final VictorSPX hookMotor1;
+  public final VictorSPX hookMotor2;
   private final RelativeEncoder lineEncoder;
-  private double positionOffset;
+  private double positionOffset=0.0;
 
   public HookSubsystem() {
     line = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
-    hookPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
-    lineEncoder = line.getEncoder();//這邊忘記設定lineEncoder的PositionConversionFactor，這你算出來的值一定不會是正確的喔，你可以查查要怎麼設定
+    hookMotor1 = new VictorSPX(HookConstants.kHookmotor1Cnannel);
+    hookMotor2 = new VictorSPX(HookConstants.kHookmotor2Cnannel);
+    linePID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
+    hookMotorPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
+    lineEncoder = line.getEncoder();// 這邊忘記設定lineEncoder的PositionConversionFactor，這你算出來的值一定不會是正確的喔，你可以查查要怎麼設定
+    lineEncoder.setPositionConversionFactor(HookConstants.kHookPositionConversionfactor);
     line.setInverted(HookConstants.kHookMotorInverted);
+    hookMotor1.follow(hookMotor2);
 
   }
 
-  public void controlHook(double hookControlSpeed) {
+  public void controlLine(double hookControlSpeed) {
     line.set(hookControlSpeed);
-    hookPID.setSetpoint(getHookPosition());
+    linePID.setSetpoint(getHookPosition());
   }
 
-  public void controlManul(double speed) {
-    line.set(speed);
-    hookPID.setSetpoint(getHookPosition());
+  public void controlHookMotor(double speed) {
+    hookMotor1.set(VictorSPXControlMode.PercentOutput, HookConstants.khookmotor1Power);
+    hookMotorPID.setSetpoint(getHookPosition());
   }
 
-  public double getHookSetpoint() {
-    return hookPID.getSetpoint();
+  public double getLineSetpoint() {
+    return linePID.getSetpoint();
   }
 
-  public void setHookSetpoint(double setSetpoint) {
-    final double trueSetpoint = getHookSetpoint();
+  public double getHookMotorSetpoint() {
+    return hookMotorPID.getSetpoint();
+  }
+
+  public void setLineSetpoint(double setSetpoint) {
+   final double trueSetpoint = setSetpoint;
+
     if (isPhylineExceed(trueSetpoint) != 0) {
-      // hookPID.setSetpoint(
-      //     (isPhylineExceed(trueSetpoint)) == 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
+      linePID.setSetpoint(
+          (isPhylineExceed(trueSetpoint)) >= 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
       return;
     }
-    // setSetpoint += trueSetpoint;  // 這樣setpoint最後的數值就不是當初放進函式的，我不太理解為甚麼要判斷trueSetpoint的值以及把setSetpoint的值與trueSetpoint相加
-    if (isPhylineExceed(setSetpoint) == -1) {
-      setSetpoint = HookConstants.kHookPositionMin;
-    } else if (isPhylineExceed(setSetpoint) == 1) {
-      setSetpoint = HookConstants.kHookPositionMax;
-    }
 
-    hookPID.setSetpoint(setSetpoint);
+    linePID.setSetpoint(trueSetpoint);
 
   }
 
-  public void PIDControl() {
-    double linePower = hookPID.calculate(getHookPosition());
+  public void setHookMotorsetpoint(double motorSetpoint) {
+    final double tureMotorsetpoint = motorSetpoint;
+    if (isPhylineExceed(tureMotorsetpoint) != 0) {
+      hookMotorPID.setSetpoint(
+          (isPhylineExceed(tureMotorsetpoint)) == 1 ? HookConstants.kHookPositionMax : HookConstants.kHookPositionMin);
+      return;
+    }
+    hookMotorPID.setSetpoint(tureMotorsetpoint);
+
+  }
+
+  public void linePIDControl() {
+    double linePower = linePID.calculate(lineEncoder.getPosition(), getLineSetpoint());
     double modifiedLinePower = linePower;
     if (Math.abs(modifiedLinePower) > HookConstants.kHookPower) {
-      modifiedLinePower = HookConstants.kHookPower * (linePower > 0 ? 1 : 1); // TO DO -> kHookPower
+      modifiedLinePower = HookConstants.kHookPower * (linePower > 0 ? 1 :-1);
     }
-    line.set(linePower);
+    line.setVoltage(linePower);
     SmartDashboard.putNumber("linepower", modifiedLinePower);
 
   }
 
+  public void hookMotorPIDControl() {
+    double hookMotor1Power = hookMotorPID.calculate(lineEncoder.getPosition(),getHookMotorSetpoint());
+    double modifiedHookMotor1Power = hookMotor1Power;
+    if (Math.abs(modifiedHookMotor1Power) > HookConstants.kHookPower) {
+      modifiedHookMotor1Power = HookConstants.kHookPower * (hookMotor1Power > 0 ? 1 :-1);
+    }
+     hookMotor1.set(VictorSPXControlMode.PercentOutput,hookMotor1Power/12);
+    SmartDashboard.putNumber("hookmotorpower", modifiedHookMotor1Power);
+
+  }
+
   public double getHookPosition() {
-    SmartDashboard.putNumber("", lineEncoder.getPosition());//""之間要有名稱喔
-    return (lineEncoder.getPosition()) + positionOffset; // TO DO -> positionOffset
+    SmartDashboard.putNumber("Position", lineEncoder.getPosition());
+    return (lineEncoder.getPosition()) + positionOffset;
 
   }
 
   public void stopMotor() {
     line.set(0.0);
+    hookMotor1.set(VictorSPXControlMode.PercentOutput, 0.0);
   }
 
   public void resetHookEncoder() {
@@ -94,6 +128,7 @@ public class HookSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putData("HookPID", hookPID);
+    SmartDashboard.putData("LINEPID", linePID);
+    SmartDashboard.putData("hook motor", hookMotorPID);
   }
 }
