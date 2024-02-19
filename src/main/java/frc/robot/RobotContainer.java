@@ -15,7 +15,7 @@ import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.shooterCmds.ShootManualCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.shooterCmds.ShooterTestCmd;
-import frc.robot.commands.GyroResetCmd;
+import frc.robot.commands.GyroresetCmd;
 import frc.robot.commands.hookCmds.HookManualCmd;
 import frc.robot.commands.hookCmds.HookManualPIDCmd;
 import frc.robot.commands.IntakeCmd;
