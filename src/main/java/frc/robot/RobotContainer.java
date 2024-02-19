@@ -15,9 +15,9 @@ import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.shooterCmds.ShootManualCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.shooterCmds.ShooterTestCmd;
-import frc.robot.commands.GyroResetCmd;
+import frc.robot.commands.GyroresetCmd;
 import frc.robot.commands.hookCmds.HookManualCmd;
-import frc.robot.commands.hookCmds.HookManualPIDCmd;
+import frc.robot.commands.hookCmds.LinePIDCmd;
 import frc.robot.commands.IntakeCmd;
 import frc.robot.Constants.XboxControllerConstants;
 import frc.robot.subsystems.HookSubsystem;
@@ -67,8 +67,8 @@ public class RobotContainer {
     main.x().toggleOnTrue(new TransCmd(trans));
     main.back().toggleOnTrue(new ReTransCmd(trans));
     // main.y().whileTrue(new HookManualCmd(hook));
-    main.pov(0).onTrue(new HookManualPIDCmd(hook));
-    main.pov(180).onTrue(new HookManualPIDCmd(hook));
+    main.pov(0).onTrue(new LinePIDCmd(hook));
+    main.pov(180).onTrue(new LinePIDCmd(hook));
 
   }
 

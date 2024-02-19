@@ -22,7 +22,7 @@ public final class Constants {
         public static final double kA = 0.0;
     }
 
-    public static class TransportConstants{
+    public static class TransportConstants {
         public static final int kTrantsportChannel = 4;
         public static final double kSetTrans = 0.3;
         public static final double kSetReTrans = -0.3;
@@ -49,17 +49,20 @@ public final class Constants {
         public static final double kRiseTriggerValue = 0.15;
     }
 
-    public static class HookConstants{
+    public static class HookConstants {
         public static final int kHookLineChannel = 22;
-        public static final double kP=0.0;
-        public static final double kI=0.0;
-        public static final double kD=0.0;
-        public static final double kHookPositionMax=60.0;
-        public static final double kHookPositionMin=0.0;
-        public static final double kHookPower=0;
-        public static final boolean kHookMotorInverted=false;
-        public static final double kInitSetpoint=0.0;
-
+        public static final int kHookmotor1Cnannel = 1;//孔位記得改
+        public static final int kHookmotor2Cnannel = 3;//孔位記得改
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kHookPositionMax = 1.0;
+        public static final double kHookPositionMin = -1.0;
+        public static final double kHookPower = 0;
+        public static final double khookmotor1Power=0.0;
+        public static final boolean kHookMotorInverted = false;
+        public static final double kInitSetpoint = 0.0;
+        public static final double kHookPositionConversionfactor = 0.0;
 
     }
 
@@ -122,7 +125,6 @@ public final class Constants {
         public static final int A_pipeline = 0;
         public static final double klimelightLensHeightInches = 0;
         public static final double klimelightMountAngleDegrees = 0;
-      }
-
     }
 
+}
