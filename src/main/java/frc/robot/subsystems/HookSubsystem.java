@@ -92,16 +92,16 @@ public class HookSubsystem extends SubsystemBase {
   public void hookMotorPIDControl() {
     double hookMotor1Power = hookMotorPID.calculate(lineEncoder.getPosition(), getHookMotorSetpoint());
     double modifiedHookMotor1Power = hookMotor1Power;
-    if (Math.abs(modifiedHookMotor1Power) > HookConstants.kLinePower) {
-      modifiedHookMotor1Power = HookConstants.kLinePower * (hookMotor1Power > 0 ? 1 : -1);
+    if (Math.abs(modifiedHookMotor1Power) > HookConstants.khookmotor1Power) {
+      modifiedHookMotor1Power = HookConstants.khookmotor1Power * (hookMotor1Power > 0 ? 1 : -1);
     }
     hookMotor1.set(VictorSPXControlMode.PercentOutput, hookMotor1Power / 12);
     SmartDashboard.putNumber("hookmotor1power", modifiedHookMotor1Power);
     
     double hookMotor2Power = hookMotorPID.calculate(lineEncoder.getPosition(), getHookMotorSetpoint());
     double modifiedHookMotor2Power = hookMotor1Power;
-    if (Math.abs(modifiedHookMotor2Power) > HookConstants.kLinePower) {
-      modifiedHookMotor2Power = HookConstants.kLinePower * (hookMotor2Power > 0 ? 1 : -1);
+    if (Math.abs(modifiedHookMotor2Power) > HookConstants.khookmotor2Power) {
+      modifiedHookMotor2Power = HookConstants.khookmotor2Power * (hookMotor2Power > 0 ? 1 : -1);
     }
     hookMotor2.set(VictorSPXControlMode.PercentOutput, hookMotor2Power / 12);
     SmartDashboard.putNumber("hookmotor2power", modifiedHookMotor2Power);
