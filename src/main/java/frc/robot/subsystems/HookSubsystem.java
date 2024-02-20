@@ -113,7 +113,7 @@ public class HookSubsystem extends SubsystemBase {
 
   }
 
-  public void stoplineMotor() {
+  public void stopLineMotor() {
     line.set(0.0);
   }
 
