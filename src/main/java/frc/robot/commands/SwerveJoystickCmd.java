@@ -8,11 +8,11 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DrivebaseConstants;
-import frc.robot.subsystems.drive.DrivebaseSubsystem;
+import frc.robot.subsystems.drive.Drivebase;
 
 public class SwerveJoystickCmd extends Command {
   /** Creates a new SwerveTest1ManualCmd. */
-  private final DrivebaseSubsystem DrivebaseSubsystem;
+  private final Drivebase drivebase;
   private final CommandXboxController main;
   private final SlewRateLimiter xLimiter;
   private final SlewRateLimiter yLimiter;
@@ -20,14 +20,14 @@ public class SwerveJoystickCmd extends Command {
   private final double drivebaseMaxSpeed = DrivebaseConstants.kMaxSpeed;
   private double xSpeed, ySpeed, rotSpeed;
 
-  public SwerveJoystickCmd(DrivebaseSubsystem drivebase, CommandXboxController main) {
+  public SwerveJoystickCmd(Drivebase drivebase, CommandXboxController main) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.DrivebaseSubsystem = drivebase;
+    this.drivebase = drivebase;
     this.main = main;
     xLimiter = new SlewRateLimiter(DrivebaseConstants.xLimiterRateLimit);
     yLimiter = new SlewRateLimiter(DrivebaseConstants.yLimiterRateLimit);
     rotLimiter = new SlewRateLimiter(DrivebaseConstants.rotLimiterRateLimit);
-    addRequirements(this.DrivebaseSubsystem);
+    addRequirements(this.drivebase);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,7 +36,7 @@ public class SwerveJoystickCmd extends Command {
     xSpeed = xLimiter.calculate(main.getLeftX()) * drivebaseMaxSpeed;
     ySpeed = yLimiter.calculate(main.getLeftY()) * drivebaseMaxSpeed;
     rotSpeed = rotLimiter.calculate(main.getRightX()) * drivebaseMaxSpeed;
-    DrivebaseSubsystem.drive(-xSpeed, ySpeed, rotSpeed, !main.getHID().getAButton());
+    drivebase.drive(-xSpeed, ySpeed, rotSpeed, !main.getHID().getAButton());
     // drivetain.testDrive(main.getLeftY(), main.getLeftX());
   }
 
