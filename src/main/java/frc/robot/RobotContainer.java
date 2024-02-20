@@ -25,10 +25,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
-import frc.robot.subsystems.drive.DrivebaseSubsystem;
+import frc.robot.subsystems.drive.Drivebase;
 
 public class RobotContainer {
-  private final CommandXboxController main;
+  private final CommandXboxController mainController;
   private final ShooterSubsystem shooter;
   private final TransportSubsystem trans;
   // private final HookSubsystem hook;
@@ -42,7 +42,7 @@ public class RobotContainer {
   // double mainRightTrigggerValue;
 
   public RobotContainer() {
-    main = new CommandXboxController(XboxControllerConstants.kMain);
+    mainController = new CommandXboxController(XboxControllerConstants.kMainController);
     shooter = new ShooterSubsystem();
     trans = new TransportSubsystem();
     // hook = new HookSubsystem();
@@ -63,12 +63,12 @@ public class RobotContainer {
     // riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
     // main.b().onTrue(new GyroresetCmd(drivebase) );
-    main.a().toggleOnTrue(new ShootPIDCmd(shooter));
-    main.x().toggleOnTrue(new TransCmd(trans));
-    main.back().toggleOnTrue(new ReTransCmd(trans));
+    mainController.a().toggleOnTrue(new ShootPIDCmd(shooter));
+    mainController.x().toggleOnTrue(new TransCmd(trans));
+    mainController.back().toggleOnTrue(new ReTransCmd(trans));
     // main.y().whileTrue(new HookManualCmd(hook));
-    main.pov(0).onTrue(new LinePIDCmd(hook));
-    main.pov(180).onTrue(new LinePIDCmd(hook));
+    mainController.pov(0).onTrue(new LinePIDCmd(hook));
+    mainController.pov(180).onTrue(new LinePIDCmd(hook));
 
   }
 

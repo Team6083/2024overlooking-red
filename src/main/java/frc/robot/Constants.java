@@ -4,7 +4,7 @@ import java.security.PublicKey;
 
 public final class Constants {
     public static class XboxControllerConstants {
-        public static final int kMain = 0;
+        public static final int kMainController = 0;
     }
 
     public static class ShooterConstants {
