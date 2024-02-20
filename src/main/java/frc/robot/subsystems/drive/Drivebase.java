@@ -12,6 +12,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivebaseConstants;
+import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
+import frc.robot.subsystems.NoteTracking.NoteTrackingPhotovision;
 
 public class Drivebase extends SubsystemBase {
   /** Creates a new Drivetain. */
@@ -45,6 +48,33 @@ public class Drivebase extends SubsystemBase {
 
   private final AHRS gyro;
 
+  private PIDController facingNotePID;
+  private PIDController facingTagPID;
+  private PIDController followingTagPID;
+  public PIDController faceToSpecificAnglePID;
+
+   // face method value maybe correct
+   private final double kP = 0.08;
+   private final double kI = 0;
+   private final double kD = 0;
+ 
+   // fix distance value not determined yet
+   private final double kfP = 0.8;
+   private final double kfI = 0;
+   private final double kfD = 0.006;
+ 
+   // fix position
+   public static final double kPP = 0.03;
+   public static final double kII = 0;
+   public static final double kDD = 0; 
+
+  private double trackTargetError = 0.0;
+
+  private Boolean trackingCondition = false;
+
+  private NoteTrackingPhotovision note;
+  private TagTrackingLimelight tag;
+
   private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
 
   public Drivebase() {
@@ -57,6 +87,8 @@ public class Drivebase extends SubsystemBase {
     frontRight = new SwerveModule(12, 13, 4, DrivebaseConstants.kFrontRightDriveMotorInverted);
     backLeft = new SwerveModule(14, 15, 2, DrivebaseConstants.kBackLeftDriveMotorInverted);
     backRight = new SwerveModule(16, 17, 3, DrivebaseConstants.kBackRightDriveMotorInverted);
+
+    tag = new TagTrackingLimelight();
 
     SmartDashboard.putData("frontLeft", frontLeft);
     SmartDashboard.putData("frontRight", frontRight);
@@ -84,6 +116,10 @@ public class Drivebase extends SubsystemBase {
 
     // set the swerve speed equal 0
     drive(0, 0, 0, false);
+
+    facingNotePID = new PIDController(kP, kI, kD);
+    followingTagPID = new PIDController(kfP, kfI, kfD);
+    facingTagPID = new PIDController(kP, kI, kD);
 
     AutoBuilder.configureHolonomic(
         this::getPose2d, // Robot pose suppier
@@ -121,7 +157,8 @@ public class Drivebase extends SubsystemBase {
     gyro.reset();
   }
   public Rotation2d getRotation2d() {
-    return Rotation2d.fromDegrees(DrivebaseConstants.kGyroOffSet+((DrivebaseConstants.kGyroInverted) ? (360.0 - gyro.getRotation2d().getDegrees())
+    return Rotation2d.fromDegrees(DrivebaseConstants.kGyroOffSet
+    + ((DrivebaseConstants.kGyroInverted) ? (360.0 - gyro.getRotation2d().getDegrees())
         : gyro.getRotation2d().getDegrees()));
   }
 
@@ -148,6 +185,186 @@ public class Drivebase extends SubsystemBase {
       backRight.setDesiredState(swerveModuleStates[3]);
   }
 
+  public double facingNoteRot(double currentRot) {
+    var target = note.getNotes();
+    if (target.size() > 0) {
+      var pose = target.get(0);
+      double rot = -facingNotePID.calculate(pose.getX(), 0);
+      return rot;
+    } else {
+      return currentRot;
+    }
+  }
+
+  public double[] followingNoteSpeed() {
+    var target = note.getNotes();
+    double[] speed = new double[3];
+    speed[0] = 0;
+    speed[1] = 0;
+    speed[2] = 0;
+    if (target.size() > 0) {
+      var pose = target.get(0);
+      double XSpeed = facingNotePID.calculate(pose.getY(), 0.2);
+      double YSpeed = 0;
+      double rot = -facingNotePID.calculate(pose.getX(), 0);
+      // return rot;
+      speed[0] = XSpeed;
+      speed[1] = YSpeed;
+      speed[2] = rot;
+    }
+    return speed;
+  }
+
+  
+
+  public void faceTarget() {
+    double offset = tag.getTx();
+    double hasTarget = tag.getTv();
+    double rot = 0;
+    if (hasTarget == 1) {
+      rot = facingTagPID.calculate(offset, 0);
+    }
+    drive(0, 0, -rot, false);
+  }
+
+  public double faceTargetMethod2() {
+    double offset = tag.getTx();
+    double hasTarget = tag.getTv();
+    double rot = 0;
+    if (hasTarget == 1) {
+      rot = -facingTagPID.calculate(offset, 0);
+    }
+    SmartDashboard.putNumber("rot", rot);
+    return rot;
+  }
+
+  public void follow() {
+    double offset = tag.getTx();
+    double hasTarget = tag.getTv();
+    double rot = 0;
+    if (hasTarget == 1) {
+      rot = facingTagPID.calculate(offset, 0);
+    }
+    double[] bt = tag.getBT();
+    double x_dis = bt[2];
+    double y_dis = bt[2];
+    // double hasTarget = tag.getTv();
+    double xSpeed = 0;
+    // double ySpeed = 0;
+    if (hasTarget == 1) {
+      xSpeed = -followingTagPID.calculate(x_dis, 0.5);
+      // ySpeed = follow_pid.calculate(y_dis, 1);
+    }
+    SmartDashboard.putNumber("x_dis_speed", xSpeed);
+    // SmartDashboard.putNumber("y_dis_speed", ySpeed);
+    drive(xSpeed, 0, -rot, false);
+    SmartDashboard.putNumber("distance", tag.getMyDistance());
+    // drive(0, 0, -rot, false);
+  }
+
+  public void fixDistanceBT() {
+    double[] bt = tag.getBT();
+    double x_dis = bt[0];
+    double y_dis = bt[1];
+    double hasTarget = tag.getTv();
+    double xSpeed = 0;
+    double ySpeed = 0;
+    if (hasTarget == 1) {
+      xSpeed = followingTagPID.calculate(x_dis, 0);
+      ySpeed = followingTagPID.calculate(y_dis, 1);
+    }
+    SmartDashboard.putNumber("x_dis_speed", xSpeed);
+    SmartDashboard.putNumber("y_dis_speed", ySpeed);
+    drive(xSpeed, 0, 0, true);
+  }
+
+  public void fixDistanceCT() {
+    double[] ct = tag.getCT();
+    double x_dis = ct[0];
+    double y_dis = ct[1];
+    double hasTarget = tag.getTv();
+    double xSpeed = 0;
+    double ySpeed = 0;
+    if (hasTarget == 1) {
+      xSpeed = followingTagPID.calculate(x_dis, 0);
+      ySpeed = followingTagPID.calculate(y_dis, 1);
+    }
+    SmartDashboard.putNumber("x_dis_speed", xSpeed);
+    SmartDashboard.putNumber("y_dis_speed", ySpeed);
+    drive(xSpeed, 0, 0, true);
+  }
+
+  public void Go_To_45_Angle() {
+    double tan = Math.abs(tag.getBT()[0]) / Math.abs(tag.getBT()[2]);
+    faceToSpecificAnglePID = new PIDController(kPP, kII, kDD);
+    double xSpeed = 0;
+    double ySpeed = 0;
+    if (tag.getTv() == 1) {
+      // xSpeed = PID.calculate(tan, 1);
+      // ySpeed = follow_pid.calcualte();
+
+    }
+    if (Math.abs(tan - 1) < 0.01) {
+      drive(xSpeed, 0, 0, false);
+    }
+  }
+
+  public void Go_To_45_Angle_New() {
+    // double tan = Math.abs(tag.getBT()[0]) / Math.abs(tag.getBT()[2]);
+    double x_offset = tag.getBT()[0];
+    double z_offset = tag.getBT()[2];
+    faceToSpecificAnglePID = new PIDController(kPP, kII, kDD);
+    double xSpeed = 0;
+    double ySpeed = 0;
+    if (tag.getTv() == 1) {
+      xSpeed = faceToSpecificAnglePID.calculate(x_offset, 1);
+      ySpeed = followingTagPID.calculate(z_offset, 1);
+    }
+    if (Math.abs(x_offset - 1) > 0.01 && Math.abs(ySpeed - 1) > 0.01) {
+      drive(xSpeed, ySpeed, 0, false);
+    } else {
+      drive(0, 0, 0, false);
+    }
+  }
+
+  public void Go_To_30_Angle() {
+    double tan = Math.abs(tag.getBT()[0]) / Math.abs(tag.getBT()[2]);
+    faceToSpecificAnglePID = new PIDController(kPP, kII, kDD);
+    double speed = 0;
+    if (tag.getTv() == 1) {
+      speed = faceToSpecificAnglePID.calculate(tan, 0.3);
+    }
+    if (Math.abs(tan - 1) < 0.01) {
+      drive(speed, 0, 0, false);
+    }
+  }
+
+  public void Keep_45_Angle() {
+    double offset = tag.getTlong() / tag.getTshort();
+    faceToSpecificAnglePID = new PIDController(kPP, kII, kDD);
+    double speed = 0;
+    if (tag.getTv() == 1) {
+      speed = faceToSpecificAnglePID.calculate(offset, 1.414);
+    }
+    drive(0, 0, speed, false);
+  }
+
+  public void switchTrackCondition() {
+    trackingCondition = !trackingCondition;
+  }
+
+  public void addTrackTargetError() {
+    trackTargetError += 2;
+  }
+
+  public void minusTrackTargetError() {
+    trackTargetError -= 2;
+  }
+
+  public void resetTrackTargetError() {
+    trackTargetError = 0.0;
+  }
+
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
     odometry.update(
@@ -166,6 +383,7 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putNumber("backLeft_speed", swerveModuleStates[2].speedMetersPerSecond);
     SmartDashboard.putNumber("backRight_speed", swerveModuleStates[3].speedMetersPerSecond);
     SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
+    SmartDashboard.putBoolean("trackingCondition", trackingCondition);
   }
 
   public Pose2d getPose2d() {

@@ -86,7 +86,7 @@ public final class Constants {
         public static final int kBackRightTurningEncoderChannel = 3;
 
         // can coder magnet offset value
-        public static final double kFrontLeftCanCoderMagOffset = 0.066650;
+        public static final double kFrontLeftCanCoderMagOffset = -0.060303;
         public static final double kFrontRightCanCoderMagOffset = -0.442871;
         public static final double kBackLeftCanCoderMagOffset = 0.351562;
         public static final double kBackRightCanCoderMagOffset = -0.333740;
@@ -104,8 +104,9 @@ public final class Constants {
         public static final boolean kFrontRightDriveMotorInverted = false;
         public static final boolean kBackLeftDriveMotorInverted = true;
         public static final boolean kBackRightDriveMotorInverted = false;
-
-        public static final boolean kGyroInverted = false; // wheather gyro is under the robot
+        
+        public static final double kPTrackingValue = 1.0;
+        public static final boolean kGyroInverted = true; // wheather gyro is under the robot
         public static final double kGyroOffSet = -90.0;
     }
 
@@ -122,12 +123,6 @@ public final class Constants {
         public static final double kDRotController = 0.0004;
     }
 
-    public static final class VisionTrackingConstants {
-        public static final int A_pipeline = 0;
-        public static final double klimelightLensHeightInches = 0;
-        public static final double klimelightMountAngleDegrees = 0;
-    }
-
     public static final class AutoConstants {
         // chooser path name
 
@@ -142,4 +137,18 @@ public final class Constants {
         public static final double drivebaseRadius = 0.34;
     }
 
+    public static final class NoteTrackingConstants {
+        public static final String cameraName = "Microsoft_LifeCam_HD-3000";
+        public static final int noteTrakingPipeline = 1;
+        public static final double cameraHeight = 0.36;
+        public static final double cameraWeight = 0.0;
+        public static final double pitchDegree = -20.0;
+        public static final double yawDegree = 0;
+      }
+    
+      public static final class AprilTagConstants {
+        public static final int A_pipeline = 0;
+        public static final double klimelightLensHeightInches = 0;
+        public static final double klimelightMountAngleDegrees = 0;
+      }
 }
