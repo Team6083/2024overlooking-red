@@ -10,9 +10,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HookConstants;
+import frc.robot.Constants.PdConstants;
 
 public class HookSubsystem extends SubsystemBase {
   /** Creates a new HookSubsystem. */
@@ -23,8 +25,10 @@ public class HookSubsystem extends SubsystemBase {
   public final VictorSPX hookMotor2;
   private final RelativeEncoder lineEncoder;
   private double positionOffset = 0.0;
+  private final PowerDistribution Pd;
 
-  public HookSubsystem() {
+  public HookSubsystem(PowerDistribution Pd) {
+    this.Pd = Pd;
     line = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
     hookMotor1 = new VictorSPX(HookConstants.kHookMotor1Cnannel);
     hookMotor2 = new VictorSPX(HookConstants.kHookMotor2Cnannel);
@@ -97,7 +101,7 @@ public class HookSubsystem extends SubsystemBase {
     }
     hookMotor1.set(VictorSPXControlMode.PercentOutput, hookMotor1Power / 12);
     SmartDashboard.putNumber("hookmotor1power", modifiedHookMotor1Power);
-    
+
     double hookMotor2Power = hookMotorPID.calculate(lineEncoder.getPosition(), getHookMotorSetpoint());
     double modifiedHookMotor2Power = hookMotor1Power;
     if (Math.abs(modifiedHookMotor2Power) > HookConstants.khookmotor2Power) {
@@ -131,10 +135,25 @@ public class HookSubsystem extends SubsystemBase {
 
   }
 
+  public double getLineCurrent() {
+    return Pd.getCurrent(PdConstants.klineCurrentchannel);
+  }
+
+  public double getHookMotor1Current() {
+    return Pd.getCurrent(PdConstants.kHookMotor1Currentchannel);
+  }
+
+  public double getHookMotor2Current() {
+    return Pd.getCurrent(PdConstants.kHookMotor2Currentchannel);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putData("LINEPID", linePID);
     SmartDashboard.putData("hook motor", hookMotorPID);
+    SmartDashboard.putNumber("line Current", getLineCurrent());
+    SmartDashboard.putNumber("HookMotor1Current", getHookMotor1Current());
+    SmartDashboard.putNumber("HookMotor2Current", getHookMotor2Current());
   }
 }

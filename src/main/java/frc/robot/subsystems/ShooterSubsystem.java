@@ -9,9 +9,11 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.PdConstants;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -22,12 +24,13 @@ public class ShooterSubsystem extends SubsystemBase {
   private final Encoder downEncoder;
   private final PIDController ratePidController;
   private final SimpleMotorFeedforward rateFeedForwardControl;
+  private final PowerDistribution Pd;
 
-  public ShooterSubsystem() {
+  public ShooterSubsystem(PowerDistribution Pd) {
 
     shootUpMotor = new VictorSPX(ShooterConstants.kShooterUpChannel);
     shootDownMotor = new VictorSPX(ShooterConstants.kShooterDownChannel);
-
+    this.Pd = Pd;
     upEncoder = new Encoder(2, 3);
     downEncoder = new Encoder(5, 6);
 
@@ -97,6 +100,12 @@ public class ShooterSubsystem extends SubsystemBase {
     return shootDownMotor.getBusVoltage();
   }
 
+  public double getDownShooterCurrent() {
+    return Pd.getCurrent(PdConstants.kShooterDownMotorCurrentchannel);
+  }
+  public double getUpShooterCurrent(){
+    return Pd.getCurrent(PdConstants.kShooterUpMotorCurrentchannel);
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -104,5 +113,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("downRate", getDownEncoderRate());
     SmartDashboard.putNumber("upPower", shootUpMotor.getMotorOutputPercent());
     SmartDashboard.putNumber("downPower", shootDownMotor.getMotorOutputPercent());
+    SmartDashboard.putNumber("downMotorCurrent", getDownShooterCurrent());
+    SmartDashboard.putNumber("upMotorCurrent", getUpShooterCurrent());
   }
 }

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -36,21 +37,21 @@ public class RobotContainer {
   // private final RiseShooterSubsystem riseMotor;
   // private final DrivebaseSubsystem drivebase;
   private final HookSubsystem hook;
-
+  private final PowerDistribution pd;
 
   // double mainLeftTriggerValue;
   // double mainRightTrigggerValue;
 
   public RobotContainer() {
+    pd = new PowerDistribution();
     mainController = new CommandXboxController(XboxControllerConstants.kMainController);
-    shooter = new ShooterSubsystem();
+    shooter = new ShooterSubsystem(pd);
     trans = new TransportSubsystem();
-    // hook = new HookSubsystem();
-    intake = new IntakeSubsystem();
+    intake = new IntakeSubsystem(pd);
     // riseMotor = new RiseShooterSubsystem();
     // drivebase = new DrivebaseSubsystem();
-    hook = new HookSubsystem();
-    
+    hook = new HookSubsystem(pd);
+
     // mainLeftTriggerValue = main.getLeftTriggerAxis();
     // mainRightTrigggerValue = main.getRightTriggerAxis();
     configureBindings();
@@ -58,9 +59,11 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // main.y().toggleOnTrue(new IntakeCmd(intake).alongWith(new IntakeTransCmd(trans)));
+    // main.y().toggleOnTrue(new IntakeCmd(intake).alongWith(new
+    // IntakeTransCmd(trans)));
     // main.x().and(main.a()).toggleOnTrue(new ShootManualCmd(shooter));
-    // riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor, mainLeftTriggerValue, mainRightTrigggerValue));
+    // riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor,
+    // mainLeftTriggerValue, mainRightTrigggerValue));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
     // main.b().onTrue(new GyroresetCmd(drivebase) );
     mainController.a().toggleOnTrue(new ShootPIDCmd(shooter));

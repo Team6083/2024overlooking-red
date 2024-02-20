@@ -63,7 +63,7 @@ public final class Constants {
         public static final double kHookPositionConversionfactor = 1.0;
         public static final double kLinePower = 0;
         public static final double khookmotor1Power = 0.0;
-        public static final double khookmotor2Power=0.0; 
+        public static final double khookmotor2Power = 0.0;
         public static final boolean kHookMotor1Inverted = false;
         public static final boolean kHookMotor2Inverted = false;
         public static final double kInitSetpoint = 0.0;
@@ -107,7 +107,7 @@ public final class Constants {
         public static final boolean kFrontRightDriveMotorInverted = false;
         public static final boolean kBackLeftDriveMotorInverted = true;
         public static final boolean kBackRightDriveMotorInverted = false;
-        
+
         public static final double kPTrackingValue = 1.0;
         public static final boolean kGyroInverted = true; // wheather gyro is under the robot
         public static final double kGyroOffSet = -90.0;
@@ -124,6 +124,16 @@ public final class Constants {
         public static final double kMaxSpeedTurningDegree = 180.0;
         public static final double kPRotController = kMaxModuleTuringVoltage / kMaxSpeedTurningDegree;
         public static final double kDRotController = 0.0004;
+    }
+
+    public static final class PdConstants {
+        public static final int kIntakeMotorCurrrentchannel = 0;
+        public static final int kShooterDownMotorCurrentchannel = 1;
+        public static final int kShooterUpMotorCurrentchannel = 2;
+        public static final int klineCurrentchannel = 3;
+        public static final int kHookMotor1Currentchannel = 4;
+        public static final int kHookMotor2Currentchannel = 5;
+
     }
 
     public static final class AutoConstants {
@@ -147,11 +157,11 @@ public final class Constants {
         public static final double cameraWeight = 0.0;
         public static final double pitchDegree = -20.0;
         public static final double yawDegree = 0;
-      }
-    
-      public static final class AprilTagConstants {
+    }
+
+    public static final class AprilTagConstants {
         public static final int A_pipeline = 0;
         public static final double klimelightLensHeightInches = 0;
         public static final double klimelightMountAngleDegrees = 0;
-      }
+    }
 }
