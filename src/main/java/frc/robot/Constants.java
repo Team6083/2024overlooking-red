@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.security.PublicKey;
+
 public final class Constants {
     public static class XboxControllerConstants {
         public static final int kMainController = 0;
@@ -59,8 +61,9 @@ public final class Constants {
         public static final double kHookPositionMax = 60.0;
         public static final double kHookPositionMin = 0.0;
         public static final double kHookPositionConversionfactor = 1.0;
-        public static final double kHookPower = 0;
+        public static final double kLinePower = 0;
         public static final double khookmotor1Power = 0.0;
+        public static final double khookmotor2Power=0.0; 
         public static final boolean kHookMotor1Inverted = false;
         public static final boolean kHookMotor2Inverted = false;
         public static final double kInitSetpoint = 0.0;
