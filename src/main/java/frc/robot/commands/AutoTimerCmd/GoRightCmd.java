@@ -9,7 +9,7 @@ import frc.robot.subsystems.drive.Drivebase;
 
 public class GoRightCmd extends Command {
   /** Creates a new GoRightCmd. */
-   public final Drivebase drivebase;
+  public final Drivebase drivebase;
 
   public GoRightCmd(Drivebase drivebase) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -25,7 +25,7 @@ public class GoRightCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivebase.drive(0, -0.3, 0, false);
+    drivebase.drive(0, -0.3, 0, true);
   }
 
   // Called once the command ends or is interrupted.

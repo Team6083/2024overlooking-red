@@ -6,9 +6,8 @@ package frc.robot.commands.AutoTimerCmd;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.IntakeCmd;
 import frc.robot.commands.ApriltagCmd.FollowNewCmd;
-import frc.robot.commands.TrackingCmd.TrackingNoteCmd;
+import frc.robot.commands.TrackingCmd.SwitchTrackConditionCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterAutoControlCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -16,7 +15,7 @@ import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.drive.Drivebase;
 
-public final class LeftSpeakerCmdGroup {
+public final class MiddleStageRightCmdGroup {
   /** Example static factory for an autonomous command. */
   public static Command exampleAuto(Drivebase drivebase, IntakeSubsystem intake,
       RiseShooterSubsystem riseShooterSubsystem, double mainLeftTrigger, double mainRightTrigger,
@@ -25,18 +24,11 @@ public final class LeftSpeakerCmdGroup {
         new FollowNewCmd(drivebase).withTimeout(1),
         new RiseShooterAutoControlCmd(riseShooterSubsystem, mainLeftTrigger, mainRightTrigger),
         new ShootPIDCmd(shooterSubsystem),
-        new GoForwardCmd(drivebase).withTimeout(2),
-        new TrackingNoteCmd(drivebase),
-        new IntakeCmd(intake),
-        new FollowNewCmd(drivebase).withTimeout(1),
-        new RiseShooterAutoControlCmd(riseShooterSubsystem, mainLeftTrigger, mainRightTrigger),
-        new ShootPIDCmd(shooterSubsystem),
-        new GoLeftCmd(drivebase).withTimeout(2),
+
         new StopCmd(drivebase));
   }
 
-  private LeftSpeakerCmdGroup() {
+  private MiddleStageRightCmdGroup() {
     throw new UnsupportedOperationException("This is a utility class!");
   }
-
 }

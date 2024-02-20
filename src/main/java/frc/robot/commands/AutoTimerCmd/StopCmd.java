@@ -25,7 +25,7 @@ public class StopCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivebase.drive(0, 0, 0, false);
+    drivebase.drive(0, 0, 0, true);
   }
 
   // Called once the command ends or is interrupted.
