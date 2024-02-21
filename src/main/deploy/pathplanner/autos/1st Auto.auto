@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GoToSpeaker"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GoToMidline"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TakeNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GetTopNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GetBottomNote"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

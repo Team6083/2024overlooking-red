@@ -7,6 +7,7 @@ package frc.robot.subsystems.drive;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -467,5 +468,9 @@ public class Drivebase extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirementsme
     );
+  }
+
+  public Command followAutoCommand(String autoName) {
+    return new PathPlannerAuto(autoName);
   }
 }
