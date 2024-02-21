@@ -1,0 +1,139 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.25,
+      "y": 2.0
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightMidline1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TakeNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightBack1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightMidline2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TakeNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightBack2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightMidline3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TakeNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightBack3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightMidline4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TakeNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightBack4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightMidline5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TakeNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker1"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

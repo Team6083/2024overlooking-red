@@ -1,0 +1,79 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.25,
+      "y": 7.0
+    },
+    "rotation": 0.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftNote1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TakeNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LefeNote2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TakeNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftNote3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TakeNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker1"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
