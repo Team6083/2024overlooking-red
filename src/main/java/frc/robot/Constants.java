@@ -138,8 +138,13 @@ public final class Constants {
 
     public static final class AutoConstants {
         // chooser path name
-        public static final String pathGoToSpeaker = "GoToSpeaker";
         public static final String autoFirstAuto = "1st Auto";
+
+        public static final String leftMidline = "LeftMidline";
+        public static final String leftNote = "LeftNote";
+        public static final String middle = "Middle";
+        public static final String right = "Right";
+        
         // constants
         public static final double kPTranslation = 2.0;
         public static final double kITranslation = 0.0;
