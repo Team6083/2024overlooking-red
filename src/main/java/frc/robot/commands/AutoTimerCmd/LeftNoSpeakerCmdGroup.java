@@ -19,19 +19,19 @@ import frc.robot.subsystems.drive.Drivebase;
 public final class LeftNoSpeakerCmdGroup {
   /** Example static factory for an autonomous command. */
   public static Command exampleAuto(Drivebase drivebase, IntakeSubsystem intake,
-      RiseShooterSubsystem riseShooterSubsystem, double mainLeftTrigger, double mainRightTrigger,
-      ShooterSubsystem shooterSubsystem) {
+      RiseShooterSubsystem riseShooter, double mainLeftTrigger, double mainRightTrigger,
+      ShooterSubsystem shooter) {
     return Commands.sequence(
         new FollowNewCmd(drivebase).withTimeout(1),
-        new RiseShooterAutoControlCmd(riseShooterSubsystem, mainLeftTrigger, mainRightTrigger),
-        new ShootPIDCmd(shooterSubsystem),
+        new RiseShooterAutoControlCmd(riseShooter, mainLeftTrigger, mainRightTrigger),
+        new ShootPIDCmd(shooter),
         new GoForwardCmd(drivebase).withTimeout(4),
         new TrackingNoteCmd(drivebase),
         new IntakeCmd(intake),
         new GoBackCmd(drivebase).withTimeout(2),
         new FollowNewCmd(drivebase).withTimeout(1),
-        new RiseShooterAutoControlCmd(riseShooterSubsystem, mainLeftTrigger, mainRightTrigger),
-        new ShootPIDCmd(shooterSubsystem),
+        new RiseShooterAutoControlCmd(riseShooter, mainLeftTrigger, mainRightTrigger),
+        new ShootPIDCmd(shooter),
         new StopCmd(drivebase));
   }
 

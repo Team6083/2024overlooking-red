@@ -5,10 +5,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.AutoTimerCmd.LeftNoSpeakerCmdGroup;
+import frc.robot.commands.AutoTimerCmd.LeftSpeakerCmdGroup;
+import frc.robot.commands.AutoTimerCmd.MiddleCmdGroup;
+import frc.robot.commands.AutoTimerCmd.RightCmdGroup;
+import frc.robot.commands.AutoTimerCmd.StopCmd;
 import frc.robot.commands.TransportCmds.IntakeTransCmd;
 import frc.robot.commands.TransportCmds.ReTransCmd;
 import frc.robot.commands.TransportCmds.TransCmd;
@@ -34,13 +41,15 @@ public class RobotContainer {
   private final TransportSubsystem trans;
   // private final HookSubsystem hook;
   private final IntakeSubsystem intake;
-  // private final RiseShooterSubsystem riseMotor;
-  // private final DrivebaseSubsystem drivebase;
+  private final RiseShooterSubsystem riseShooter;
+  private final Drivebase drivebase;
   private final HookSubsystem hook;
   private final PowerDistribution pd;
 
-  // double mainLeftTriggerValue;
-  // double mainRightTrigggerValue;
+  public static SendableChooser<Command> chooser;
+
+  double mainLeftTrigger;
+  double mainRightTrigger;
 
   public RobotContainer() {
     pd = new PowerDistribution();
@@ -48,13 +57,22 @@ public class RobotContainer {
     shooter = new ShooterSubsystem(pd);
     trans = new TransportSubsystem();
     intake = new IntakeSubsystem(pd);
-    // riseMotor = new RiseShooterSubsystem();
-    // drivebase = new DrivebaseSubsystem();
+    riseShooter = new RiseShooterSubsystem();
+    drivebase = new Drivebase();
     hook = new HookSubsystem(pd);
 
-    // mainLeftTriggerValue = main.getLeftTriggerAxis();
-    // mainRightTrigggerValue = main.getRightTriggerAxis();
+    mainLeftTrigger= mainController.getLeftTriggerAxis();
+    mainRightTrigger = mainController.getRightTriggerAxis();
     configureBindings();
+
+    chooser = new SendableChooser<Command>();
+    chooser.setDefaultOption("DoNothing", new StopCmd(drivebase));
+    chooser.addOption("Right", RightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    chooser.addOption("Middle", MiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    chooser.addOption("LeftSpeaker", LeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    chooser.addOption("LeftNospeaker", LeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    SmartDashboard.putData("Auto Choice", chooser);
+
 
   }
 
@@ -76,6 +94,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return chooser.getSelected();
   }
 }
