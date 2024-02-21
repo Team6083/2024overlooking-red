@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -46,7 +48,7 @@ public class RobotContainer {
   private final HookSubsystem hook;
   private final PowerDistribution pd;
 
-  public static SendableChooser<Command> chooser;
+  private SendableChooser<Command> autoChooser;
 
   double mainLeftTrigger;
   double mainRightTrigger;
@@ -65,13 +67,14 @@ public class RobotContainer {
     mainRightTrigger = mainController.getRightTriggerAxis();
     configureBindings();
 
-    chooser = new SendableChooser<Command>();
-    chooser.setDefaultOption("DoNothing", new StopCmd(drivebase));
-    chooser.addOption("Right", RightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    chooser.addOption("Middle", MiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    chooser.addOption("LeftSpeaker", LeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    chooser.addOption("LeftNospeaker", LeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    SmartDashboard.putData("Auto Choice", chooser);
+    autoChooser = AutoBuilder.buildAutoChooser();
+    
+    autoChooser.setDefaultOption("DoNothing", new StopCmd(drivebase));
+    autoChooser.addOption("Right", RightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("Middle", MiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("LeftSpeaker", LeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("LeftNospeaker", LeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    SmartDashboard.putData("Auto Choice", autoChooser);
 
 
   }
@@ -94,6 +97,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return chooser.getSelected();
+    return autoChooser.getSelected();
   }
 }

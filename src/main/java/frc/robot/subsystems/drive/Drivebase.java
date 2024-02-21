@@ -216,8 +216,6 @@ public class Drivebase extends SubsystemBase {
     return speed;
   }
 
-  
-
   public void faceTarget() {
     double offset = tag.getTx();
     double hasTarget = tag.getTv();
