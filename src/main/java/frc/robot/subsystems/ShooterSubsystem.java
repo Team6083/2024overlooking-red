@@ -6,22 +6,13 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DrivebaseConstants;
-import frc.robot.Constants.PdConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 
@@ -33,21 +24,14 @@ public class ShooterSubsystem extends SubsystemBase {
   private final Encoder downEncoder;
   private final PIDController ratePidController;
   private final SimpleMotorFeedforward rateFeedForwardControl;
-  private final PowerDistribution Pd;
   private TagTrackingLimelight tag;
   private PIDController facingTagPID;
   private final AHRS gyro;
- 
-  
 
-
-
-
-  public ShooterSubsystem(PowerDistribution Pd) {
+  public ShooterSubsystem() {
 
     shootUpMotor = new VictorSPX(ShooterConstants.kShooterUpChannel);
     shootDownMotor = new VictorSPX(ShooterConstants.kShooterDownChannel);
-    this.Pd = Pd;
     upEncoder = new Encoder(2, 3);
     downEncoder = new Encoder(5, 6);
 
@@ -69,9 +53,6 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("shooter_rate", 0);
     SmartDashboard.putNumber("shooter_Voltage", 0);
   }
-
-  
-  
 
   public void setManual() {
     double voltage = 10;
@@ -125,9 +106,7 @@ public class ShooterSubsystem extends SubsystemBase {
     return shootDownMotor.getBusVoltage();
   }
 
- 
-
-  public void tagTracking () {
+  public void tagTracking() {
     double x_dis = Math.abs(tag.getBT()[0]);
     double target_Height = 1.98;
     double tan = target_Height / x_dis;
@@ -140,14 +119,10 @@ public class ShooterSubsystem extends SubsystemBase {
     if (hasTarget == 1) {
       rot = facingTagPID.calculate(offset, 0);
       gyro.setAngleAdjustment(angle);
-      shootUpMotor.set(VictorSPXControlMode.PercentOutput,1);
+      shootUpMotor.set(VictorSPXControlMode.PercentOutput, 1);
     }
-  
 
-    
-  
-}
-
+  }
 
   @Override
   public void periodic() {
@@ -156,6 +131,6 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("downRate", getDownEncoderRate());
     SmartDashboard.putNumber("upPower", shootUpMotor.getMotorOutputPercent());
     SmartDashboard.putNumber("downPower", shootDownMotor.getMotorOutputPercent());
-    
+
   }
 }

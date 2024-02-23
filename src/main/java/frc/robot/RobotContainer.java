@@ -49,40 +49,40 @@ public class RobotContainer {
   private final RiseShooterSubsystem riseShooter;
   private final Drivebase drivebase;
   private final HookSubsystem hook;
-  private final PowerDistribution pd;
 
   private SendableChooser<Command> autoChooser;
 
   double mainLeftTrigger;
   double mainRightTrigger;
 
- 
-
   public RobotContainer() {
-    pd = new PowerDistribution();
     mainController = new CommandXboxController(XboxControllerConstants.kMainController);
-    shooter = new ShooterSubsystem(pd);
+    shooter = new ShooterSubsystem();
     trans = new TransportSubsystem();
-    intake = new IntakeSubsystem(pd);
+    intake = new IntakeSubsystem();
     riseShooter = new RiseShooterSubsystem();
     drivebase = new Drivebase();
-    hook = new HookSubsystem(pd);
+    hook = new HookSubsystem();
     AprilTagTracking.init();
 
-    mainLeftTrigger= mainController.getLeftTriggerAxis();
+    mainLeftTrigger = mainController.getLeftTriggerAxis();
     mainRightTrigger = mainController.getRightTriggerAxis();
     configureBindings();
 
     autoChooser = AutoBuilder.buildAutoChooser();
-    
+
     autoChooser.setDefaultOption("DoNothing", new StopCmd(drivebase));
-    autoChooser.addOption("Right", RightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("Middle", MiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("LeftSpeaker", LeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("LeftNospeaker", LeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("Right",
+        RightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("Middle",
+        MiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("LeftSpeaker",
+        LeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("LeftNospeaker",
+        LeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
     SmartDashboard.putData("Auto Choice", autoChooser);
     NamedCommands.registerCommand("ThrowIntoSpeaker", new ShootPIDCmd(shooter));
-    NamedCommands.registerCommand("TransToShooter",new IntakeTransCmd(trans));
+    NamedCommands.registerCommand("TransToShooter", new IntakeTransCmd(trans));
     NamedCommands.registerCommand("TakeNote", new IntakeCmd(intake));
 
   }
@@ -107,6 +107,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
-
 
 }

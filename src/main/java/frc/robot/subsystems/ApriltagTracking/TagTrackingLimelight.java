@@ -1,6 +1,5 @@
 package frc.robot.subsystems.ApriltagTracking;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;

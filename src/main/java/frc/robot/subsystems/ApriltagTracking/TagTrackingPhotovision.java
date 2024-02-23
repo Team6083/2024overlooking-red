@@ -60,14 +60,6 @@ public class TagTrackingPhotovision extends SubsystemBase {
         List<PhotonTrackedTarget> targets = results.getTargets();
 
         for (PhotonTrackedTarget trackedTarget : targets) {
-            // this calc assumes pitch angle is positive UP, so flip the camera's pitch
-            // note that PV target angles are in degrees
-            // double d = Math.abs(noteCamPosition.getZ() /
-            // Math.tan(-noteCamPosition.getRotation().getY() +
-            // Math.toRadians(trackedTarget.getPitch())));
-            // double yaw = Math.toRadians(trackedTarget.getYaw());
-            // double x = d * Math.cos(yaw);
-            // double y = d * Math.sin(yaw);
             double pitch = trackedTarget.getPitch();
             double yaw = trackedTarget.getYaw();
             double y = cameraHeight * (1 / Math.tan(Math.toRadians(pitch - pitchDegree)));
