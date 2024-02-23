@@ -6,15 +6,24 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.PdConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 
 public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new Shooter. */
@@ -25,6 +34,14 @@ public class ShooterSubsystem extends SubsystemBase {
   private final PIDController ratePidController;
   private final SimpleMotorFeedforward rateFeedForwardControl;
   private final PowerDistribution Pd;
+  private TagTrackingLimelight tag;
+  private PIDController facingTagPID;
+  private final AHRS gyro;
+ 
+  
+
+
+
 
   public ShooterSubsystem(PowerDistribution Pd) {
 
@@ -37,10 +54,14 @@ public class ShooterSubsystem extends SubsystemBase {
     upEncoder.setReverseDirection(ShooterConstants.kUpEncoderInverted);
     downEncoder.setReverseDirection(ShooterConstants.kDownEncoderInverted);
 
+    gyro = new AHRS(Port.kMXP);
+
     ratePidController = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
 
     shootUpMotor.setInverted(ShooterConstants.kUpMotorInverted);
     shootDownMotor.setInverted(ShooterConstants.kDownMotorInverted);
+
+    tag = new TagTrackingLimelight();
 
     rateFeedForwardControl = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV, ShooterConstants.kA);
 
@@ -49,12 +70,16 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("shooter_Voltage", 0);
   }
 
+  
+  
+
   public void setManual() {
     double voltage = 10;
     double upPower = voltage / getUpMotorBusVoltage();
     double downPower = voltage / getDownMotorBusVoltage();
     shootUpMotor.set(VictorSPXControlMode.PercentOutput, upPower);
     shootDownMotor.set(VictorSPXControlMode.PercentOutput, downPower);
+
   }
 
   public void resetEncoder() {
@@ -100,12 +125,30 @@ public class ShooterSubsystem extends SubsystemBase {
     return shootDownMotor.getBusVoltage();
   }
 
-  public double getDownShooterCurrent() {
-    return Pd.getCurrent(PdConstants.kShooterDownMotorCurrentchannel);
-  }
-  public double getUpShooterCurrent(){
-    return Pd.getCurrent(PdConstants.kShooterUpMotorCurrentchannel);
-  }
+ 
+
+  public void tagTracking () {
+    double x_dis = Math.abs(tag.getBT()[0]);
+    double target_Height = 1.98;
+    double tan = target_Height / x_dis;
+    double angle = Math.toDegrees(Math.atan(tan));
+
+    double offset = tag.getTx();
+    double hasTarget = tag.getTv();
+    double rot = 0;
+
+    if (hasTarget == 1) {
+      rot = facingTagPID.calculate(offset, 0);
+      gyro.setAngleAdjustment(angle);
+      shootUpMotor.set(VictorSPXControlMode.PercentOutput,1);
+    }
+  
+
+    
+  
+}
+
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -113,7 +156,6 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("downRate", getDownEncoderRate());
     SmartDashboard.putNumber("upPower", shootUpMotor.getMotorOutputPercent());
     SmartDashboard.putNumber("downPower", shootDownMotor.getMotorOutputPercent());
-    SmartDashboard.putNumber("downMotorCurrent", getDownShooterCurrent());
-    SmartDashboard.putNumber("upMotorCurrent", getUpShooterCurrent());
+    
   }
 }

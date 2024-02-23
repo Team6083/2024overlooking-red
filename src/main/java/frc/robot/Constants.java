@@ -133,7 +133,14 @@ public final class Constants {
         public static final int klineCurrentchannel = 3;
         public static final int kHookMotor1Currentchannel = 4;
         public static final int kHookMotor2Currentchannel = 5;
-
+        public static final int kTransportCurrentchannel = 0;
+        public static final double kIntakeMotorPd = 0;
+        public static final double kShooterDownMoterrPd = 0;
+        public static final double kShooterUpMotorPd = 0;
+        public static final double klineMotorPd = 0;
+        public static final double kHookMotor1Pd = 0;
+        public static final double kHookMotor2Pd = 0;
+        public static final double kTransportPd = 0; 
     }
 
     public static final class AutoConstants {

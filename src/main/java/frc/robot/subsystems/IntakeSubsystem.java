@@ -41,14 +41,12 @@ public class IntakeSubsystem extends SubsystemBase {
     return intakeMotor.getBusVoltage();
   }
 
-  public double getIntakeCurrent() {
-    return pd.getCurrent(PdConstants.kIntakeMotorCurrrentchannel);
-  }
+  
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.getNumber("IntakeMotorBusVoltage", getIntakeMotorBusVoltage());
-    SmartDashboard.getNumber("IntakeCurrent", getIntakeCurrent());
+    
   }
 }
