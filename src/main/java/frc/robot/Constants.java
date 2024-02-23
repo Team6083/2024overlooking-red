@@ -1,7 +1,5 @@
 package frc.robot;
 
-import java.security.PublicKey;
-
 public final class Constants {
     public static class XboxControllerConstants {
         public static final int kMainController = 0;
@@ -10,6 +8,10 @@ public final class Constants {
     public static class ShooterConstants {
         public static final int kShooterUpChannel = 3;
         public static final int kShooterDownChannel = 5;
+        public static final int kShooterUpEncoderChannelA = 2;
+        public static final int kShooterUpEncoderChannelB = 3;
+        public static final int kShooterDownEncoderChannelA = 5;
+        public static final int kShooterDownEncoderChannelB = 6;
         public static final Boolean kUpMotorInverted = false;
         public static final Boolean kDownMotorInverted = false;
         public static final Boolean kUpEncoderInverted = true;

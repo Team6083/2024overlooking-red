@@ -32,8 +32,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     shootUpMotor = new VictorSPX(ShooterConstants.kShooterUpChannel);
     shootDownMotor = new VictorSPX(ShooterConstants.kShooterDownChannel);
-    upEncoder = new Encoder(2, 3);
-    downEncoder = new Encoder(5, 6);
+    upEncoder = new Encoder(ShooterConstants.kShooterUpEncoderChannelA, ShooterConstants.kShooterUpEncoderChannelB);
+    downEncoder = new Encoder(ShooterConstants.kShooterDownEncoderChannelA,
+        ShooterConstants.kShooterDownEncoderChannelB);
 
     upEncoder.setReverseDirection(ShooterConstants.kUpEncoderInverted);
     downEncoder.setReverseDirection(ShooterConstants.kDownEncoderInverted);
@@ -119,7 +120,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (hasTarget == 1) {
       rot = facingTagPID.calculate(offset, 0);
       gyro.setAngleAdjustment(angle);
-      shootUpMotor.set(VictorSPXControlMode.PercentOutput, 1);
+      shootUpMotor.set(VictorSPXControlMode.PercentOutput, 0.8);
     }
 
   }
