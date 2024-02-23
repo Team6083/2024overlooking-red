@@ -16,7 +16,7 @@ public class PowerDistributionSubsystem extends SubsystemBase {
   
 
   public PowerDistributionSubsystem() {
-    this.Pd = Pd;
+    Pd = new PowerDistribution();
   }
 
   public double intakeCurrent(){
