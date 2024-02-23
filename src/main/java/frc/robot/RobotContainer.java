@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -53,6 +54,8 @@ public class RobotContainer {
   double mainLeftTrigger;
   double mainRightTrigger;
 
+ 
+
   public RobotContainer() {
     pd = new PowerDistribution();
     mainController = new CommandXboxController(XboxControllerConstants.kMainController);
@@ -75,7 +78,9 @@ public class RobotContainer {
     autoChooser.addOption("LeftSpeaker", LeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
     autoChooser.addOption("LeftNospeaker", LeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
     SmartDashboard.putData("Auto Choice", autoChooser);
-
+    NamedCommands.registerCommand("ThrowIntoSpeaker", new ShootPIDCmd(shooter));
+    NamedCommands.registerCommand("TransToShooter",new IntakeTransCmd(trans));
+    NamedCommands.registerCommand("TakeNote", new IntakeCmd(intake));
 
   }
 
@@ -99,4 +104,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
+
+
 }

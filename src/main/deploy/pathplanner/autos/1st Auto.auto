@@ -12,15 +12,15 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.5
+            "name": "ThrowIntoSpeaker"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "ThrowIntoSpeaker1"
+            "waitTime": 1.5
           }
         },
         {
@@ -36,15 +36,111 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TransToShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "GetTopNote"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "TakeNote"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TransToShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "GetBottomNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TakeNote"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TransToShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ThrowIntoSpeaker"
           }
         }
       ]
