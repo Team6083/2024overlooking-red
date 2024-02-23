@@ -135,25 +135,12 @@ public class HookSubsystem extends SubsystemBase {
 
   }
 
-  public double getLineCurrent() {
-    return Pd.getCurrent(PdConstants.klineCurrentchannel);
-  }
-
-  public double getHookMotor1Current() {
-    return Pd.getCurrent(PdConstants.kHookMotor1Currentchannel);
-  }
-
-  public double getHookMotor2Current() {
-    return Pd.getCurrent(PdConstants.kHookMotor2Currentchannel);
-  }
-
+  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putData("LINEPID", linePID);
     SmartDashboard.putData("hook motor", hookMotorPID);
-    SmartDashboard.putNumber("line Current", getLineCurrent());
-    SmartDashboard.putNumber("HookMotor1Current", getHookMotor1Current());
-    SmartDashboard.putNumber("HookMotor2Current", getHookMotor2Current());
+  
   }
 }
