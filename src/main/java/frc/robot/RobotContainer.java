@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,6 +32,7 @@ import frc.robot.commands.hookCmds.HookManualCmd;
 import frc.robot.commands.hookCmds.LinePIDCmd;
 import frc.robot.commands.IntakeCmd;
 import frc.robot.Constants.XboxControllerConstants;
+import frc.robot.subsystems.AprilTagTracking;
 import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.RiseShooterSubsystem;
@@ -65,6 +67,7 @@ public class RobotContainer {
     riseShooter = new RiseShooterSubsystem();
     drivebase = new Drivebase();
     hook = new HookSubsystem(pd);
+    AprilTagTracking.init();
 
     mainLeftTrigger= mainController.getLeftTriggerAxis();
     mainRightTrigger = mainController.getRightTriggerAxis();

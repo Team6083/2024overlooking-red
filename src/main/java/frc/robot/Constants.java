@@ -49,6 +49,7 @@ public final class Constants {
         public static final double kRiseEncoderPulse = 2048;
         public static final double kRiseInitAngleDegree = 0;
         public static final double kRiseTriggerValue = 0.15;
+        public static final double kSpeakerHeight = 5.0;
     }
 
     public static class HookConstants {
