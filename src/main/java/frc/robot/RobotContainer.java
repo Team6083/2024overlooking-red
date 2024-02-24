@@ -15,14 +15,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.commands.AutoTimerCmd.BlueLeftNoSpeakerCmdGroup;
-import frc.robot.commands.AutoTimerCmd.BlueLeftSpeakerCmdGroup;
-import frc.robot.commands.AutoTimerCmd.BlueMiddleCmdGroup;
-import frc.robot.commands.AutoTimerCmd.BlueRightCmdGroup;
-import frc.robot.commands.AutoTimerCmd.RedLeftCmdGroup;
-import frc.robot.commands.AutoTimerCmd.RedRightNoSpeakerCmdGroup;
-import frc.robot.commands.AutoTimerCmd.RedRightSpeakerCmdGroup;
-import frc.robot.commands.AutoTimerCmd.RedMiddleCmdGroup;
 import frc.robot.commands.AutoTimerCmd.StopCmd;
 import frc.robot.commands.TransportCmds.IntakeTransCmd;
 import frc.robot.commands.TransportCmds.ReTransCmd;
@@ -31,6 +23,7 @@ import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.shooterCmds.ShootManualCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.shooterCmds.ShooterTestCmd;
+import frc.robot.commands.Autos;
 import frc.robot.commands.GyroresetCmd;
 import frc.robot.commands.hookCmds.HookManualCmd;
 import frc.robot.commands.hookCmds.LinePIDCmd;
@@ -74,18 +67,17 @@ public class RobotContainer {
     configureBindings();
 
     autoChooser = AutoBuilder.buildAutoChooser();
-    
-    autoChooser.addOption("BlueRight", BlueRightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("BlueMiddle", BlueMiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("BlueLeftSpeaker", BlueLeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("BlueLeftNospeaker", BlueLeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    
-        
-    autoChooser.addOption("RedLeft", RedLeftCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("RedMiddle", RedMiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("RedRightSpeaker", RedRightSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("RedRightNospeaker", RedRightNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    
+
+    autoChooser.addOption("BlueRightTrans", Autos.blueRightTrans(drivebase, intake, riseShooter, shooter));
+    autoChooser.addOption("BlueMiddle", Autos.blueMiddle(drivebase, intake, riseShooter, shooter));
+    autoChooser.addOption("BlueLeft", Autos.blueLeft(drivebase, intake, riseShooter, shooter));
+    autoChooser.addOption("BlueLeftTrans", Autos.blueLeftTrans(drivebase, intake, riseShooter, shooter));
+
+    autoChooser.addOption("RedLeftTrans", Autos.redLeftTrans(drivebase, intake, riseShooter, shooter));
+    autoChooser.addOption("RedMiddle", Autos.redMiddle(drivebase, intake, riseShooter, shooter));
+    autoChooser.addOption("RedRight", Autos.redRight(drivebase, intake, riseShooter, shooter));
+    autoChooser.addOption("RedRightTrans", Autos.redRightTrans(drivebase, intake, riseShooter, shooter));
+
     SmartDashboard.putData("Auto Choice", autoChooser);
 
     NamedCommands.registerCommand("ThrowIntoSpeaker", new ShootPIDCmd(shooter));
