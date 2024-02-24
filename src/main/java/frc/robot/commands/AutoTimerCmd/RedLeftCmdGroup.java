@@ -16,7 +16,7 @@ import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.drive.Drivebase;
 
-public final class RedLeftSpeakerCmdGroup {
+public final class RedLeftCmdGroup {
   /** Example static factory for an autonomous command. */
   public static Command exampleAuto(Drivebase drivebase, IntakeSubsystem intake,
       RiseShooterSubsystem riseShooter, double mainLeftTrigger, double mainRightTrigger,
@@ -37,7 +37,7 @@ public final class RedLeftSpeakerCmdGroup {
         new StopCmd(drivebase));
   }
 
-  private RedLeftSpeakerCmdGroup() {
+  private RedLeftCmdGroup() {
     throw new UnsupportedOperationException("This is a utility class!");
   }
 

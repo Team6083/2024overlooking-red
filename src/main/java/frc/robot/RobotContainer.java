@@ -19,6 +19,10 @@ import frc.robot.commands.AutoTimerCmd.BlueLeftNoSpeakerCmdGroup;
 import frc.robot.commands.AutoTimerCmd.BlueLeftSpeakerCmdGroup;
 import frc.robot.commands.AutoTimerCmd.BlueMiddleCmdGroup;
 import frc.robot.commands.AutoTimerCmd.BlueRightCmdGroup;
+import frc.robot.commands.AutoTimerCmd.RedLeftCmdGroup;
+import frc.robot.commands.AutoTimerCmd.RedRightNoSpeakerCmdGroup;
+import frc.robot.commands.AutoTimerCmd.RedRightSpeakerCmdGroup;
+import frc.robot.commands.AutoTimerCmd.RedMiddleCmdGroup;
 import frc.robot.commands.AutoTimerCmd.StopCmd;
 import frc.robot.commands.TransportCmds.IntakeTransCmd;
 import frc.robot.commands.TransportCmds.ReTransCmd;
@@ -71,23 +75,19 @@ public class RobotContainer {
 
     autoChooser = AutoBuilder.buildAutoChooser();
     
-    autoChooser.setDefaultOption("DoNothing", new StopCmd(drivebase));
-    autoChooser.addOption("Right", BlueRightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("Middle", BlueMiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("LeftSpeaker", BlueLeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("LeftNospeaker", BlueLeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("BlueRight", BlueRightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("BlueMiddle", BlueMiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("BlueLeftSpeaker", BlueLeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("BlueLeftNospeaker", BlueLeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    
+        
+    autoChooser.addOption("RedLeft", RedLeftCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("RedMiddle", RedMiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("RedRightSpeaker", RedRightSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("RedRightNospeaker", RedRightNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    
     SmartDashboard.putData("Auto Choice", autoChooser);
 
-    autoChooser.setDefaultOption("DoNothing", new StopCmd(drivebase));
-    autoChooser.addOption("Right",
-        RightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("Middle",
-        MiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("LeftSpeaker",
-        LeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("LeftNospeaker",
-        LeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    SmartDashboard.putData("Auto Choice", autoChooser);
     NamedCommands.registerCommand("ThrowIntoSpeaker", new ShootPIDCmd(shooter));
     NamedCommands.registerCommand("TransToShooter", new IntakeTransCmd(trans));
     NamedCommands.registerCommand("TakeNote", new IntakeCmd(intake));
