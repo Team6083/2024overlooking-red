@@ -10,28 +10,24 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HookConstants;
-import frc.robot.Constants.PdConstants;
 
 public class HookSubsystem extends SubsystemBase {
   /** Creates a new HookSubsystem. */
   private final PIDController linePID;
   private final PIDController hookMotorPID;
   private final CANSparkMax line;
-  public final VictorSPX hookMotor1;
-  public final VictorSPX hookMotor2;
+  public final VictorSPX hookLeftMotor;
+  public final VictorSPX hookRightMotor;
   private final RelativeEncoder lineEncoder;
   private double positionOffset = 0.0;
-  private final PowerDistribution Pd;
 
-  public HookSubsystem(PowerDistribution Pd) {
-    this.Pd = Pd;
+  public HookSubsystem() {
     line = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
-    hookMotor1 = new VictorSPX(HookConstants.kHookMotor1Cnannel);
-    hookMotor2 = new VictorSPX(HookConstants.kHookMotor2Cnannel);
+    hookLeftMotor = new VictorSPX(HookConstants.kHookLeftMotorCnannel);
+    hookRightMotor = new VictorSPX(HookConstants.kHookRightMotorCnannel);
     linePID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     hookMotorPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     lineEncoder = line.getEncoder();
@@ -45,8 +41,8 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void controlHookMotor(double speed) {
-    hookMotor1.set(VictorSPXControlMode.PercentOutput, HookConstants.khookmotor1Power);
-    hookMotor2.set(VictorSPXControlMode.PercentOutput, HookConstants.khookmotor2Power);
+    hookLeftMotor.set(VictorSPXControlMode.PercentOutput, HookConstants.khookmotor1Power);
+    hookRightMotor.set(VictorSPXControlMode.PercentOutput, HookConstants.khookmotor2Power);
     hookMotorPID.setSetpoint(getHookPosition());
   }
 
@@ -99,7 +95,7 @@ public class HookSubsystem extends SubsystemBase {
     if (Math.abs(modifiedHookMotor1Power) > HookConstants.khookmotor1Power) {
       modifiedHookMotor1Power = HookConstants.khookmotor1Power * (hookMotor1Power > 0 ? 1 : -1);
     }
-    hookMotor1.set(VictorSPXControlMode.PercentOutput, hookMotor1Power / 12);
+    hookLeftMotor.set(VictorSPXControlMode.PercentOutput, hookMotor1Power / 12);
     SmartDashboard.putNumber("hookmotor1power", modifiedHookMotor1Power);
 
     double hookMotor2Power = hookMotorPID.calculate(lineEncoder.getPosition(), getHookMotorSetpoint());
@@ -107,7 +103,7 @@ public class HookSubsystem extends SubsystemBase {
     if (Math.abs(modifiedHookMotor2Power) > HookConstants.khookmotor2Power) {
       modifiedHookMotor2Power = HookConstants.khookmotor2Power * (hookMotor2Power > 0 ? 1 : -1);
     }
-    hookMotor2.set(VictorSPXControlMode.PercentOutput, hookMotor2Power / 12);
+    hookRightMotor.set(VictorSPXControlMode.PercentOutput, hookMotor2Power / 12);
     SmartDashboard.putNumber("hookmotor2power", modifiedHookMotor2Power);
   }
 
@@ -122,8 +118,8 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void stopHookMotor() {
-    hookMotor1.set(VictorSPXControlMode.PercentOutput, 0.0);
-    hookMotor2.set(VictorSPXControlMode.PercentOutput, 0.0);
+    hookLeftMotor.set(VictorSPXControlMode.PercentOutput, 0.0);
+    hookRightMotor.set(VictorSPXControlMode.PercentOutput, 0.0);
   }
 
   public void resetHookEncoder() {
@@ -135,25 +131,11 @@ public class HookSubsystem extends SubsystemBase {
 
   }
 
-  public double getLineCurrent() {
-    return Pd.getCurrent(PdConstants.klineCurrentchannel);
-  }
-
-  public double getHookMotor1Current() {
-    return Pd.getCurrent(PdConstants.kHookMotor1Currentchannel);
-  }
-
-  public double getHookMotor2Current() {
-    return Pd.getCurrent(PdConstants.kHookMotor2Currentchannel);
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putData("LINEPID", linePID);
     SmartDashboard.putData("hook motor", hookMotorPID);
-    SmartDashboard.putNumber("line Current", getLineCurrent());
-    SmartDashboard.putNumber("HookMotor1Current", getHookMotor1Current());
-    SmartDashboard.putNumber("HookMotor2Current", getHookMotor2Current());
+
   }
 }

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RiseShooterConstants;
 
 public class RiseShooterSubsystem extends SubsystemBase {
+
   /** Creates a new RiseShooterSubsytem. */
   private final CANSparkMax riseMotor;
   private final Encoder riseEncoder;
@@ -66,6 +67,11 @@ public class RiseShooterSubsystem extends SubsystemBase {
     riseMotor.set(riseVolt);
 
     SmartDashboard.putNumber("rise_volt", modifiedRiseVolt);
+
+  }
+
+  public double getAprilTagDegree() {
+    return Math.toDegrees(Math.atan(RiseShooterConstants.kSpeakerHeight * AprilTagTracking.getMyDistance()));
   }
 
   public double getAngleDegree() {

@@ -7,47 +7,47 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AprilTagTracking extends SubsystemBase {
-    public NetworkTable table;
-    public NetworkTableEntry tx;// = table.getEntry("tx");// table.getEntry("tx");
-    public NetworkTableEntry ty;// = table.getEntry("ty");
-    public NetworkTableEntry ta;// = table.getEntry("ta");
-    public NetworkTableEntry tv;
-    public NetworkTableEntry tid;
-    public NetworkTableEntry tl;
+    public static NetworkTable table;
+    public static NetworkTableEntry tx;// = table.getEntry("tx");// table.getEntry("tx");
+    public static NetworkTableEntry ty;// = table.getEntry("ty");
+    public static NetworkTableEntry ta;// = table.getEntry("ta");
+    public static NetworkTableEntry tv;
+    public static NetworkTableEntry tid;
+    public static NetworkTableEntry tl;
 
-    public NetworkTableEntry BT;
-    public NetworkTableEntry CR;
-    public NetworkTableEntry TR;
-    public NetworkTableEntry CT;
+    public static NetworkTableEntry BT;
+    public static NetworkTableEntry CR;
+    public static NetworkTableEntry TR;
+    public static NetworkTableEntry CT;
 
-    public double v;
-    public double a;
-    public double x;
-    public double y;
-    public double area;
-    public double ID;
-    public double latency;
+    public static double v;
+    public static double a;
+    public static double x;
+    public static double y;
+    public static double area;
+    public static double ID;
+    public static double latency;
 
-    public double[] bt; // botpose_targetspace
-    public double[] cr;// camerapose_robotspace
-    public double[] tr; // targetpose_robotpose;
-    public double[] ct; // camerapose_targetspace
+    public static double[] bt; // botpose_targetspace
+    public static double[] cr;// camerapose_robotspace
+    public static double[] tr; // targetpose_robotpose;
+    public static double[] ct; // camerapose_targetspace
 
-    public double MyDistance;
+    public static double MyDistance;
 
-    public final double limelightLensHeightInches = 0;
-    public final double limelightMountAngleDegrees = 0;
-    public double targetOffsetAngle_Vertical;
-    public double angleToGoalDegrees;
-    public double angleToGoalRadians;
-    public double goalHeightInches;
+    public final static double limelightLensHeightInches = 0;
+    public final static double limelightMountAngleDegrees = 0;
+    public static double targetOffsetAngle_Vertical;
+    public static double angleToGoalDegrees;
+    public static double angleToGoalRadians;
+    public static double goalHeightInches;
 
-    public void init() {
+    public static void init() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
 
     }
 
-    public double getMyDistance() {
+    public static double getMyDistance() {
         // readValue();
         double target_height = getBT()[1]; // botpose in targetspace y
         double x_dis = getBT()[0];
@@ -59,49 +59,49 @@ public class AprilTagTracking extends SubsystemBase {
         return MyDistance;
     }
 
-    public double getTx() {
+    public static double getTx() {
         init();
         x = table.getEntry("tx").getDouble(0);
         return x;
     }
 
-    public double getTy() {
+    public static double getTy() {
         init();
         y = table.getEntry("ty").getDouble(0);
         return y;
     }
 
-    public double getTa() {
+    public static double getTa() {
         init();
         a = table.getEntry("ta").getDouble(0);
         return a;
     }
 
-    public double getTv() {
+    public static double getTv() {
         init();
         v = table.getEntry("tv").getDouble(0);
         return v;
     }
 
-    public double getTID() {
+    public static double getTID() {
         init();
         ID = table.getEntry("tid").getDouble(0);
         return ID;
     }
 
-    public double getTl() {
+    public static double getTl() {
         init();
         latency = table.getEntry("tl").getDouble(0);
         return latency;
     }
 
-    public double[] getBT() {
+    public static double[] getBT() {
         init();
         bt = table.getEntry("botpose_targetspace").getDoubleArray(new double[6]);
         return bt;
     }
 
-    public void putDashboard() {
+    public static void putDashboard() {
         // SmartDashboard.putNumber("hasTarget", getTv());
         SmartDashboard.putNumber("LimelightX", getTx());
         SmartDashboard.putNumber("LimelightY", getTy());
