@@ -33,6 +33,7 @@ public final class Autos {
   // return drivebase.followPathCommand(AutoConstants.pathGoToSpeaker);
   // }
 
+  // timer
   public static Command redLeftTrans(Drivebase drivebase, IntakeSubsystem intake, RiseShooterSubsystem riseShooter,
       ShooterSubsystem shooter) {
     return Commands.sequence(
@@ -397,8 +398,21 @@ public final class Autos {
         new StopCmd(drivebase));
   }
 
-  public static Command FirstAuto(Drivebase drivebase) {
-    return drivebase.followAutoCommand(AutoConstants.autoFirstAuto);
+  // pathplanner
+  public static Command RightTrans(Drivebase drivebase) {
+    return drivebase.followAutoCommand(AutoConstants.rightTrans);
+  }
+
+  public static Command Middle(Drivebase drivebase) {
+    return drivebase.followAutoCommand(AutoConstants.middle);
+  }
+
+  public static Command Left(Drivebase drivebase) {
+    return drivebase.followAutoCommand(AutoConstants.left);
+  }
+
+  public static Command LeftTrans(Drivebase drivebase) {
+    return drivebase.followAutoCommand(AutoConstants.leftTrans);
   }
 
   private Autos() {
