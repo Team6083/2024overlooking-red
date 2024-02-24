@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.IntakeCmd;
 import frc.robot.commands.ApriltagCmd.FaceTag;
 import frc.robot.commands.TrackingCmd.TrackingNoteClockwiseCmd;
+import frc.robot.commands.TrackingCmd.TrackingNoteCounterclockwiseCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterAutoControlCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -23,40 +24,43 @@ public final class RedRightSpeakerCmdGroup {
       RiseShooterSubsystem riseShooter, double mainLeftTrigger, double mainRightTrigger,
       ShooterSubsystem shooter) {
     return Commands.sequence(
-        new ParallelCommandGroup(new GoBackCmd(drivebase).withTimeout(2),
-            new FaceTag(drivebase).withTimeout(1),
-            new RiseShooterAutoControlCmd(riseShooter, mainLeftTrigger, mainRightTrigger)),
         new ShootPIDCmd(shooter),
+
+        new ParallelCommandGroup(new GoForwardCmd(drivebase).withTimeout(0.5),
+            new GoLeftCmd(drivebase).withTimeout(2.5),
+            new TrackingNoteCounterclockwiseCmd(drivebase)),
+        new IntakeCmd(intake),
+        new ParallelCommandGroup(new FaceTag(drivebase).withTimeout(1),
+            new ShootPIDCmd(shooter)),
+
+        new ParallelCommandGroup(new GoLeftCmd(drivebase).withTimeout(0.5),
+            new TrackingNoteClockwiseCmd(drivebase)),
+        new IntakeCmd(intake),
+        new ParallelCommandGroup(new FaceTag(drivebase).withTimeout(1),
+            new ShootPIDCmd(shooter)),
+
+        new ParallelCommandGroup(new GoLeftCmd(drivebase).withTimeout(0.5),
+            new TrackingNoteClockwiseCmd(drivebase)),
+        new IntakeCmd(intake),
+        new ParallelCommandGroup(new FaceTag(drivebase).withTimeout(1),
+            new ShootPIDCmd(shooter)),
 
         new ParallelCommandGroup(new GoForwardCmd(drivebase).withTimeout(4),
             new TrackingNoteClockwiseCmd(drivebase)),
         new IntakeCmd(intake),
-        new ParallelCommandGroup(new GoBackCmd(drivebase).withTimeout(2),
-            new FaceTag(drivebase).withTimeout(1),
-            new RiseShooterAutoControlCmd(riseShooter, mainLeftTrigger, mainRightTrigger)),
-        new ShootPIDCmd(shooter),
+        new GoBackCmd(drivebase).withTimeout(4),
+        new ParallelCommandGroup(new FaceTag(drivebase).withTimeout(1),
+            new ShootPIDCmd(shooter)),
 
-        new ParallelCommandGroup(
-            new GoForwardCmd(drivebase).withTimeout(2),
-            new GoLeftCmd(drivebase).withTimeout(1),
-            new TrackingNoteClockwiseCmd(drivebase)),
+        new GoForwardCmd(drivebase).withTimeout(3),
+        new ParallelCommandGroup(new GoForwardCmd(drivebase).withTimeout(0.5),
+            new GoLeftCmd(drivebase).withTimeout(0.5),
+            new TrackingNoteCounterclockwiseCmd(drivebase)),
         new IntakeCmd(intake),
-        new ParallelCommandGroup(new GoRightCmd(drivebase).withTimeout(1),
-            new GoBackCmd(drivebase).withTimeout(2),
-            new FaceTag(drivebase).withTimeout(1),
-            new RiseShooterAutoControlCmd(riseShooter, mainLeftTrigger, mainRightTrigger)),
-        new ShootPIDCmd(shooter),
-
-          new ParallelCommandGroup(
-            new GoForwardCmd(drivebase).withTimeout(2),
-            new GoLeftCmd(drivebase).withTimeout(2),
-            new TrackingNoteClockwiseCmd(drivebase)),
-        new IntakeCmd(intake),
-        new ParallelCommandGroup(new GoRightCmd(drivebase).withTimeout(2),
-            new GoBackCmd(drivebase).withTimeout(2),
-            new FaceTag(drivebase).withTimeout(1),
-            new RiseShooterAutoControlCmd(riseShooter, mainLeftTrigger, mainRightTrigger)),
-        new ShootPIDCmd(shooter),
+        new ParallelCommandGroup(new GoRightCmd(drivebase).withTimeout(0.5),
+            new GoBackCmd(drivebase).withTimeout(4)),
+        new ParallelCommandGroup(new FaceTag(drivebase).withTimeout(1),
+            new ShootPIDCmd(shooter)),
 
         new StopCmd(drivebase));
   }
