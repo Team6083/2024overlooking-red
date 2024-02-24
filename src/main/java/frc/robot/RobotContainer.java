@@ -13,10 +13,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.commands.AutoTimerCmd.LeftNoSpeakerCmdGroup;
-import frc.robot.commands.AutoTimerCmd.LeftSpeakerCmdGroup;
-import frc.robot.commands.AutoTimerCmd.MiddleCmdGroup;
-import frc.robot.commands.AutoTimerCmd.RightCmdGroup;
+import frc.robot.commands.AutoTimerCmd.BlueLeftNoSpeakerCmdGroup;
+import frc.robot.commands.AutoTimerCmd.BlueLeftSpeakerCmdGroup;
+import frc.robot.commands.AutoTimerCmd.BlueMiddleCmdGroup;
+import frc.robot.commands.AutoTimerCmd.BlueRightCmdGroup;
 import frc.robot.commands.AutoTimerCmd.StopCmd;
 import frc.robot.commands.TransportCmds.IntakeTransCmd;
 import frc.robot.commands.TransportCmds.ReTransCmd;
@@ -70,10 +70,10 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     
     autoChooser.setDefaultOption("DoNothing", new StopCmd(drivebase));
-    autoChooser.addOption("Right", RightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("Middle", MiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("LeftSpeaker", LeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("LeftNospeaker", LeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("Right", BlueRightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("Middle", BlueMiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("LeftSpeaker", BlueLeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    autoChooser.addOption("LeftNospeaker", BlueLeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
     SmartDashboard.putData("Auto Choice", autoChooser);
 
 

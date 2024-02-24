@@ -7,8 +7,8 @@ package frc.robot.commands.AutoTimerCmd;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.IntakeCmd;
-import frc.robot.commands.ApriltagCmd.FollowNewCmd;
-import frc.robot.commands.TrackingCmd.TrackingNoteCmd;
+import frc.robot.commands.ApriltagCmd.FaceTag;
+import frc.robot.commands.TrackingCmd.TrackingNoteClockwiseCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterAutoControlCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -16,26 +16,30 @@ import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.drive.Drivebase;
 
-public final class LeftNoSpeakerCmdGroup {
+public final class BlueLeftSpeakerCmdGroup {
   /** Example static factory for an autonomous command. */
   public static Command exampleAuto(Drivebase drivebase, IntakeSubsystem intake,
       RiseShooterSubsystem riseShooter, double mainLeftTrigger, double mainRightTrigger,
       ShooterSubsystem shooter) {
     return Commands.sequence(
-        new FollowNewCmd(drivebase).withTimeout(1),
+        new FaceTag(drivebase).withTimeout(1),
         new RiseShooterAutoControlCmd(riseShooter, mainLeftTrigger, mainRightTrigger),
         new ShootPIDCmd(shooter),
-        new GoForwardCmd(drivebase).withTimeout(4),
-        new TrackingNoteCmd(drivebase),
+
+        new GoForwardCmd(drivebase).withTimeout(2),
+        new GoRightCmd(drivebase).withTimeout(1),
+        new TrackingNoteClockwiseCmd(drivebase),
         new IntakeCmd(intake),
-        new GoBackCmd(drivebase).withTimeout(2),
-        new FollowNewCmd(drivebase).withTimeout(1),
+        new FaceTag(drivebase).withTimeout(1),
         new RiseShooterAutoControlCmd(riseShooter, mainLeftTrigger, mainRightTrigger),
         new ShootPIDCmd(shooter),
+        new GoLeftCmd(drivebase).withTimeout(2),
+        
         new StopCmd(drivebase));
   }
 
-  private LeftNoSpeakerCmdGroup() {
+  private BlueLeftSpeakerCmdGroup() {
     throw new UnsupportedOperationException("This is a utility class!");
   }
+
 }

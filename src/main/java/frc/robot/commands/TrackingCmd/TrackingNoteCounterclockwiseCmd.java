@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.NoteTracking.NoteTrackingPhotovision;
 import frc.robot.subsystems.drive.Drivebase;
 
-public class TrackingNoteCmd extends Command {
+public class TrackingNoteCounterclockwiseCmd extends Command {
   /** Creates a new TrackingNoteCmd. */
   public final Drivebase drivebase;
-  public TrackingNoteCmd(Drivebase drivebase) {
+  public TrackingNoteCounterclockwiseCmd(Drivebase drivebase) {
     this.drivebase = drivebase;
     addRequirements(drivebase);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,8 +24,8 @@ public class TrackingNoteCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivebase.facingNoteRot(0);
-    drivebase.followingNoteSpeed();
+    drivebase.drive(0, 0, drivebase.facingNoteRot(-10), isScheduled());
+    drivebase.drive(drivebase.faceTargetMethod2(),drivebase.faceTargetMethod2(),drivebase.faceTargetMethod2() ,isScheduled());
   }
 
   // Called once the command ends or is interrupted.
