@@ -5,7 +5,6 @@
 package frc.robot.commands.TrackingCmd;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.NoteTracking.NoteTrackingPhotovision;
 import frc.robot.subsystems.drive.Drivebase;
 
 public class TrackingNoteCounterclockwiseCmd extends Command {
@@ -24,8 +23,8 @@ public class TrackingNoteCounterclockwiseCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivebase.drive(0, 0, drivebase.facingNoteRot(-10), isScheduled());
-    drivebase.drive(drivebase.faceTargetMethod2(),drivebase.faceTargetMethod2(),drivebase.faceTargetMethod2() ,isScheduled());
+    drivebase.drive(0, 0, drivebase.facingNoteRot(-10), true);
+    drivebase.drive(drivebase.followingNoteSpeed()[0],drivebase.followingNoteSpeed()[1],drivebase.followingNoteSpeed()[2],true);
   }
 
   // Called once the command ends or is interrupted.
