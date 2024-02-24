@@ -71,7 +71,8 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   public double getAprilTagDegree() {
-    return Math.toDegrees(Math.atan(RiseShooterConstants.kSpeakerHeight * AprilTagTracking.getMyDistance()));
+    double distance = Math.pow(Math.pow(AprilTagTracking.getBT()[0], 2)+Math.pow(AprilTagTracking.getBT()[2], 2), 1/2);
+    return Math.toDegrees(Math.atan(RiseShooterConstants.kSpeakerHeight / distance));
   }
 
   public double getAngleDegree() {
