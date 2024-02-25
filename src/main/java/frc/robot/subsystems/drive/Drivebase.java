@@ -69,7 +69,7 @@ public class Drivebase extends SubsystemBase {
    public static final double kII = 0;
    public static final double kDD = 0; 
 
-  private double trackTargetError = 0.0;
+  private double noteTrackTargetError = 0.0;
 
   private Boolean trackingCondition = false;
 
@@ -353,15 +353,15 @@ public class Drivebase extends SubsystemBase {
   }
 
   public void addTrackTargetError() {
-    trackTargetError += 2;
+    noteTrackTargetError += 2;
   }
 
   public void minusTrackTargetError() {
-    trackTargetError -= 2;
+    noteTrackTargetError -= 2;
   }
 
   public void resetTrackTargetError() {
-    trackTargetError = 0.0;
+    noteTrackTargetError = 0.0;
   }
 
   /** Updates the field relative position of the robot. */

@@ -27,24 +27,28 @@ public class TransportSubsystem extends SubsystemBase {
   }
 
   public void setTrans() {
-  
-    trans.set(VictorSPXControlMode.PercentOutput,TransportConstants.kTransSpeed);
+
+    trans.set(VictorSPXControlMode.PercentOutput, TransportConstants.kTransSpeed);
   }
 
   public void setReTrans() {
     trans.set(VictorSPXControlMode.PercentOutput, TransportConstants.kReTransSpeed);
   }
 
-  public void intakeTrans(){
-    if(dist.isRangeValid()){
+  public void intakeTrans() {
+    if (dist.isRangeValid()) {
       SmartDashboard.putNumber("Range dist", dist.getRange());
       SmartDashboard.putNumber("Timestamp dist", dist.getTimestamp());
     }
-    if(dist.getRange()<= TransportConstants.kDistRange){
+    if (isGetNote()) {
       stopMotor();
-    }else{
+    } else {
       setTrans();
     }
+  }
+
+  public boolean isGetNote() {
+    return dist.getRange() <= TransportConstants.kDistRange;
   }
 
   public void stopMotor() {

@@ -15,19 +15,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.commands.AutoTimerCmd.StopCmd;
-import frc.robot.commands.TransportCmds.IntakeTransCmd;
-import frc.robot.commands.TransportCmds.ReTransCmd;
-import frc.robot.commands.TransportCmds.TransCmd;
+import frc.robot.commands.TeleopIntakeCmd;
+import frc.robot.commands.autoTimerCmds.StopCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.shooterCmds.ShootManualCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
-import frc.robot.commands.shooterCmds.ShooterTestCmd;
+import frc.robot.commands.transportCmds.IntakeTransCmd;
+import frc.robot.commands.transportCmds.ReTransCmd;
+import frc.robot.commands.transportCmds.TransCmd;
 import frc.robot.commands.Autos;
-import frc.robot.commands.GyroresetCmd;
+import frc.robot.commands.GyroResetCmd;
 import frc.robot.commands.hookCmds.HookManualCmd;
 import frc.robot.commands.hookCmds.LinePIDCmd;
-import frc.robot.commands.IntakeCmd;
+import frc.robot.commands.AutoIntakeCmd;
 import frc.robot.Constants.XboxControllerConstants;
 import frc.robot.subsystems.AprilTagTracking;
 import frc.robot.subsystems.HookSubsystem;
@@ -82,18 +82,17 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("ThrowIntoSpeaker", new ShootPIDCmd(shooter));
     NamedCommands.registerCommand("TransToShooter", new IntakeTransCmd(trans));
-    NamedCommands.registerCommand("TakeNote", new IntakeCmd(intake));
+    NamedCommands.registerCommand("TakeNote", new AutoIntakeCmd(intake));
 
   }
 
   private void configureBindings() {
-    // main.y().toggleOnTrue(new IntakeCmd(intake).alongWith(new
-    // IntakeTransCmd(trans)));
-    // main.x().and(main.a()).toggleOnTrue(new ShootManualCmd(shooter));
+    mainController.y().toggleOnTrue(new TeleopIntakeCmd(intake, trans.isGetNote()).alongWith(new
+    IntakeTransCmd(trans)));
     // riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor,
     // mainLeftTriggerValue, mainRightTrigggerValue));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
-    // main.b().onTrue(new GyroresetCmd(drivebase) );
+    // main.b().onTrue(new GyroResetCmd(drivebase) );
     mainController.a().toggleOnTrue(new ShootPIDCmd(shooter));
     mainController.x().toggleOnTrue(new TransCmd(trans));
     mainController.back().toggleOnTrue(new ReTransCmd(trans));
