@@ -1,45 +1,49 @@
 package frc.robot;
 
+
 public final class Constants {
     public static class XboxControllerConstants {
         public static final int kMainController = 0;
     }
 
     public static class ShooterConstants {
-        public static final int kShooterUpChannel = 3;
-        public static final int kShooterDownChannel = 5;
-        public static final int kShooterUpEncoderChannelA = 2;
-        public static final int kShooterUpEncoderChannelB = 3;
-        public static final int kShooterDownEncoderChannelA = 5;
-        public static final int kShooterDownEncoderChannelB = 6;
+        public static final int kUpMotorChannel = 3;
+        public static final int kDownMotorChannel = 5;
+        public static final int kUpEncoderChannelA = 2;
+        public static final int kUpEncoderChannelB = 3;
+        public static final int kDownEncoderChannelA = 5;
+        public static final int kDownEncoderChannelB = 6;
         public static final Boolean kUpMotorInverted = false;
         public static final Boolean kDownMotorInverted = false;
         public static final Boolean kUpEncoderInverted = true;
         public static final Boolean kDownEncoderInverted = true;
-        public static final double kUpMotorPower = 0.8;
-        public static final double kDownMotorPower = 0.8;
+        public static final double kUpMotorManualVoltage = 10.0;
+        public static final double kDownMotorManualVoltage = 10.0;
+        public static final double kShooterRate = 55.0;
         public static final double kP = 0.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
-        public static final double kS = 0.756;
-        public static final double kV = 0.149;
-        public static final double kA = 0.0;
+        public static final double kUpMotorS = 0.756;
+        public static final double kUpMotorV = 0.149;
+        public static final double kUpMotorA = 0.0;
+        public static final double kDownMotorS = 0.856;
+        public static final double kDownMotorV = 0.149;
+        public static final double kDownMotorA = 0.0;
     }
 
     public static class TransportConstants {
         public static final int kTrantsportChannel = 4;
-        public static final double kTransSpeed = 0.3;
-        public static final double kReTransSpeed = -0.3;
+        public static final boolean kTransportInverted = false;
+        public static final double kTransSpeed = 0.8;
+        public static final double kReTransSpeed = -0.5;
         public static final double kDistRange = 8.0;
     }
 
     public static class IntakeConstants {
-        public static final int kIntakeUpChannel = 2;
-        public static final int kIntakeDownChannel = 1;
-        public static final double kIntakePrecentage = 0.4;
+        public static final int kIntakeChannel = 2;
+        public static final Boolean kIntakeInverted = true;
+        public static final double kIntakePrecentage = 0.65;
         public static final double kThrowPrecentage = -0.4;
-        public static final Boolean kIntakeUpInverted = true;
-        public static final Boolean kIntakeDownInverted = false;
     }
 
     public static class RiseShooterConstants {
@@ -57,7 +61,7 @@ public final class Constants {
     public static class HookConstants {
         public static final int kHookLineChannel = 22;
         public static final int kHookLeftMotorCnannel = 1;
-        public static final int kHookRightMotorCnannel = 1;
+        public static final int kHookRightMotorCnannel = 2;
         public static final double kP = 0.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
@@ -65,31 +69,31 @@ public final class Constants {
         public static final double kHookPositionMin = 0.0;
         public static final double kHookPositionConversionfactor = 1.0;
         public static final double kLinePower = 0;
-        public static final double khookmotor1Power = 0.0;
-        public static final double khookmotor2Power = 0.0;
-        public static final boolean kHookMotor1Inverted = false;
-        public static final boolean kHookMotor2Inverted = false;
+        public static final double kHookMotorLeftPower = 0.0;
+        public static final double kHookMotorRightPower = 0.0;
+        public static final boolean kHookMotorLeftInverted = false;
+        public static final boolean kHookMotorRightInverted = false;
         public static final double kInitSetpoint = 0.0;
 
     }
 
     public static class DrivebaseConstants {
-        public static final int kFrontLeftDriveMotorChannel = 10;
-        public static final int kFrontRightDriveMotorChannel = 12;
-        public static final int kBackLeftDriveMotorChannel = 14;
-        public static final int kBackRightDriveMotorChannel = 16;
+        public static final int kFrontLeftDriveMotorChannel = 11;
+        public static final int kFrontRightDriveMotorChannel = 15;
+        public static final int kBackLeftDriveMotorChannel = 13;
+        public static final int kBackRightDriveMotorChannel = 17;
 
         // turning motor channel
-        public static final int kFrontLeftTurningMotorChannel = 11;
-        public static final int kFrontRightTurningMotorChannel = 13;
-        public static final int kBackLeftTurningMotorChannel = 15;
-        public static final int kBackRightTurningMotorChannel = 17;
+        public static final int kFrontLeftTurningMotorChannel = 12;
+        public static final int kFrontRightTurningMotorChannel = 16;
+        public static final int kBackLeftTurningMotorChannel = 14;
+        public static final int kBackRightTurningMotorChannel = 18;
 
         // turnning encoder channel
-        public static final int kFrontLeftTurningEncoderChannel = 5;
-        public static final int kFrontRightTurningEncoderChannel = 4;
-        public static final int kBackLeftTurningEncoderChannel = 2;
-        public static final int kBackRightTurningEncoderChannel = 3;
+        public static final int kFrontLeftTurningEncoderChannel = 31;
+        public static final int kFrontRightTurningEncoderChannel = 32;
+        public static final int kBackLeftTurningEncoderChannel = 33;
+        public static final int kBackRightTurningEncoderChannel = 34;
 
         // can coder magnet offset value
         public static final double kFrontLeftCanCoderMagOffset = -0.060303;
@@ -111,9 +115,9 @@ public final class Constants {
         public static final boolean kBackLeftDriveMotorInverted = true;
         public static final boolean kBackRightDriveMotorInverted = false;
 
-        public static final double kPTrackingValue = 1.0;
-        public static final boolean kGyroInverted = true; // wheather gyro is under the robot
-        public static final double kGyroOffSet = -90.0;
+        public static final double kPNoteTrackingValue = 1.0;
+        public static final boolean kGyroInverted = false; // wheather gyro is under the robot
+        public static final double kGyroOffSet = 0;
     }
 
     public static final class ModuleConstants {
@@ -143,7 +147,7 @@ public final class Constants {
         public static final double kLineMotorMaxCurrent = 0;
         public static final double kHookMotor1MaxCurrent = 0;
         public static final double kHookMotor2MaxCurrent = 0;
-        public static final double kTransportMaxCurrent = 0; 
+        public static final double kTransportMaxCurrent = 0;
     }
 
     public static final class AutoConstants {
@@ -152,7 +156,7 @@ public final class Constants {
         public static final String left = "Left";
         public static final String middle = "Middle";
         public static final String rightTrans = "RightTrans";
-        
+
         // constants
         public static final double kPTranslation = 2.0;
         public static final double kITranslation = 0.0;

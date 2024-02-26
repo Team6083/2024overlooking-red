@@ -32,7 +32,7 @@ public class HookSubsystem extends SubsystemBase {
     hookMotorPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     lineEncoder = line.getEncoder();
     lineEncoder.setPositionConversionFactor(HookConstants.kHookPositionConversionfactor);
-    line.setInverted(HookConstants.kHookMotor1Inverted);
+    line.setInverted(HookConstants.kHookMotorLeftInverted);
   }
 
   public void controlLine(double hookControlSpeed) {
@@ -41,8 +41,8 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void controlHookMotor(double speed) {
-    hookLeftMotor.set(VictorSPXControlMode.PercentOutput, HookConstants.khookmotor1Power);
-    hookRightMotor.set(VictorSPXControlMode.PercentOutput, HookConstants.khookmotor2Power);
+    hookLeftMotor.set(VictorSPXControlMode.PercentOutput, HookConstants.kHookMotorLeftPower);
+    hookRightMotor.set(VictorSPXControlMode.PercentOutput, HookConstants.kHookMotorRightPower);
     hookMotorPID.setSetpoint(getHookPosition());
   }
 
@@ -92,16 +92,16 @@ public class HookSubsystem extends SubsystemBase {
   public void hookMotorPIDControl() {
     double hookMotor1Power = hookMotorPID.calculate(lineEncoder.getPosition(), getHookMotorSetpoint());
     double modifiedHookMotor1Power = hookMotor1Power;
-    if (Math.abs(modifiedHookMotor1Power) > HookConstants.khookmotor1Power) {
-      modifiedHookMotor1Power = HookConstants.khookmotor1Power * (hookMotor1Power > 0 ? 1 : -1);
+    if (Math.abs(modifiedHookMotor1Power) > HookConstants.kHookMotorLeftPower) {
+      modifiedHookMotor1Power = HookConstants.kHookMotorLeftPower * (hookMotor1Power > 0 ? 1 : -1);
     }
     hookLeftMotor.set(VictorSPXControlMode.PercentOutput, hookMotor1Power / 12);
     SmartDashboard.putNumber("hookmotor1power", modifiedHookMotor1Power);
 
     double hookMotor2Power = hookMotorPID.calculate(lineEncoder.getPosition(), getHookMotorSetpoint());
     double modifiedHookMotor2Power = hookMotor1Power;
-    if (Math.abs(modifiedHookMotor2Power) > HookConstants.khookmotor2Power) {
-      modifiedHookMotor2Power = HookConstants.khookmotor2Power * (hookMotor2Power > 0 ? 1 : -1);
+    if (Math.abs(modifiedHookMotor2Power) > HookConstants.kHookMotorRightPower) {
+      modifiedHookMotor2Power = HookConstants.kHookMotorRightPower * (hookMotor2Power > 0 ? 1 : -1);
     }
     hookRightMotor.set(VictorSPXControlMode.PercentOutput, hookMotor2Power / 12);
     SmartDashboard.putNumber("hookmotor2power", modifiedHookMotor2Power);

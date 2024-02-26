@@ -21,13 +21,12 @@ public class ShootPIDCmd extends Command {
   @Override
   public void initialize() {
     shooterSubsystem.stopMotor();
-    shooterSubsystem.setSetpoint(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooterSubsystem.setRateToPower();
+    shooterSubsystem.setRateControl();
   }
 
   // Called once the command ends or is interrupted.
