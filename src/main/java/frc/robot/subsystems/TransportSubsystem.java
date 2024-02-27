@@ -4,8 +4,9 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 
@@ -15,12 +16,12 @@ import frc.robot.Constants.TransportConstants;
 
 public class TransportSubsystem extends SubsystemBase {
   /** Creates a new TransportSubsystem. */
-  private final VictorSPX trans;
+  private final CANSparkMax trans;
   private final Rev2mDistanceSensor dist;
 
   public TransportSubsystem() {
 
-    trans = new VictorSPX(TransportConstants.kTrantsportChannel);
+    trans = new CANSparkMax(TransportConstants.kTrantsportChannel, MotorType.kBrushless);
     trans.setInverted(true);
 
     dist = new Rev2mDistanceSensor(Port.kOnboard);
@@ -56,7 +57,7 @@ public class TransportSubsystem extends SubsystemBase {
   }
 
   public void setMotor(double power) {
-    trans.set(VictorSPXControlMode.PercentOutput, power);
+    trans.set( power);
 
     if (PowerDistributionSubsystem.isTransportOverCurrent()) {
       stopMotor();

@@ -154,7 +154,7 @@ public class HookSubsystem extends SubsystemBase {
       stopLineMotor();
       return;
     }
-    hookLeftMotor.set(VictorSPXControlMode.PercentOutput, power);
+    line.set(power);
   }
 
   public void resetHookEncoder() {

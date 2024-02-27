@@ -21,7 +21,9 @@ public class ShootManualCmd extends Command {
  
   @Override
   public void initialize(){
-    shooter.stopMotor();
+    shooter.stopUpMotor();
+    shooter.stopDownMotor();
+  
   }
  
   @Override
@@ -31,7 +33,8 @@ public class ShootManualCmd extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    shooter.stopMotor();
+     shooter.stopUpMotor();
+    shooter.stopDownMotor();
   }
 
   @Override
