@@ -83,7 +83,7 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Choice", autoChooser);
     NamedCommands.registerCommand("ThrowIntoSpeaker", new ShootPIDCmd(shooter));
     NamedCommands.registerCommand("TransToShooter",new IntakeTransCmd(trans));
-    NamedCommands.registerCommand("TakeNote", new IntakeCmd(intake));
+    NamedCommands.registerCommand("TakeNote", new IntakeCmd(intake).withTimeout(2));
 
   }
 
