@@ -95,6 +95,10 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   public void setMotor(double power){
+  if(PowerDistributionSubsystem.isRiseShooterOverCurrent()){
+    stopMotor();
+    return;
+  }
   riseMotor.set(power);
   }
 

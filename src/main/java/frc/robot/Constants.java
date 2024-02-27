@@ -56,6 +56,7 @@ public final class Constants {
         public static final double kRiseInitAngleDegree = 0;
         public static final double kRiseTriggerValue = 0.15;
         public static final double kSpeakerHeight = 5.0;
+        
     }
 
     public static class HookConstants {
@@ -141,6 +142,8 @@ public final class Constants {
         public static final int kHookMotor1Currentchannel = 4;
         public static final int kHookMotor2Currentchannel = 5;
         public static final int kTransportCurrentchannel = 0;
+        public static final int kRiseShooterCurrentchannel = 1;
+
         public static final double kIntakeMotorMaxCurrent = 0;
         public static final double kShooterDownMotorMaxCuurent = 0;
         public static final double kShooterUpMotorMaxCurrent = 0;
@@ -148,6 +151,7 @@ public final class Constants {
         public static final double kHookMotor1MaxCurrent = 0;
         public static final double kHookMotor2MaxCurrent = 0;
         public static final double kTransportMaxCurrent = 0;
+        public static final double kRiseShooterMaxCurrent = 0;
     }
 
     public static final class AutoConstants {
