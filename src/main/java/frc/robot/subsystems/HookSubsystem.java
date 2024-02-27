@@ -22,9 +22,10 @@ public class HookSubsystem extends SubsystemBase {
   public final VictorSPX hookLeftMotor;
   public final VictorSPX hookRightMotor;
   private final RelativeEncoder lineEncoder;
+  private final PowerDistributionSubsystem powerDistributionSubsystem;
   private double positionOffset = 0.0;
 
-  public HookSubsystem() {
+  public HookSubsystem(PowerDistributionSubsystem powerDistributionSubsystem) {
     line = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
     hookLeftMotor = new VictorSPX(HookConstants.kHookLeftMotorCnannel);
     hookRightMotor = new VictorSPX(HookConstants.kHookRightMotorCnannel);

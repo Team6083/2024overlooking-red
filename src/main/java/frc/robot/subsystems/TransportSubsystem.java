@@ -59,7 +59,7 @@ public class TransportSubsystem extends SubsystemBase {
   public void setMotor(double power) {
     trans.set( power);
 
-    if (PowerDistributionSubsystem.isTransportOverCurrent()) {
+    if (powerDistributionSubsystem.isTransportOverCurrent()) {
       stopMotor();
       return;
     }

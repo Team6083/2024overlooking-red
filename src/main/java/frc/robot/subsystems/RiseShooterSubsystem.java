@@ -27,11 +27,13 @@ public class RiseShooterSubsystem extends SubsystemBase {
     riseEncoder = new Encoder(0, 1);
     angleDegreeOffset = RiseShooterConstants.kRiseInitAngleDegree;
 
-    risePID = new PIDController(1, 0, 0);
+    risePID = new PIDController(0.5, 0, 0);
+
+    risePID.setSetpoint(60.0);
 
     riseMotor.setInverted(RiseShooterConstants.kRiseShooterInverted);
 
-    riseEncoder.setDistancePerPulse(360 / RiseShooterConstants.kRiseEncoderPulse);
+    riseEncoder.setDistancePerPulse(360.0 / RiseShooterConstants.kRiseEncoderPulse);
   }
 
   public void manualControl(double RiseSpeed) {
@@ -50,7 +52,6 @@ public class RiseShooterSubsystem extends SubsystemBase {
           : RiseShooterConstants.kRiseAngleMin);
       return;
     }
-    setpoint += currentSetpoint;
     if (isPhyLimitExceed(setpoint) == -1) {
       setpoint = RiseShooterConstants.kRiseAngleMin;
     } else if (isPhyLimitExceed(setpoint) == 1) {
@@ -77,8 +78,9 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   public double getAngleDegree() {
-    SmartDashboard.putNumber("riseEncoderPos", riseEncoder.getDistance());
-    return (riseEncoder.getDistance()) + angleDegreeOffset;
+    double degree = (riseEncoder.getDistance()+angleDegreeOffset)%360.0;
+    SmartDashboard.putNumber("riseShooterDegree", degree);
+    return degree;
   }
 
   public void resetEncoder() {
@@ -91,15 +93,15 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   public void stopMotor() {
-    setMotor(0.0);
+    riseMotor.setVoltage(0.0);
   }
 
   public void setMotor(double power){
-  if(PowerDistributionSubsystem.isRiseShooterOverCurrent()){
+  if(powerDistributionSubsystem.isRiseShooterOverCurrent()){
     stopMotor();
     return;
   }
-  riseMotor.set(power);
+  riseMotor.setVoltage(power);
   }
 
   private int isPhyLimitExceed(double angle) {
@@ -109,5 +111,6 @@ public class RiseShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putData("rise_PID", risePID);
+    SmartDashboard.putNumber("motor",riseMotor.getOutputCurrent());
   }
 }

@@ -13,8 +13,10 @@ import frc.robot.Constants.IntakeConstants;
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
   private final VictorSPX intakeMotor;
+  private final PowerDistributionSubsystem powerDistributionSubsystem;
 
-  public IntakeSubsystem() {
+  public IntakeSubsystem(PowerDistributionSubsystem powerDistributionSubsystem) {
+    this.powerDistributionSubsystem = powerDistributionSubsystem;
     intakeMotor = new VictorSPX(IntakeConstants.kIntakeChannel);
     intakeMotor.setInverted(IntakeConstants.kIntakeInverted);
 
@@ -33,7 +35,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setMotor(double power) {
-    if(PowerDistributionSubsystem.isIntakeOverCurrent() ){
+    if(powerDistributionSubsystem.isIntakeOverCurrent() ){
       stopMotor();
       return;
     }

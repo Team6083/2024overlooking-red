@@ -18,13 +18,10 @@ import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.TeleopIntakeCmd;
 import frc.robot.commands.autoTimerCmds.StopCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
+import frc.robot.commands.riseShooterCmds.RiseShooterPIDCmd;
 import frc.robot.commands.shooterCmds.ShootManualCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
-import frc.robot.commands.TransportCmds.IntakeTransCmd;
-import frc.robot.commands.TransportCmds.ReTransCmd;
-import frc.robot.commands.TransportCmds.TransCmd;
 import frc.robot.commands.Autos;
-import frc.robot.commands.GyroresetCmd;
 import frc.robot.commands.hookCmds.HookManualCmd;
 import frc.robot.commands.hookCmds.LinePIDCmd;
 import frc.robot.commands.AutoIntakeCmd;
@@ -39,66 +36,60 @@ import frc.robot.subsystems.drive.Drivebase;
 
 public class RobotContainer {
   private final CommandXboxController mainController;
-  private final ShooterSubsystem shooter;
-  private final TransportSubsystem trans;
+  // private final ShooterSubsystem shooter;
+  // private final TransportSubsystem trans;
   // private final HookSubsystem hook;
-  private final IntakeSubsystem intake;
+  // private final IntakeSubsystem intake;
   private final RiseShooterSubsystem riseShooter;
-  private final Drivebase drivebase;
-  private final HookSubsystem hook;
+  // private final Drivebase drivebase;
+  // private final HookSubsystem hook;
 
   private SendableChooser<Command> autoChooser;
 
-  double mainLeftTrigger;
-  double mainRightTrigger;
-
   public RobotContainer() {
     mainController = new CommandXboxController(XboxControllerConstants.kMainController);
-    shooter = new ShooterSubsystem();
-    trans = new TransportSubsystem();
-    intake = new IntakeSubsystem();
+    // shooter = new ShooterSubsystem();
+    // trans = new TransportSubsystem();
+    // intake = new IntakeSubsystem();
     riseShooter = new RiseShooterSubsystem();
-    drivebase = new Drivebase();
-    hook = new HookSubsystem();
-    AprilTagTracking.init();
-
-    mainLeftTrigger = mainController.getLeftTriggerAxis();
-    mainRightTrigger = mainController.getRightTriggerAxis();
+    // drivebase = new Drivebase();
+    // hook = new HookSubsystem();
+    // AprilTagTracking.init();
     configureBindings();
 
-    autoChooser = AutoBuilder.buildAutoChooser();
+    // autoChooser = AutoBuilder.buildAutoChooser();
 
-    autoChooser.addOption("BlueRightTrans", Autos.blueRightTrans(drivebase, intake, riseShooter, shooter));
-    autoChooser.addOption("BlueMiddle", Autos.blueMiddle(drivebase, intake, riseShooter, shooter));
-    autoChooser.addOption("BlueLeft", Autos.blueLeft(drivebase, intake, riseShooter, shooter));
-    autoChooser.addOption("BlueLeftTrans", Autos.blueLeftTrans(drivebase, intake, riseShooter, shooter));
+    // autoChooser.addOption("BlueRightTrans", Autos.blueRightTrans(drivebase, intake, riseShooter, shooter));
+    // autoChooser.addOption("BlueMiddle", Autos.blueMiddle(drivebase, intake, riseShooter, shooter));
+    // autoChooser.addOption("BlueLeft", Autos.blueLeft(drivebase, intake, riseShooter, shooter));
+    // autoChooser.addOption("BlueLeftTrans", Autos.blueLeftTrans(drivebase, intake, riseShooter, shooter));
 
-    autoChooser.addOption("RedLeftTrans", Autos.redLeftTrans(drivebase, intake, riseShooter, shooter));
-    autoChooser.addOption("RedMiddle", Autos.redMiddle(drivebase, intake, riseShooter, shooter));
-    autoChooser.addOption("RedRight", Autos.redRight(drivebase, intake, riseShooter, shooter));
-    autoChooser.addOption("RedRightTrans", Autos.redRightTrans(drivebase, intake, riseShooter, shooter));
+    // autoChooser.addOption("RedLeftTrans", Autos.redLeftTrans(drivebase, intake, riseShooter, shooter));
+    // autoChooser.addOption("RedMiddle", Autos.redMiddle(drivebase, intake, riseShooter, shooter));
+    // autoChooser.addOption("RedRight", Autos.redRight(drivebase, intake, riseShooter, shooter));
+    // autoChooser.addOption("RedRightTrans", Autos.redRightTrans(drivebase, intake, riseShooter, shooter));
 
-    SmartDashboard.putData("Auto Choice", autoChooser);
+    // SmartDashboard.putData("Auto Choice", autoChooser);
 
-    NamedCommands.registerCommand("ThrowIntoSpeaker", new ShootPIDCmd(shooter));
-    NamedCommands.registerCommand("TransToShooter", new IntakeTransCmd(trans));
-    NamedCommands.registerCommand("TakeNote", new AutoIntakeCmd(intake));
+    // NamedCommands.registerCommand("ThrowIntoSpeaker", new ShootPIDCmd(shooter));
+    // NamedCommands.registerCommand("TransToShooter", new IntakeTransCmd(trans));
+    // NamedCommands.registerCommand("TakeNote", new AutoIntakeCmd(intake));
 
   }
 
   private void configureBindings() {
-    mainController.y().toggleOnTrue(new TeleopIntakeCmd(intake, trans.isGetNote()).alongWith(new
-    IntakeTransCmd(trans)));
-    // riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor,
-    // mainLeftTriggerValue, mainRightTrigggerValue));
+    // mainController.y().toggleOnTrue(new TeleopIntakeCmd(intake, trans.isGetNote()).alongWith(new
+    // IntakeTransCmd(trans)));
+    riseShooter.setDefaultCommand(new RiseShooterPIDCmd(riseShooter, mainController.getLeftTriggerAxis(), mainController.getRightTriggerAxis()));
+    // mainController.a().toggleOnTrue(new RiseShooterManualCmd(riseShooter));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
     // main.b().onTrue(new GyroResetCmd(drivebase) );
-    mainController.a().toggleOnTrue(new ShootPIDCmd(shooter));
-    mainController.x().toggleOnTrue(new TransCmd(trans));
-    mainController.back().toggleOnTrue(new ReTransCmd(trans));
+    // mainController.a().toggleOnTrue(new ShootPIDCmd(shooter));
+    // mainController.x().toggleOnTrue(new TransCmd(trans));
+    // mainController.back().toggleOnTrue(new ReTransCmd(trans));
     // main.y().whileTrue(new HookManualCmd(hook));
-    mainController.pov(0).onTrue(new LinePIDCmd(hook));
-    mainController.pov(180).onTrue(new LinePIDCmd(hook));
+    // mainController.pov(0).onTrue(new LinePIDCmd(hook));
+    // mainController.pov(180).onTrue(new LinePIDCmd(hook));
 
   }
 

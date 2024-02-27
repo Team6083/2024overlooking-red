@@ -1,4 +1,4 @@
-package frc.robot.commands.TransportCmds;
+package frc.robot.commands.transportCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TransportSubsystem;

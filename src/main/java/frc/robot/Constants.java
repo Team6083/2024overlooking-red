@@ -48,12 +48,12 @@ public final class Constants {
 
     public static class RiseShooterConstants {
         public static final int kRiseShooterChannel = 21;
-        public static final Boolean kRiseShooterInverted = false;
-        public static final double kRiseVoltLimit = 4;
+        public static final Boolean kRiseShooterInverted = true;
+        public static final double kRiseVoltLimit = 5;
         public static final double kRiseAngleMin = 0;
-        public static final double kRiseAngleMax = 45;
+        public static final double kRiseAngleMax = 60;
         public static final double kRiseEncoderPulse = 2048;
-        public static final double kRiseInitAngleDegree = 0;
+        public static final double kRiseInitAngleDegree = 60;
         public static final double kRiseTriggerValue = 0.15;
         public static final double kSpeakerHeight = 5.0;
         
@@ -151,7 +151,7 @@ public final class Constants {
         public static final double kHookMotor1MaxCurrent = 0;
         public static final double kHookMotor2MaxCurrent = 0;
         public static final double kTransportMaxCurrent = 0;
-        public static final double kRiseShooterMaxCurrent = 0;
+        public static final double kRiseShooterMaxCurrent = 40.0;
     }
 
     public static final class AutoConstants {
