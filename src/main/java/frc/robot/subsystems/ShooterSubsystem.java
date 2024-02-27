@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.units.Power;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -50,8 +51,8 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setManual() {
     final double upPower = ShooterConstants.kUpMotorManualVoltage / getUpMotorBusVoltage();
     final double downPower = ShooterConstants.kDownMotorManualVoltage / getDownMotorBusVoltage();
-    upMotor.set(VictorSPXControlMode.PercentOutput, upPower);
-    downMotor.set(VictorSPXControlMode.PercentOutput, downPower);
+    setUpMotor(upPower);
+    setDownMotor(downPower);
 
   }
 
@@ -72,9 +73,12 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("downMotorVoltage", downMotorVoltage);
   }
 
-  public void stopMotor() {
-    upMotor.set(VictorSPXControlMode.PercentOutput, 0);
-    downMotor.set(VictorSPXControlMode.PercentOutput, 0);
+  public void stopUpMotor() {
+   setUpMotor(0);
+  }
+
+  public void stopDownMotor(){
+  setDownMotor(0);
   }
 
   public double getUpEncoderRate() {
@@ -86,11 +90,11 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setUpMotorVoltage(double voltage) {
-    upMotor.set(VictorSPXControlMode.PercentOutput, voltage / getUpMotorBusVoltage());
+   setUpMotor(voltage / getUpMotorBusVoltage());
   }
 
   public void setDownMotorVoltage(double voltage) {
-    upMotor.set(VictorSPXControlMode.PercentOutput, voltage / getDownMotorBusVoltage());
+    setDownMotor( voltage / getDownMotorBusVoltage());
   }
 
   public double getUpMotorBusVoltage() {
@@ -99,6 +103,24 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getDownMotorBusVoltage() {
     return downMotor.getBusVoltage();
+  }
+
+  public void setUpMotor(double power){
+    upMotor.set(VictorSPXControlMode.PercentOutput, power);
+
+    if(PowerDistributionSubsystem.isShooterUpOverCurrent()){
+      stopUpMotor();
+      return;
+    }
+  }
+
+  public void setDownMotor(double power){
+    downMotor.set(VictorSPXControlMode.PercentOutput, power);
+
+    if(PowerDistributionSubsystem.isShooterDownOverCurrent()){
+      stopDownMotor();
+      return;
+    }
   }
 
   @Override

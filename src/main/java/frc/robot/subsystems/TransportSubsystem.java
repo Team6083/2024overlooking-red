@@ -28,11 +28,11 @@ public class TransportSubsystem extends SubsystemBase {
 
   public void setTrans() {
 
-    trans.set(VictorSPXControlMode.PercentOutput, TransportConstants.kTransSpeed);
+    setMotor(TransportConstants.kTransSpeed);
   }
 
   public void setReTrans() {
-    trans.set(VictorSPXControlMode.PercentOutput, TransportConstants.kReTransSpeed);
+    setMotor(TransportConstants.kReTransSpeed);
   }
 
   public void intakeTrans() {
@@ -52,7 +52,16 @@ public class TransportSubsystem extends SubsystemBase {
   }
 
   public void stopMotor() {
-    trans.set(VictorSPXControlMode.PercentOutput, 0);
+    setMotor(0);
+  }
+
+  public void setMotor(double power) {
+    trans.set(VictorSPXControlMode.PercentOutput, power);
+
+    if (PowerDistributionSubsystem.isTransportOverCurrent()) {
+      stopMotor();
+      return;
+    }
   }
 
   @Override

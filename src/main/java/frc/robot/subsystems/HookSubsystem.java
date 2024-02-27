@@ -36,13 +36,13 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void controlLine(double hookControlSpeed) {
-    line.set(hookControlSpeed);
+    setLineMotor(hookControlSpeed);
     linePID.setSetpoint(getHookPosition());
   }
 
   public void controlHookMotor(double speed) {
-    hookLeftMotor.set(VictorSPXControlMode.PercentOutput, HookConstants.kHookMotorLeftPower);
-    hookRightMotor.set(VictorSPXControlMode.PercentOutput, HookConstants.kHookMotorRightPower);
+    setLeftMotor(HookConstants.kHookMotorLeftPower);
+    setRightMotor(HookConstants.kHookMotorRightPower);
     hookMotorPID.setSetpoint(getHookPosition());
   }
 
@@ -89,22 +89,22 @@ public class HookSubsystem extends SubsystemBase {
 
   }
 
-  public void hookMotorPIDControl() {
-    double hookMotor1Power = hookMotorPID.calculate(lineEncoder.getPosition(), getHookMotorSetpoint());
-    double modifiedHookMotor1Power = hookMotor1Power;
-    if (Math.abs(modifiedHookMotor1Power) > HookConstants.kHookMotorLeftPower) {
-      modifiedHookMotor1Power = HookConstants.kHookMotorLeftPower * (hookMotor1Power > 0 ? 1 : -1);
+  public void hookLeftMotorPIDContro() {
+    double hookMotorLeftPower = hookMotorPID.calculate(lineEncoder.getPosition(), getHookMotorSetpoint());
+    double modifiedHookMotorLeftPower = hookMotorLeftPower;
+    if (Math.abs(modifiedHookMotorLeftPower) > HookConstants.kHookMotorLeftPower) {
+      modifiedHookMotorLeftPower = HookConstants.kHookMotorLeftPower * (hookMotorLeftPower > 0 ? 1 : -1);
     }
-    hookLeftMotor.set(VictorSPXControlMode.PercentOutput, hookMotor1Power / 12);
-    SmartDashboard.putNumber("hookmotor1power", modifiedHookMotor1Power);
+    setLeftMotor(hookMotorLeftPower / getHookLeftMotorBusVoltage());
+    SmartDashboard.putNumber("hookmotor1power", modifiedHookMotorLeftPower);
 
-    double hookMotor2Power = hookMotorPID.calculate(lineEncoder.getPosition(), getHookMotorSetpoint());
-    double modifiedHookMotor2Power = hookMotor1Power;
-    if (Math.abs(modifiedHookMotor2Power) > HookConstants.kHookMotorRightPower) {
-      modifiedHookMotor2Power = HookConstants.kHookMotorRightPower * (hookMotor2Power > 0 ? 1 : -1);
+    double hookMotorRightPower = hookMotorPID.calculate(lineEncoder.getPosition(), getHookMotorSetpoint());
+    double modifiedHookMotorRightPower = hookMotorLeftPower;
+    if (Math.abs(modifiedHookMotorRightPower) > HookConstants.kHookMotorRightPower) {
+      modifiedHookMotorRightPower = HookConstants.kHookMotorRightPower * (hookMotorRightPower > 0 ? 1 : -1);
     }
-    hookRightMotor.set(VictorSPXControlMode.PercentOutput, hookMotor2Power / 12);
-    SmartDashboard.putNumber("hookmotor2power", modifiedHookMotor2Power);
+    setRightMotor(hookMotorRightPower / getHookRightMotorBusVoltage());
+    SmartDashboard.putNumber("hookmotor2power", modifiedHookMotorRightPower);
   }
 
   public double getHookPosition() {
@@ -113,13 +113,48 @@ public class HookSubsystem extends SubsystemBase {
 
   }
 
-  public void stopLineMotor() {
-    line.set(0.0);
+  public double getHookLeftMotorBusVoltage(){
+    return hookLeftMotor.getBusVoltage();
   }
 
-  public void stopHookMotor() {
-    hookLeftMotor.set(VictorSPXControlMode.PercentOutput, 0.0);
-    hookRightMotor.set(VictorSPXControlMode.PercentOutput, 0.0);
+  public double getHookRightMotorBusVoltage(){
+    return hookRightMotor.getBusVoltage();
+  }
+
+  public void stopLineMotor() {
+    setLineMotor(0.0);
+  }
+
+  public void stopHookLeftMotor() {
+    setLeftMotor(0.0);
+  }
+
+  public void stopHookRightMotor() {
+    setRightMotor(0.0);
+  }
+
+  public void setLeftMotor(double power) {
+    if (PowerDistributionSubsystem.isHookLeftOverCurrent()) {
+      stopHookLeftMotor();
+      return;
+    }
+    hookLeftMotor.set(VictorSPXControlMode.PercentOutput, power);
+  }
+
+  public void setRightMotor(double power) {
+    if (PowerDistributionSubsystem.isHookRightOverCurrent()) {
+      stopHookRightMotor();
+      return;
+    }
+    hookRightMotor.set(VictorSPXControlMode.PercentOutput, power);
+  }
+
+  public void setLineMotor(double power) {
+    if (PowerDistributionSubsystem.isLineMoterOverCurrent()) {
+      stopLineMotor();
+      return;
+    }
+    hookLeftMotor.set(VictorSPXControlMode.PercentOutput, power);
   }
 
   public void resetHookEncoder() {

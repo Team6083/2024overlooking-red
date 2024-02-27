@@ -21,15 +21,24 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setIntaking() {
-    intakeMotor.set(VictorSPXControlMode.PercentOutput, IntakeConstants.kIntakePrecentage);
+    setMotor(IntakeConstants.kIntakePrecentage);
   }
 
   public void setThrowing() {
-    intakeMotor.set(VictorSPXControlMode.PercentOutput, IntakeConstants.kThrowPrecentage);
+    setMotor(IntakeConstants.kThrowPrecentage);
   }
 
   public void stopMotor() {
-    intakeMotor.set(VictorSPXControlMode.PercentOutput, 0);
+   setMotor(0);
+  }
+
+  public void setMotor(double power) {
+    if(PowerDistributionSubsystem.isIntakeOverCurrent() ){
+      stopMotor();
+      return;
+    }
+    
+    intakeMotor.set(VictorSPXControlMode.PercentOutput, power);
   }
 
   public double getIntakeMotorBusVoltage() {
