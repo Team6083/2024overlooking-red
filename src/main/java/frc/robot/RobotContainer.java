@@ -45,16 +45,18 @@ public class RobotContainer {
   // private final Drivebase drivebase;
   // private final HookSubsystem hook;
   private final PowerDistributionSubsystem powerDistribution;
+  private final AprilTagTracking aprilTagTracking;
 
   private SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
     powerDistribution = new PowerDistributionSubsystem();
+    aprilTagTracking = new AprilTagTracking();
     mainController = new CommandXboxController(XboxControllerConstants.kMainController);
     // shooter = new ShooterSubsystem(powerDistribution);
     // trans = new TransportSubsystem(powerDistribution);
     // intake = new IntakeSubsystem(powerDistribution);
-    riseShooter = new RiseShooterSubsystem(powerDistribution);
+    riseShooter = new RiseShooterSubsystem(powerDistribution, aprilTagTracking);
     // drivebase = new Drivebase();
     // hook = new HookSubsystem(powerDistribution);
     // AprilTagTracking.init();

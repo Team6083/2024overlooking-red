@@ -49,8 +49,6 @@ public class RiseShooterSubsystem extends SubsystemBase {
   public void setSetpoint(double setpoint) {
     final double currentSetpoint = getSetpoint();
     if (isPhyLimitExceed(currentSetpoint) != 0) {
-      risePID.setSetpoint((isPhyLimitExceed(currentSetpoint)) == 1 ? RiseShooterConstants.kRiseAngleMax
-          : RiseShooterConstants.kRiseAngleMin);
       return;
     }
     if (isPhyLimitExceed(setpoint) == -1) {
