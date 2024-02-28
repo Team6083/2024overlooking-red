@@ -15,26 +15,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.commands.AutoTimerCmd.LeftNoSpeakerCmdGroup;
-import frc.robot.commands.AutoTimerCmd.LeftSpeakerCmdGroup;
-import frc.robot.commands.AutoTimerCmd.MiddleCmdGroup;
-import frc.robot.commands.AutoTimerCmd.RightCmdGroup;
-import frc.robot.commands.AutoTimerCmd.StopCmd;
-import frc.robot.commands.TransportCmds.IntakeTransCmd;
-import frc.robot.commands.TransportCmds.ReTransCmd;
-import frc.robot.commands.TransportCmds.TransCmd;
+import frc.robot.commands.TeleopIntakeCmd;
+import frc.robot.commands.autoTimerCmds.StopCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
+import frc.robot.commands.riseShooterCmds.RiseShooterPIDCmd;
 import frc.robot.commands.shooterCmds.ShootManualCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
-import frc.robot.commands.shooterCmds.ShooterTestCmd;
-import frc.robot.commands.GyroresetCmd;
+import frc.robot.commands.Autos;
 import frc.robot.commands.hookCmds.HookManualCmd;
 import frc.robot.commands.hookCmds.LinePIDCmd;
-import frc.robot.commands.IntakeCmd;
+import frc.robot.commands.AutoIntakeCmd;
 import frc.robot.Constants.XboxControllerConstants;
 import frc.robot.subsystems.AprilTagTracking;
 import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PowerDistributionSubsystem;
 import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
@@ -42,71 +37,61 @@ import frc.robot.subsystems.drive.Drivebase;
 
 public class RobotContainer {
   private final CommandXboxController mainController;
-  private final ShooterSubsystem shooter;
-  private final TransportSubsystem trans;
+  // private final ShooterSubsystem shooter;
+  // private final TransportSubsystem trans;
   // private final HookSubsystem hook;
-  private final IntakeSubsystem intake;
+  // private final IntakeSubsystem intake;
   private final RiseShooterSubsystem riseShooter;
-  private final Drivebase drivebase;
-  private final HookSubsystem hook;
-  private final PowerDistribution pd;
+  // private final Drivebase drivebase;
+  // private final HookSubsystem hook;
+  private final PowerDistributionSubsystem powerDistribution;
 
   private SendableChooser<Command> autoChooser;
 
-  double mainLeftTrigger;
-  double mainRightTrigger;
-
- 
-
   public RobotContainer() {
-    pd = new PowerDistribution();
+    powerDistribution = new PowerDistributionSubsystem();
     mainController = new CommandXboxController(XboxControllerConstants.kMainController);
-    shooter = new ShooterSubsystem(pd);
-    trans = new TransportSubsystem();
-    intake = new IntakeSubsystem(pd);
-    riseShooter = new RiseShooterSubsystem();
-    drivebase = new Drivebase();
-    hook = new HookSubsystem(pd);
-    AprilTagTracking.init();
-
-    mainLeftTrigger= mainController.getLeftTriggerAxis();
-    mainRightTrigger = mainController.getRightTriggerAxis();
+    // shooter = new ShooterSubsystem(powerDistribution);
+    // trans = new TransportSubsystem(powerDistribution);
+    // intake = new IntakeSubsystem(powerDistribution);
+    riseShooter = new RiseShooterSubsystem(powerDistribution);
+    // drivebase = new Drivebase();
+    // hook = new HookSubsystem(powerDistribution);
+    // AprilTagTracking.init();
     configureBindings();
 
-    autoChooser = AutoBuilder.buildAutoChooser();
+    // autoChooser = AutoBuilder.buildAutoChooser();
     
-    autoChooser.setDefaultOption("DoNothing", new StopCmd(drivebase));
-    autoChooser.addOption("Right", RightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("Middle", MiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("LeftSpeaker", LeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    autoChooser.addOption("LeftNospeaker", LeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    SmartDashboard.putData("Auto Choice", autoChooser);
-    NamedCommands.registerCommand("ThrowIntoSpeaker", new ShootPIDCmd(shooter));
-    NamedCommands.registerCommand("TransToShooter",new IntakeTransCmd(trans));
-    NamedCommands.registerCommand("TakeNote", new IntakeCmd(intake).withTimeout(2));
+    // autoChooser.setDefaultOption("DoNothing", new StopCmd(drivebase));
+    // autoChooser.addOption("Right", RightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    // autoChooser.addOption("Middle", MiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    // autoChooser.addOption("LeftSpeaker", LeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    // autoChooser.addOption("LeftNospeaker", LeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    // SmartDashboard.putData("Auto Choice", autoChooser);
+    // NamedCommands.registerCommand("ThrowIntoSpeaker", new ShootPIDCmd(shooter));
+    // NamedCommands.registerCommand("TransToShooter",new IntakeTransCmd(trans));
+    // NamedCommands.registerCommand("TakeNote", new IntakeCmd(intake).withTimeout(2));
 
   }
 
   private void configureBindings() {
-    // main.y().toggleOnTrue(new IntakeCmd(intake).alongWith(new
+    // mainController.y().toggleOnTrue(new TeleopIntakeCmd(intake, trans.isGetNote()).alongWith(new
     // IntakeTransCmd(trans)));
-    // main.x().and(main.a()).toggleOnTrue(new ShootManualCmd(shooter));
-    // riseMotor.setDefaultCommand(new RiseShooterManualCmd(riseMotor,
-    // mainLeftTriggerValue, mainRightTrigggerValue));
+    riseShooter.setDefaultCommand(new RiseShooterPIDCmd(riseShooter, mainController.getLeftTriggerAxis(), mainController.getRightTriggerAxis()));
+    // mainController.a().toggleOnTrue(new RiseShooterManualCmd(riseShooter));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
-    // main.b().onTrue(new GyroresetCmd(drivebase) );
-    mainController.a().toggleOnTrue(new ShootPIDCmd(shooter));
-    mainController.x().toggleOnTrue(new TransCmd(trans));
-    mainController.back().toggleOnTrue(new ReTransCmd(trans));
+    // main.b().onTrue(new GyroResetCmd(drivebase) );
+    // mainController.a().toggleOnTrue(new ShootPIDCmd(shooter));
+    // mainController.x().toggleOnTrue(new TransCmd(trans));
+    // mainController.back().toggleOnTrue(new ReTransCmd(trans));
     // main.y().whileTrue(new HookManualCmd(hook));
-    mainController.pov(0).onTrue(new LinePIDCmd(hook));
-    mainController.pov(180).onTrue(new LinePIDCmd(hook));
+    // mainController.pov(0).onTrue(new LinePIDCmd(hook));
+    // mainController.pov(180).onTrue(new LinePIDCmd(hook));
 
   }
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
-
 
 }

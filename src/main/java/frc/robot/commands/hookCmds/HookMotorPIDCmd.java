@@ -27,7 +27,7 @@ public class HookMotorPIDCmd extends Command {
   @Override
   public void execute() {
     hookSubsystem.setHookMotorsetpoint(hookSubsystem.getHookMotorSetpoint());//邏輯有問題，如果你的setpoint永遠是你的setpoint，那不就不會收線嗎
-    hookSubsystem.hookMotorPIDControl();
+    hookSubsystem.hookLeftMotorPIDContro();
   }
 
   // Called once the command ends or is interrupted.

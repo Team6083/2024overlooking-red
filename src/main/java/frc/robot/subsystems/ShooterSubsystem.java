@@ -6,79 +6,55 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DrivebaseConstants;
-import frc.robot.Constants.PdConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 
 public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new Shooter. */
-  private final VictorSPX shootUpMotor;
-  private final VictorSPX shootDownMotor;
+  private final VictorSPX upMotor;
+  private final VictorSPX downMotor;
   private final Encoder upEncoder;
   private final Encoder downEncoder;
   private final PIDController ratePidController;
-  private final SimpleMotorFeedforward rateFeedForwardControl;
-  private final PowerDistribution Pd;
-  private TagTrackingLimelight tag;
-  private PIDController facingTagPID;
-  private final AHRS gyro;
- 
-  
+  private final SimpleMotorFeedforward upMotorFeedForwardControl;
+  private final SimpleMotorFeedforward downMotorFeedForwardControl;
+  private final PowerDistributionSubsystem powerDistribution;
 
+  public ShooterSubsystem(PowerDistributionSubsystem powerDistribution) {
 
-
-
-  public ShooterSubsystem(PowerDistribution Pd) {
-
-    shootUpMotor = new VictorSPX(ShooterConstants.kShooterUpChannel);
-    shootDownMotor = new VictorSPX(ShooterConstants.kShooterDownChannel);
-    this.Pd = Pd;
-    upEncoder = new Encoder(2, 3);
-    downEncoder = new Encoder(5, 6);
+    upMotor = new VictorSPX(ShooterConstants.kUpMotorChannel);
+    downMotor = new VictorSPX(ShooterConstants.kDownMotorChannel);
+    upEncoder = new Encoder(ShooterConstants.kUpEncoderChannelA, ShooterConstants.kUpEncoderChannelB);
+    downEncoder = new Encoder(ShooterConstants.kDownEncoderChannelA,
+        ShooterConstants.kDownEncoderChannelB);
 
     upEncoder.setReverseDirection(ShooterConstants.kUpEncoderInverted);
     downEncoder.setReverseDirection(ShooterConstants.kDownEncoderInverted);
 
-    gyro = new AHRS(Port.kMXP);
-
     ratePidController = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
 
-    shootUpMotor.setInverted(ShooterConstants.kUpMotorInverted);
-    shootDownMotor.setInverted(ShooterConstants.kDownMotorInverted);
+    upMotor.setInverted(ShooterConstants.kUpMotorInverted);
+    downMotor.setInverted(ShooterConstants.kDownMotorInverted);
 
-    tag = new TagTrackingLimelight();
-
-    rateFeedForwardControl = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV, ShooterConstants.kA);
+    upMotorFeedForwardControl = new SimpleMotorFeedforward(ShooterConstants.kUpMotorS, ShooterConstants.kUpMotorV,
+        ShooterConstants.kUpMotorA);
+    downMotorFeedForwardControl = new SimpleMotorFeedforward(ShooterConstants.kDownMotorS, ShooterConstants.kDownMotorV,
+        ShooterConstants.kDownMotorA);
 
     resetEncoder();
-    SmartDashboard.putNumber("shooter_rate", 0);
-    SmartDashboard.putNumber("shooter_Voltage", 0);
+
+    this.powerDistribution = powerDistribution;
   }
 
-  
-  
-
   public void setManual() {
-    double voltage = 10;
-    double upPower = voltage / getUpMotorBusVoltage();
-    double downPower = voltage / getDownMotorBusVoltage();
-    shootUpMotor.set(VictorSPXControlMode.PercentOutput, upPower);
-    shootDownMotor.set(VictorSPXControlMode.PercentOutput, downPower);
+    final double upPower = ShooterConstants.kUpMotorManualVoltage / getUpMotorBusVoltage();
+    final double downPower = ShooterConstants.kDownMotorManualVoltage / getDownMotorBusVoltage();
+    setUpMotor(upPower);
+    setDownMotor(downPower);
 
   }
 
@@ -87,26 +63,24 @@ public class ShooterSubsystem extends SubsystemBase {
     downEncoder.reset();
   }
 
-  public void setSetpoint(double distance) {
-    double rate = SmartDashboard.getNumber("shooter_rate", 0.0);
-    ratePidController.setSetpoint(rate);
+  public void setRateControl() {
+    double rate = ShooterConstants.kShooterRate;
+    final double upMotorVoltage = upMotorFeedForwardControl.calculate(rate)
+        + ratePidController.calculate(getUpEncoderRate(), rate);
+    final double downMotorVoltage = downMotorFeedForwardControl.calculate(rate)
+        + ratePidController.calculate(getDownEncoderRate(), rate);
+    setUpMotorVoltage(upMotorVoltage);
+    setDownMotorVoltage(downMotorVoltage);
+    SmartDashboard.putNumber("upMotorVoltage", upMotorVoltage);
+    SmartDashboard.putNumber("downMotorVoltage", downMotorVoltage);
   }
 
-  public void setRateToPower() {
-    double rate = SmartDashboard.getNumber("shooter_rate", 0.0);
-    final double rateToUpMotorPower = (rateFeedForwardControl.calculate(rate)
-        + ratePidController.calculate(getUpEncoderRate())) / getUpMotorBusVoltage();
-    final double rateToDownMotorPower = (rateFeedForwardControl.calculate(rate)
-        + ratePidController.calculate(getDownEncoderRate())) / getDownMotorBusVoltage();
-    shootUpMotor.set(VictorSPXControlMode.PercentOutput, rateToUpMotorPower);
-    shootDownMotor.set(VictorSPXControlMode.PercentOutput, rateToDownMotorPower);
-    SmartDashboard.putNumber("rateToUpMotorPower", rateToUpMotorPower);
-    SmartDashboard.putNumber("rateToDownMotorPower", rateToDownMotorPower);
+  public void stopUpMotor() {
+   setUpMotor(0);
   }
 
-  public void stopMotor() {
-    shootUpMotor.set(VictorSPXControlMode.PercentOutput, 0);
-    shootDownMotor.set(VictorSPXControlMode.PercentOutput, 0);
+  public void stopDownMotor(){
+  setDownMotor(0);
   }
 
   public double getUpEncoderRate() {
@@ -117,45 +91,47 @@ public class ShooterSubsystem extends SubsystemBase {
     return downEncoder.getRate() / 2048.0;
   }
 
+  public void setUpMotorVoltage(double voltage) {
+   setUpMotor(voltage / getUpMotorBusVoltage());
+  }
+
+  public void setDownMotorVoltage(double voltage) {
+    setDownMotor( voltage / getDownMotorBusVoltage());
+  }
+
   public double getUpMotorBusVoltage() {
-    return shootUpMotor.getBusVoltage();
+    return upMotor.getBusVoltage();
   }
 
   public double getDownMotorBusVoltage() {
-    return shootDownMotor.getBusVoltage();
+    return downMotor.getBusVoltage();
   }
 
- 
+  public void setUpMotor(double power){
+    upMotor.set(VictorSPXControlMode.PercentOutput, power);
 
-  public void tagTracking () {
-    double x_dis = Math.abs(tag.getBT()[0]);
-    double target_Height = 1.98;
-    double tan = target_Height / x_dis;
-    double angle = Math.toDegrees(Math.atan(tan));
-
-    double offset = tag.getTx();
-    double hasTarget = tag.getTv();
-    double rot = 0;
-
-    if (hasTarget == 1) {
-      rot = facingTagPID.calculate(offset, 0);
-      gyro.setAngleAdjustment(angle);
-      shootUpMotor.set(VictorSPXControlMode.PercentOutput,1);
+    if(powerDistribution.isShooterUpOverCurrent()){
+      stopUpMotor();
+      return;
     }
-  
+  }
 
-    
-  
-}
+  public void setDownMotor(double power){
+    downMotor.set(VictorSPXControlMode.PercentOutput, power);
 
+    if(powerDistribution.isShooterDownOverCurrent()){
+      stopDownMotor();
+      return;
+    }
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("upRate", getUpEncoderRate());
     SmartDashboard.putNumber("downRate", getDownEncoderRate());
-    SmartDashboard.putNumber("upPower", shootUpMotor.getMotorOutputPercent());
-    SmartDashboard.putNumber("downPower", shootDownMotor.getMotorOutputPercent());
-    
+    SmartDashboard.putNumber("upPower", upMotor.getMotorOutputPercent());
+    SmartDashboard.putNumber("downPower", downMotor.getMotorOutputPercent());
+
   }
 }

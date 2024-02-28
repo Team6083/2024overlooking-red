@@ -11,14 +11,10 @@ import frc.robot.subsystems.RiseShooterSubsystem;
 public class RiseShooterManualCmd extends Command {
   /** Creates a new RiseStooterCmd. */
   private final RiseShooterSubsystem riseShooterSubsytem;
-  private double leftTriggerValue;
-  private double rightTriggerValue;
 
-  public RiseShooterManualCmd(RiseShooterSubsystem riseShooterSubsytem, double mainLeftTrigger, double mainRightTrigger) {
+  public RiseShooterManualCmd(RiseShooterSubsystem riseShooterSubsytem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.riseShooterSubsytem = riseShooterSubsytem;
-    this.leftTriggerValue = mainLeftTrigger;
-    this.rightTriggerValue = mainRightTrigger;
     addRequirements(this.riseShooterSubsytem);
   }
 
@@ -31,8 +27,8 @@ public class RiseShooterManualCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double risePower = (leftTriggerValue - rightTriggerValue) * RiseShooterConstants.kRiseTriggerValue;
-    riseShooterSubsytem.manualControl(risePower);
+    
+    riseShooterSubsytem.manualControl(3.0);
   }
 
   // Called once the command ends or is interrupted.

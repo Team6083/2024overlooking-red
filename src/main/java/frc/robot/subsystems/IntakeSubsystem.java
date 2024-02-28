@@ -6,47 +6,51 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.PdConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
   private final VictorSPX intakeMotor;
-  private final PowerDistribution pd;
+  private final PowerDistributionSubsystem powerDistributionSubsystem;
 
-  public IntakeSubsystem(PowerDistribution pd) {
-    this.pd = pd;
-    intakeMotor = new VictorSPX(IntakeConstants.kIntakeUpChannel);
-    intakeMotor.setInverted(IntakeConstants.kIntakeUpInverted);
+  public IntakeSubsystem(PowerDistributionSubsystem powerDistributionSubsystem) {
+    this.powerDistributionSubsystem = powerDistributionSubsystem;
+    intakeMotor = new VictorSPX(IntakeConstants.kIntakeChannel);
+    intakeMotor.setInverted(IntakeConstants.kIntakeInverted);
 
   }
 
   public void setIntaking() {
-    intakeMotor.set(VictorSPXControlMode.PercentOutput, IntakeConstants.kIntakePrecentage);
+    setMotor(IntakeConstants.kIntakePrecentage);
   }
 
   public void setThrowing() {
-    intakeMotor.set(VictorSPXControlMode.PercentOutput, IntakeConstants.kThrowPrecentage);
+    setMotor(IntakeConstants.kThrowPrecentage);
   }
 
   public void stopMotor() {
-    intakeMotor.set(VictorSPXControlMode.PercentOutput, 0);
+   setMotor(0);
+  }
+
+  public void setMotor(double power) {
+    if(powerDistributionSubsystem.isIntakeOverCurrent() ){
+      stopMotor();
+      return;
+    }
+    
+    intakeMotor.set(VictorSPXControlMode.PercentOutput, power);
   }
 
   public double getIntakeMotorBusVoltage() {
     return intakeMotor.getBusVoltage();
   }
 
-  
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.getNumber("IntakeMotorBusVoltage", getIntakeMotorBusVoltage());
-    
+
   }
 }

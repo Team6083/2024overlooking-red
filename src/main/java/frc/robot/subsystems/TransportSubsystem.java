@@ -4,8 +4,9 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 
@@ -15,40 +16,56 @@ import frc.robot.Constants.TransportConstants;
 
 public class TransportSubsystem extends SubsystemBase {
   /** Creates a new TransportSubsystem. */
-  private final VictorSPX trans;
+  private final CANSparkMax trans;
   private final Rev2mDistanceSensor dist;
+  private final PowerDistributionSubsystem powerDistribution;
 
-  public TransportSubsystem() {
+  public TransportSubsystem(PowerDistributionSubsystem powerDistribution) {
 
-    trans = new VictorSPX(TransportConstants.kTrantsportChannel);
+    trans = new CANSparkMax(TransportConstants.kTrantsportChannel, MotorType.kBrushless);
     trans.setInverted(true);
 
     dist = new Rev2mDistanceSensor(Port.kOnboard);
+
+    this.powerDistribution = powerDistribution;
   }
 
   public void setTrans() {
-  
-    trans.set(VictorSPXControlMode.PercentOutput,TransportConstants.kTransSpeed);
+
+    setMotor(TransportConstants.kTransSpeed);
   }
 
   public void setReTrans() {
-    trans.set(VictorSPXControlMode.PercentOutput, TransportConstants.kReTransSpeed);
+    setMotor(TransportConstants.kReTransSpeed);
   }
 
-  public void intakeTrans(){
-    if(dist.isRangeValid()){
+  public void intakeTrans() {
+    if (dist.isRangeValid()) {
       SmartDashboard.putNumber("Range dist", dist.getRange());
       SmartDashboard.putNumber("Timestamp dist", dist.getTimestamp());
     }
-    if(dist.getRange()<= TransportConstants.kDistRange){
+    if (isGetNote()) {
       stopMotor();
-    }else{
+    } else {
       setTrans();
     }
   }
 
+  public boolean isGetNote() {
+    return dist.getRange() <= TransportConstants.kDistRange;
+  }
+
   public void stopMotor() {
-    trans.set(VictorSPXControlMode.PercentOutput, 0);
+    setMotor(0);
+  }
+
+  public void setMotor(double power) {
+    trans.set( power);
+
+    if (powerDistribution.isTransportOverCurrent()) {
+      stopMotor();
+      return;
+    }
   }
 
   @Override

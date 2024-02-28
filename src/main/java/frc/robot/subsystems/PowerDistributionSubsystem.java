@@ -6,93 +6,95 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PdConstants;
 
-public class PowerDistributionSubsystem extends SubsystemBase {
-  /** Creates a new PowerDistributionSubsystem. */
+public class PowerDistributionSubsystem {
   private PowerDistribution Pd;
 
-  
-
-  public PowerDistributionSubsystem() {
+  public PowerDistributionSubsystem(){
     Pd = new PowerDistribution();
   }
 
-  public double intakeCurrent(){
-     return Pd.getCurrent(PdConstants.kIntakeMotorCurrrentchannel);
+  public double intakeCurrent() {
+    SmartDashboard.putNumber("intakeCurrent", intakeCurrent());
+    return Pd.getCurrent(PdConstants.kIntakeMotorCurrrentchannel);
   }
 
-  public double hook1Current(){
-   return Pd.getCurrent(PdConstants.kHookMotor1Currentchannel);
+  public double hookLeftCurrent() {
+    SmartDashboard.putNumber("hook1Current", hookLeftCurrent());
+    return Pd.getCurrent(PdConstants.kHookMotor1Currentchannel);
   }
 
-   public double hook2Current(){
-   return Pd.getCurrent(PdConstants.kHookMotor2Currentchannel);
+  public double hookRightCurrent() {
+     SmartDashboard.putNumber("hook2Current", hookRightCurrent());
+    return Pd.getCurrent(PdConstants.kHookMotor2Currentchannel);
   }
 
   public double getDownShooterCurrent() {
+     SmartDashboard.putNumber("getDownShooterCurrent", getDownShooterCurrent());
     return Pd.getCurrent(PdConstants.kShooterDownMotorCurrentchannel);
   }
 
   public double getUpShooterCurrent() {
+    SmartDashboard.putNumber("getUpShooterCurrent", getUpShooterCurrent());
     return Pd.getCurrent(PdConstants.kShooterUpMotorCurrentchannel);
-  } 
+  }
 
-  public double lineCurrent(){
+  public double lineCurrent() {
+    SmartDashboard.putNumber("lineCurrent", lineCurrent());
     return Pd.getCurrent(PdConstants.klineCurrentchannel);
   }
 
-  public double kTransportCurrent(){
+  public double transportCurrent() {
+    SmartDashboard.putNumber("kTransportCurrent", transportCurrent());
     return Pd.getCurrent(PdConstants.kTransportCurrentchannel);
   }
 
-
-  public boolean intakePowerDistribution(){
-   return(Pd.getCurrent(PdConstants.kIntakeMotorCurrrentchannel) < PdConstants.kIntakeMotorPd);   
+   public double riseShooterCurrent(){
+    SmartDashboard.putNumber("kriseShooterCurrent", riseShooterCurrent());
+    return Pd.getCurrent(PdConstants.kRiseShooterCurrentchannel);
   }
 
-  public boolean hook1PowerDistribution(){
-   return(Pd.getCurrent(PdConstants.kHookMotor1Currentchannel) < PdConstants.kHookMotor1Pd);   
-  }
-  
-   public boolean hook2PowerDistribution(){
-    return(Pd.getCurrent(PdConstants.kHookMotor2Currentchannel)< PdConstants.kHookMotor2Pd);
+  public boolean isIntakeOverCurrent() {
+    SmartDashboard.putBoolean("isIntakeOverCurren", isIntakeOverCurrent());
+    return (intakeCurrent()> PdConstants.kIntakeMotorMaxCurrent);
   }
 
-  public boolean shooterDownPowerDistribution(){
-    return(Pd.getCurrent(PdConstants.kShooterDownMotorCurrentchannel)< PdConstants.kShooterDownMoterrPd);
+  public boolean isHookLeftOverCurrent() {
+     SmartDashboard.putBoolean("isHookLeftOverCurrent", isHookLeftOverCurrent());
+    return (hookLeftCurrent() > PdConstants.kHookMotor1MaxCurrent);
   }
 
-   public boolean shooterUpPowerDistribution(){
-    return(Pd.getCurrent(PdConstants.kShooterUpMotorCurrentchannel)< PdConstants.kShooterUpMotorPd);
+  public boolean isHookRightOverCurrent() {
+     SmartDashboard.putBoolean("isHookRightOverCurrent", isHookRightOverCurrent());
+    return (hookRightCurrent() > PdConstants.kHookMotor2MaxCurrent);
   }
 
-   public boolean transportPowerDistribution(){
-    return(Pd.getCurrent(PdConstants.kTransportCurrentchannel)< PdConstants.kTransportPd);
+  public boolean isShooterDownOverCurrent() {
+      SmartDashboard.putBoolean("isShooterDownOverCurrent", isShooterDownOverCurrent());
+    return (getDownShooterCurrent()> PdConstants.kShooterDownMotorMaxCuurent);
   }
 
-   public boolean lineMoterPowerDistribution(){
-    return(Pd.getCurrent(PdConstants.klineCurrentchannel)< PdConstants.klineMotorPd);
+  public boolean isShooterUpOverCurrent() {
+    SmartDashboard.putBoolean("isShooterUpOverCurren", isShooterUpOverCurrent());
+    return (getUpShooterCurrent() > PdConstants.kShooterUpMotorMaxCurrent);
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-      SmartDashboard.putNumber("intakeCurrent",intakeCurrent() );
-      SmartDashboard.putNumber("hook1Current", hook1Current());
-      SmartDashboard.putNumber("hook2Current", hook2Current());
-      SmartDashboard.putNumber("getDownShooterCurrent", getDownShooterCurrent());
-      SmartDashboard.putNumber("getUpShooterCurrent", getUpShooterCurrent());
-      SmartDashboard.putNumber("lineCurrent", lineCurrent());
-      SmartDashboard.putNumber("kTransportCurrent", kTransportCurrent());
-
-      SmartDashboard.putBoolean("intakePd",intakePowerDistribution());
-      SmartDashboard.putBoolean("hook1Pd",hook1PowerDistribution());
-      SmartDashboard.putBoolean("hook2Pd",hook2PowerDistribution());
-      SmartDashboard.putBoolean("downShooterPd", shooterDownPowerDistribution() );
-      SmartDashboard.putBoolean("upShooterPd", shooterUpPowerDistribution());
-      SmartDashboard.putBoolean("transportPd",transportPowerDistribution());
-      SmartDashboard.putBoolean("lineMoterPd",lineMoterPowerDistribution());
+  public boolean isTransportOverCurrent() {
+    SmartDashboard.putBoolean("isTransportOverCurrent", isTransportOverCurrent());
+    return (transportCurrent() > PdConstants.kTransportMaxCurrent);
+    
   }
+
+  public boolean isLineMoterOverCurrent() {
+     SmartDashboard.putBoolean("isLineMoterOverCurrent", isLineMoterOverCurrent());
+    return (lineCurrent() > PdConstants.kLineMotorMaxCurrent);
+    
+  }
+
+  public boolean isRiseShooterOverCurrent(){
+    SmartDashboard.putBoolean("isRiseShooterOverCurrent", isRiseShooterOverCurrent());
+    return(riseShooterCurrent()>PdConstants.kRiseShooterMaxCurrent);
+  }
+
 }
