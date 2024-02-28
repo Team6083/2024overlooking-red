@@ -24,9 +24,9 @@ public class SwerveJoystickCmd extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivebase = drivebase;
     this.main = main;
-    xLimiter = new SlewRateLimiter(DrivebaseConstants.xLimiterRateLimit);
-    yLimiter = new SlewRateLimiter(DrivebaseConstants.yLimiterRateLimit);
-    rotLimiter = new SlewRateLimiter(DrivebaseConstants.rotLimiterRateLimit);
+    xLimiter = new SlewRateLimiter(DrivebaseConstants.kXLimiterRateLimit);
+    yLimiter = new SlewRateLimiter(DrivebaseConstants.kYLimiterRateLimit);
+    rotLimiter = new SlewRateLimiter(DrivebaseConstants.kRotLimiterRateLimit);
     addRequirements(this.drivebase);
   }
 

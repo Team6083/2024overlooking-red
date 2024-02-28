@@ -1,6 +1,5 @@
 package frc.robot;
 
-
 public final class Constants {
     public static class XboxControllerConstants {
         public static final int kMainController = 0;
@@ -33,7 +32,7 @@ public final class Constants {
 
     public static class TransportConstants {
         public static final int kTrantsportChannel = 4;
-        public static final boolean kTransportInverted = false;
+        public static final boolean kTransportInverted = true;
         public static final double kTransSpeed = 0.8;
         public static final double kReTransSpeed = -0.5;
         public static final double kDistRange = 8.0;
@@ -49,6 +48,8 @@ public final class Constants {
     public static class RiseShooterConstants {
         public static final int kRiseShooterChannel = 21;
         public static final Boolean kRiseShooterInverted = true;
+        public static final int kEncoderChannelA = 0;
+        public static final int kEncoderChannelB = 1;
         public static final double kRiseVoltLimit = 5;
         public static final double kRiseAngleMin = -5;
         public static final double kRiseAngleMax = 65;
@@ -59,7 +60,6 @@ public final class Constants {
         public static final double kP = 0.5;
         public static final double kI = 0;
         public static final double kD = 0;
-        
     }
 
     public static class HookConstants {
@@ -110,9 +110,9 @@ public final class Constants {
         public static final double kMinJoyStickValue = 0.3;
         public static final double kMaxAngularSpeed = 2.5 * Math.PI; // 1/2 rotation per second
 
-        public static final double xLimiterRateLimit = 3.0;
-        public static final double yLimiterRateLimit = 3.0;
-        public static final double rotLimiterRateLimit = 3.0;
+        public static final double kXLimiterRateLimit = 3.0;
+        public static final double kYLimiterRateLimit = 3.0;
+        public static final double kRotLimiterRateLimit = 3.0;
 
         public static final boolean kFrontLeftDriveMotorInverted = true;
         public static final boolean kFrontRightDriveMotorInverted = false;
@@ -127,7 +127,6 @@ public final class Constants {
     public static final class ModuleConstants {
         public static final double kWheelRadius = 0.046;
         public static final double kWheelDiameterMeters = 0.15;
-        public static final double kLimitModuleDriveVoltage = 7.0;
         public static final double kMaxModuleDriveVoltage = 12.0;
         public static final double kClosedLoopRampRate = 0.25;// 1 second 1 unit
         public static final double kDesireSpeedtoMotorVoltage = kMaxModuleDriveVoltage / DrivebaseConstants.kMaxSpeed;
@@ -141,7 +140,7 @@ public final class Constants {
         public static final int kIntakeMotorCurrrentchannel = 0;
         public static final int kShooterDownMotorCurrentchannel = 1;
         public static final int kShooterUpMotorCurrentchannel = 2;
-        public static final int klineCurrentchannel = 3;
+        public static final int kLineCurrentchannel = 3;
         public static final int kHookMotor1Currentchannel = 4;
         public static final int kHookMotor2Currentchannel = 5;
         public static final int kTransportCurrentchannel = 0;
@@ -171,17 +170,17 @@ public final class Constants {
         public static final double kPRotation = 2.0;
         public static final double kIRotation = 0.0;
         public static final double kDRotation = 0.0;
-        public static final double maxModuleSpeed = 3.0;
         public static final double drivebaseRadius = 0.34;
     }
 
     public static final class NoteTrackingConstants {
-        public static final String cameraName = "Microsoft_LifeCam_HD-3000";
+        public static final String kCameraName = "Microsoft_LifeCam_HD-3000";
         public static final int noteTrakingPipeline = 1;
         public static final double cameraHeight = 0.36;
         public static final double cameraWeight = 0.0;
         public static final double pitchDegree = -20.0;
         public static final double yawDegree = 0;
+        public static final double minNoteDistance = 0.2;
     }
 
     public static final class AprilTagConstants {

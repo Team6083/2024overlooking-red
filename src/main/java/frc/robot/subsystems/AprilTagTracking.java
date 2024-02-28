@@ -27,6 +27,8 @@ public class AprilTagTracking extends SubsystemBase {
     private double area;
     private double ID;
     private double latency;
+    private double tagLong;
+    private double tagShort;
 
     private double[] bt; // botpose_targetspace
     private double[] cr;// camerapose_robotspace
@@ -94,6 +96,21 @@ public class AprilTagTracking extends SubsystemBase {
         return bt;
     }
 
+    public double[] getCT(){
+        ct = table.getEntry("camerapose_targetspace").getDoubleArray(new double[6]);
+        return ct;
+    }
+
+    public double getTlong(){
+        tagLong = table.getEntry("tlong").getDouble(0);
+        return tagLong;
+    }
+
+    public double getTshort(){
+        tagShort = table. getEntry("tshort").getDouble(0);
+        return tagShort;
+    }
+ 
     public void putDashboard() {
         // SmartDashboard.putNumber("hasTarget", getTv());
         SmartDashboard.putNumber("LimelightX", getTx());

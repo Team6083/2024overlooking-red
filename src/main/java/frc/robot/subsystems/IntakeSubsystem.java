@@ -31,15 +31,15 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void stopMotor() {
-   setMotor(0);
+    setMotor(0);
   }
 
   public void setMotor(double power) {
-    if(powerDistributionSubsystem.isIntakeOverCurrent() ){
+    if (powerDistributionSubsystem.isIntakeOverCurrent()) {
       stopMotor();
       return;
     }
-    
+
     intakeMotor.set(VictorSPXControlMode.PercentOutput, power);
   }
 

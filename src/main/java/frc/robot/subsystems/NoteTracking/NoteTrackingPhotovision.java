@@ -24,7 +24,7 @@ public class NoteTrackingPhotovision extends SubsystemBase {
     private final PhotonCamera noteCamera;
 
     public NoteTrackingPhotovision() {
-        noteCamera = new PhotonCamera(NoteTrackingConstants.cameraName);
+        noteCamera = new PhotonCamera(NoteTrackingConstants.kCameraName);
         noteCamera.setPipelineIndex(NoteTrackingConstants.noteTrakingPipeline);
         noteCamera.setDriverMode(driveMode);
     }

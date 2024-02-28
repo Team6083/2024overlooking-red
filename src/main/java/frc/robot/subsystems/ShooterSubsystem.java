@@ -25,7 +25,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private final PowerDistributionSubsystem powerDistribution;
 
   public ShooterSubsystem(PowerDistributionSubsystem powerDistribution) {
-
     upMotor = new VictorSPX(ShooterConstants.kUpMotorChannel);
     downMotor = new VictorSPX(ShooterConstants.kDownMotorChannel);
     upEncoder = new Encoder(ShooterConstants.kUpEncoderChannelA, ShooterConstants.kUpEncoderChannelB);
@@ -76,11 +75,11 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void stopUpMotor() {
-   setUpMotor(0);
+    setUpMotor(0);
   }
 
-  public void stopDownMotor(){
-  setDownMotor(0);
+  public void stopDownMotor() {
+    setDownMotor(0);
   }
 
   public double getUpEncoderRate() {
@@ -92,11 +91,11 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setUpMotorVoltage(double voltage) {
-   setUpMotor(voltage / getUpMotorBusVoltage());
+    setUpMotor(voltage / getUpMotorBusVoltage());
   }
 
   public void setDownMotorVoltage(double voltage) {
-    setDownMotor( voltage / getDownMotorBusVoltage());
+    setDownMotor(voltage / getDownMotorBusVoltage());
   }
 
   public double getUpMotorBusVoltage() {
@@ -107,22 +106,20 @@ public class ShooterSubsystem extends SubsystemBase {
     return downMotor.getBusVoltage();
   }
 
-  public void setUpMotor(double power){
-    upMotor.set(VictorSPXControlMode.PercentOutput, power);
-
-    if(powerDistribution.isShooterUpOverCurrent()){
+  public void setUpMotor(double power) {
+    if (powerDistribution.isShooterUpOverCurrent()) {
       stopUpMotor();
       return;
     }
+    upMotor.set(VictorSPXControlMode.PercentOutput, power);
   }
 
-  public void setDownMotor(double power){
-    downMotor.set(VictorSPXControlMode.PercentOutput, power);
-
-    if(powerDistribution.isShooterDownOverCurrent()){
+  public void setDownMotor(double power) {
+    if (powerDistribution.isShooterDownOverCurrent()) {
       stopDownMotor();
       return;
     }
+    downMotor.set(VictorSPXControlMode.PercentOutput, power);
   }
 
   @Override

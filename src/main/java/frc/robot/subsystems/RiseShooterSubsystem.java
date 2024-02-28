@@ -25,7 +25,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
   public RiseShooterSubsystem(PowerDistributionSubsystem powerDistribution, AprilTagTracking aprilTagTracking) {
     riseMotor = new CANSparkMax(RiseShooterConstants.kRiseShooterChannel, MotorType.kBrushless);
 
-    riseEncoder = new Encoder(0, 1);
+    riseEncoder = new Encoder(RiseShooterConstants.kEncoderChannelA, RiseShooterConstants.kEncoderChannelB);
     angleDegreeOffset = RiseShooterConstants.kRiseInitAngleDegree;
 
     risePID = new PIDController(RiseShooterConstants.kP, RiseShooterConstants.kI, RiseShooterConstants.kD);

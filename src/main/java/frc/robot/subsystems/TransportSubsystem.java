@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.Rev2mDistanceSensor;
@@ -23,7 +22,7 @@ public class TransportSubsystem extends SubsystemBase {
   public TransportSubsystem(PowerDistributionSubsystem powerDistribution) {
 
     trans = new CANSparkMax(TransportConstants.kTrantsportChannel, MotorType.kBrushless);
-    trans.setInverted(true);
+    trans.setInverted(TransportConstants.kTransportInverted);
 
     dist = new Rev2mDistanceSensor(Port.kOnboard);
 
@@ -31,7 +30,6 @@ public class TransportSubsystem extends SubsystemBase {
   }
 
   public void setTrans() {
-
     setMotor(TransportConstants.kTransSpeed);
   }
 
@@ -60,12 +58,11 @@ public class TransportSubsystem extends SubsystemBase {
   }
 
   public void setMotor(double power) {
-    trans.set( power);
-
     if (powerDistribution.isTransportOverCurrent()) {
       stopMotor();
       return;
     }
+    trans.set(power);
   }
 
   @Override

@@ -115,11 +115,11 @@ public class HookSubsystem extends SubsystemBase {
 
   }
 
-  public double getHookLeftMotorBusVoltage(){
+  public double getHookLeftMotorBusVoltage() {
     return hookLeftMotor.getBusVoltage();
   }
 
-  public double getHookRightMotorBusVoltage(){
+  public double getHookRightMotorBusVoltage() {
     return hookRightMotor.getBusVoltage();
   }
 
