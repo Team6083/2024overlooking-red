@@ -20,8 +20,9 @@ public class RiseShooterSubsystem extends SubsystemBase {
   private final Encoder riseEncoder;
   private double angleDegreeOffset;
   private final PIDController risePID;
+  private final PowerDistributionSubsystem powerDistribution;
 
-  public RiseShooterSubsystem() {
+  public RiseShooterSubsystem(PowerDistributionSubsystem powerDistribution) {
     riseMotor = new CANSparkMax(RiseShooterConstants.kRiseShooterChannel, MotorType.kBrushless);
 
     riseEncoder = new Encoder(0, 1);
@@ -34,6 +35,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
     riseMotor.setInverted(RiseShooterConstants.kRiseShooterInverted);
 
     riseEncoder.setDistancePerPulse(360.0 / RiseShooterConstants.kRiseEncoderPulse);
+    this.powerDistribution = powerDistribution;
   }
 
   public void manualControl(double RiseSpeed) {
@@ -97,7 +99,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   public void setMotor(double power){
-  if(powerDistributionSubsystem.isRiseShooterOverCurrent()){
+  if(powerDistribution.isRiseShooterOverCurrent()){
     stopMotor();
     return;
   }

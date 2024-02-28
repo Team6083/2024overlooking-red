@@ -29,6 +29,7 @@ import frc.robot.Constants.XboxControllerConstants;
 import frc.robot.subsystems.AprilTagTracking;
 import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PowerDistributionSubsystem;
 import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
@@ -43,17 +44,19 @@ public class RobotContainer {
   private final RiseShooterSubsystem riseShooter;
   // private final Drivebase drivebase;
   // private final HookSubsystem hook;
+  private final PowerDistributionSubsystem powerDistribution;
 
   private SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
+    powerDistribution = new PowerDistributionSubsystem();
     mainController = new CommandXboxController(XboxControllerConstants.kMainController);
-    // shooter = new ShooterSubsystem();
-    // trans = new TransportSubsystem();
-    // intake = new IntakeSubsystem();
-    riseShooter = new RiseShooterSubsystem();
+    // shooter = new ShooterSubsystem(powerDistribution);
+    // trans = new TransportSubsystem(powerDistribution);
+    // intake = new IntakeSubsystem(powerDistribution);
+    riseShooter = new RiseShooterSubsystem(powerDistribution);
     // drivebase = new Drivebase();
-    // hook = new HookSubsystem();
+    // hook = new HookSubsystem(powerDistribution);
     // AprilTagTracking.init();
     configureBindings();
 

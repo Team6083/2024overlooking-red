@@ -22,10 +22,10 @@ public class HookSubsystem extends SubsystemBase {
   public final VictorSPX hookLeftMotor;
   public final VictorSPX hookRightMotor;
   private final RelativeEncoder lineEncoder;
-  private final PowerDistributionSubsystem powerDistributionSubsystem;
+  private final PowerDistributionSubsystem powerDistribution;
   private double positionOffset = 0.0;
 
-  public HookSubsystem(PowerDistributionSubsystem powerDistributionSubsystem) {
+  public HookSubsystem(PowerDistributionSubsystem powerDistribution) {
     line = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
     hookLeftMotor = new VictorSPX(HookConstants.kHookLeftMotorCnannel);
     hookRightMotor = new VictorSPX(HookConstants.kHookRightMotorCnannel);
@@ -34,6 +34,7 @@ public class HookSubsystem extends SubsystemBase {
     lineEncoder = line.getEncoder();
     lineEncoder.setPositionConversionFactor(HookConstants.kHookPositionConversionfactor);
     line.setInverted(HookConstants.kHookMotorLeftInverted);
+    this.powerDistribution = powerDistribution;
   }
 
   public void controlLine(double hookControlSpeed) {
@@ -135,7 +136,7 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void setLeftMotor(double power) {
-    if (PowerDistributionSubsystem.isHookLeftOverCurrent()) {
+    if (powerDistribution.isHookLeftOverCurrent()) {
       stopHookLeftMotor();
       return;
     }
@@ -143,7 +144,7 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void setRightMotor(double power) {
-    if (PowerDistributionSubsystem.isHookRightOverCurrent()) {
+    if (powerDistribution.isHookRightOverCurrent()) {
       stopHookRightMotor();
       return;
     }
@@ -151,7 +152,7 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void setLineMotor(double power) {
-    if (PowerDistributionSubsystem.isLineMoterOverCurrent()) {
+    if (powerDistribution.isLineMoterOverCurrent()) {
       stopLineMotor();
       return;
     }

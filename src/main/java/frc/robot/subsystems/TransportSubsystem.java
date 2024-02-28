@@ -18,13 +18,16 @@ public class TransportSubsystem extends SubsystemBase {
   /** Creates a new TransportSubsystem. */
   private final CANSparkMax trans;
   private final Rev2mDistanceSensor dist;
+  private final PowerDistributionSubsystem powerDistribution;
 
-  public TransportSubsystem() {
+  public TransportSubsystem(PowerDistributionSubsystem powerDistribution) {
 
     trans = new CANSparkMax(TransportConstants.kTrantsportChannel, MotorType.kBrushless);
     trans.setInverted(true);
 
     dist = new Rev2mDistanceSensor(Port.kOnboard);
+
+    this.powerDistribution = powerDistribution;
   }
 
   public void setTrans() {
@@ -59,7 +62,7 @@ public class TransportSubsystem extends SubsystemBase {
   public void setMotor(double power) {
     trans.set( power);
 
-    if (powerDistributionSubsystem.isTransportOverCurrent()) {
+    if (powerDistribution.isTransportOverCurrent()) {
       stopMotor();
       return;
     }
