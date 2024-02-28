@@ -37,19 +37,11 @@ public class TransportSubsystem extends SubsystemBase {
     setMotor(TransportConstants.kReTransSpeed);
   }
 
-  public void intakeTrans() {
+  public boolean isGetNote() {
     if (dist.isRangeValid()) {
       SmartDashboard.putNumber("Range dist", dist.getRange());
       SmartDashboard.putNumber("Timestamp dist", dist.getTimestamp());
     }
-    if (isGetNote()) {
-      stopMotor();
-    } else {
-      setTrans();
-    }
-  }
-
-  public boolean isGetNote() {
     return dist.getRange() <= TransportConstants.kDistRange;
   }
 

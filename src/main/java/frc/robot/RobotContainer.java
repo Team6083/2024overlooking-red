@@ -19,7 +19,6 @@ import frc.robot.commands.TeleopIntakeCmd;
 import frc.robot.commands.autoTimerCmds.StopCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterPIDCmd;
-import frc.robot.commands.shooterCmds.ShootManualCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.Autos;
 import frc.robot.commands.hookCmds.HookManualCmd;

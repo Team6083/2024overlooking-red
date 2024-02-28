@@ -39,7 +39,6 @@ public class IntakeSubsystem extends SubsystemBase {
       stopMotor();
       return;
     }
-
     intakeMotor.set(VictorSPXControlMode.PercentOutput, power);
   }
 

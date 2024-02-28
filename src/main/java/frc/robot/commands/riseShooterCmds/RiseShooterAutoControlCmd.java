@@ -32,7 +32,6 @@ public class RiseShooterAutoControlCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    riseShooterSubsystem.pidControl();
   }
 
   // Returns true when the command should end.

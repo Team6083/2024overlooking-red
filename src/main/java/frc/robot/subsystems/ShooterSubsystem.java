@@ -49,14 +49,6 @@ public class ShooterSubsystem extends SubsystemBase {
     this.powerDistribution = powerDistribution;
   }
 
-  public void setManual() {
-    final double upPower = ShooterConstants.kUpMotorManualVoltage / getUpMotorBusVoltage();
-    final double downPower = ShooterConstants.kDownMotorManualVoltage / getDownMotorBusVoltage();
-    setUpMotor(upPower);
-    setDownMotor(downPower);
-
-  }
-
   public void resetEncoder() {
     upEncoder.reset();
     downEncoder.reset();

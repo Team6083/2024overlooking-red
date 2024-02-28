@@ -228,7 +228,6 @@ public class Drivebase extends SubsystemBase {
       double XSpeed = facingNotePID.calculate(pose.getY(), NoteTrackingConstants.minNoteDistance);
       double YSpeed = 0;
       double rot = -facingNotePID.calculate(pose.getX(), 0);
-      // return rot;
       speed[0] = XSpeed;
       speed[1] = YSpeed;
       speed[2] = rot;
@@ -361,11 +360,12 @@ public class Drivebase extends SubsystemBase {
     backRight.resetAllEncoder();
   }
 
-  /**
-   * Resets the odometry to the specified pose.
-   *
-   * @param pose The pose to which to set the odometry.
-   */
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    updateOdometry();
+    putDashboard();
+  }
 
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return kinematics.toChassisSpeeds(frontLeft.getState(),
@@ -376,13 +376,6 @@ public class Drivebase extends SubsystemBase {
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
     drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false);
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    updateOdometry();
-    putDashboard();
   }
 
   // auto drive

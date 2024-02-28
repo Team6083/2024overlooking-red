@@ -40,7 +40,7 @@ public class NoteTrackingLimelight extends SubsystemBase {
 
   public double getTx() {
     double tx = table.getEntry("tx").getDouble(0.0);
-    if(tx==0){
+    if (tx == 0) {
       System.out.println("Can't find target");
     }
     return tx;

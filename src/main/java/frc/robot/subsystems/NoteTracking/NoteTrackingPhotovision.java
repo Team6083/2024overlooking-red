@@ -14,10 +14,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.NoteTrackingConstants;
 
-public class NoteTrackingPhotovision extends SubsystemBase {
+public class NoteTrackingPhotovision {
     /** Creates a new VisionTrackingPhotovision. */
 
     private final boolean driveMode = false;
@@ -56,6 +55,12 @@ public class NoteTrackingPhotovision extends SubsystemBase {
             SmartDashboard.putNumber("notePitch", trackedTarget.getPitch());
             SmartDashboard.putNumber("noteSkew", trackedTarget.getSkew());
         }
+        SmartDashboard.putNumber("noteFound", poses.size());
+        if (poses.size() > 0) {
+            Pose2d notePose = poses.get(0);
+            SmartDashboard.putNumber("noteVision/x", notePose.getX());
+            SmartDashboard.putNumber("noteVision/y", notePose.getY());
+        }
         return poses;
     }
 
@@ -81,15 +86,4 @@ public class NoteTrackingPhotovision extends SubsystemBase {
             field.getObject(label).setPose(pose);
     }
 
-    @Override
-    public void periodic() {
-        // This method will be called once per scheduler run
-        List<Pose2d> notes = getNotes();
-        SmartDashboard.putNumber("noteVision/nFound", notes.size());
-        if (notes.size() > 0) {
-            Pose2d p = notes.get(0);
-            SmartDashboard.putNumber("noteVision/x", p.getX());
-            SmartDashboard.putNumber("noteVision/y", p.getY());
-        }
-    }
 }
