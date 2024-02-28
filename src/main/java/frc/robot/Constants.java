@@ -50,8 +50,8 @@ public final class Constants {
         public static final int kRiseShooterChannel = 21;
         public static final Boolean kRiseShooterInverted = true;
         public static final double kRiseVoltLimit = 5;
-        public static final double kRiseAngleMin = 0;
-        public static final double kRiseAngleMax = 60;
+        public static final double kRiseAngleMin = -5;
+        public static final double kRiseAngleMax = 65;
         public static final double kRiseEncoderPulse = 2048;
         public static final double kRiseInitAngleDegree = 60;
         public static final double kRiseTriggerValue = 0.15;
