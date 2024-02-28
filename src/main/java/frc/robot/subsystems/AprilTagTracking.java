@@ -7,42 +7,42 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AprilTagTracking extends SubsystemBase {
-    public NetworkTable table;
-    public NetworkTableEntry tx;// = table.getEntry("tx");// table.getEntry("tx");
-    public NetworkTableEntry ty;// = table.getEntry("ty");
-    public NetworkTableEntry ta;// = table.getEntry("ta");
-    public NetworkTableEntry tv;
-    public NetworkTableEntry tid;
-    public NetworkTableEntry tl;
+    private final NetworkTable table;
+    private NetworkTableEntry tx;// = table.getEntry("tx");// table.getEntry("tx");
+    private NetworkTableEntry ty;// = table.getEntry("ty");
+    private NetworkTableEntry ta;// = table.getEntry("ta");
+    private NetworkTableEntry tv;
+    private NetworkTableEntry tid;
+    private NetworkTableEntry tl;
 
-    public NetworkTableEntry BT;
-    public NetworkTableEntry CR;
-    public NetworkTableEntry TR;
-    public NetworkTableEntry CT;
+    private NetworkTableEntry BT;
+    private NetworkTableEntry CR;
+    private NetworkTableEntry TR;
+    private NetworkTableEntry CT;
 
-    public double v;
-    public double a;
-    public double x;
-    public double y;
-    public double area;
-    public double ID;
-    public double latency;
+    private double v;
+    private double a;
+    private double x;
+    private double y;
+    private double area;
+    private double ID;
+    private double latency;
 
-    public double[] bt; // botpose_targetspace
-    public double[] cr;// camerapose_robotspace
-    public double[] tr; // targetpose_robotpose;
-    public double[] ct; // camerapose_targetspace
+    private double[] bt; // botpose_targetspace
+    private double[] cr;// camerapose_robotspace
+    private double[] tr; // targetpose_robotpose;
+    private double[] ct; // camerapose_targetspace
 
-    public double MyDistance;
+    private double MyDistance;
 
-    public final double limelightLensHeightInches = 0;
-    public final double limelightMountAngleDegrees = 0;
-    public double targetOffsetAngle_Vertical;
-    public double angleToGoalDegrees;
-    public double angleToGoalRadians;
-    public double goalHeightInches;
+    private final double limelightLensHeightInches = 0;
+    private final double limelightMountAngleDegrees = 0;
+    private double targetOffsetAngle_Vertical;
+    private double angleToGoalDegrees;
+    private double angleToGoalRadians;
+    private double goalHeightInches;
 
-    public void init() {
+    public AprilTagTracking(){
         table = NetworkTableInstance.getDefault().getTable("limelight");
 
     }
@@ -60,43 +60,36 @@ public class AprilTagTracking extends SubsystemBase {
     }
 
     public double getTx() {
-        init();
         x = table.getEntry("tx").getDouble(0);
         return x;
     }
 
     public double getTy() {
-        init();
         y = table.getEntry("ty").getDouble(0);
         return y;
     }
 
     public double getTa() {
-        init();
         a = table.getEntry("ta").getDouble(0);
         return a;
     }
 
     public double getTv() {
-        init();
         v = table.getEntry("tv").getDouble(0);
         return v;
     }
 
     public double getTID() {
-        init();
         ID = table.getEntry("tid").getDouble(0);
         return ID;
     }
 
     public double getTl() {
-        init();
         latency = table.getEntry("tl").getDouble(0);
         return latency;
     }
 
     public double[] getBT() {
-        init();
         bt = table.getEntry("botpose_targetspace").getDoubleArray(new double[6]);
         return bt;
     }
