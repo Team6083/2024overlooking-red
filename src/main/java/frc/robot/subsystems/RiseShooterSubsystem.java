@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RiseShooterConstants;
 
-
 public class RiseShooterSubsystem extends SubsystemBase {
 
   /** Creates a new RiseShooterSubsytem. */
@@ -21,8 +20,9 @@ public class RiseShooterSubsystem extends SubsystemBase {
   private double angleDegreeOffset;
   private final PIDController risePID;
   private final PowerDistributionSubsystem powerDistribution;
+  private final AprilTagTracking aprilTagTracking;
 
-  public RiseShooterSubsystem(PowerDistributionSubsystem powerDistribution) {
+  public RiseShooterSubsystem(PowerDistributionSubsystem powerDistribution, AprilTagTracking aprilTagTracking) {
     riseMotor = new CANSparkMax(RiseShooterConstants.kRiseShooterChannel, MotorType.kBrushless);
 
     riseEncoder = new Encoder(0, 1);
@@ -36,6 +36,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
 
     riseEncoder.setDistancePerPulse(360.0 / RiseShooterConstants.kRiseEncoderPulse);
     this.powerDistribution = powerDistribution;
+    this.aprilTagTracking = aprilTagTracking;
   }
 
   public void manualControl(double RiseSpeed) {
@@ -69,18 +70,20 @@ public class RiseShooterSubsystem extends SubsystemBase {
       modifiedRiseVolt = RiseShooterConstants.kRiseVoltLimit * (riseVolt > 0 ? 1 : -1);
     }
     setMotor(riseVolt);
-
     SmartDashboard.putNumber("rise_volt", modifiedRiseVolt);
-
   }
 
   public double getAprilTagDegree() {
-    double distance = Math.pow(Math.pow(AprilTagTracking.getBT()[0], 2)+Math.pow(AprilTagTracking.getBT()[2], 2), 1/2);
-    return Math.toDegrees(Math.atan(RiseShooterConstants.kSpeakerHeight / distance));
+    if (aprilTagTracking.getTx() == 1) {
+      return Math.toDegrees(Math.atan(RiseShooterConstants.kSpeakerHeight / aprilTagTracking.getBT()[2]));
+    } else {
+      return getAngleDegree();
+    }
+
   }
 
   public double getAngleDegree() {
-    double degree = (riseEncoder.getDistance()+angleDegreeOffset)%360.0;
+    double degree = (riseEncoder.getDistance() + angleDegreeOffset) % 360.0;
     SmartDashboard.putNumber("riseShooterDegree", degree);
     return degree;
   }
@@ -98,12 +101,12 @@ public class RiseShooterSubsystem extends SubsystemBase {
     riseMotor.setVoltage(0.0);
   }
 
-  public void setMotor(double power){
-  if(powerDistribution.isRiseShooterOverCurrent()){
-    stopMotor();
-    return;
-  }
-  riseMotor.setVoltage(power);
+  public void setMotor(double power) {
+    if (powerDistribution.isRiseShooterOverCurrent()) {
+      stopMotor();
+      return;
+    }
+    riseMotor.setVoltage(power);
   }
 
   private int isPhyLimitExceed(double angle) {
@@ -113,6 +116,6 @@ public class RiseShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putData("rise_PID", risePID);
-    SmartDashboard.putNumber("motor",riseMotor.getOutputCurrent());
+    SmartDashboard.putNumber("motor", riseMotor.getOutputCurrent());
   }
 }

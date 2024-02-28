@@ -9,15 +9,10 @@ import frc.robot.subsystems.RiseShooterSubsystem;
 
 public class RiseShooterAutoControlCmd extends Command {
   private final RiseShooterSubsystem riseShooterSubsystem;
-  private double leftTriggerValue;
-  private double rightTriggerValue;
-  private double armAngleModify;
 
   /** Creates a new RiseShooterPIDCmd. */
-  public RiseShooterAutoControlCmd(RiseShooterSubsystem riseShooterSubsystem, double mainLeftTrigger, double mainRightTrigger) {
+  public RiseShooterAutoControlCmd(RiseShooterSubsystem riseShooterSubsystem) {
     this.riseShooterSubsystem = riseShooterSubsystem;
-    this.leftTriggerValue = mainLeftTrigger;
-    this.rightTriggerValue = mainRightTrigger;
     addRequirements(this.riseShooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -25,21 +20,19 @@ public class RiseShooterAutoControlCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    riseShooterSubsystem.stopMotor();
+    riseShooterSubsystem.setSetpoint(riseShooterSubsystem.getAprilTagDegree());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armAngleModify = (leftTriggerValue - rightTriggerValue) * 0.7;
-    riseShooterSubsystem.setSetpoint(riseShooterSubsystem.getSetpoint() + armAngleModify);
     riseShooterSubsystem.pidControl();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    riseShooterSubsystem.stopMotor();
+    riseShooterSubsystem.pidControl();
   }
 
   // Returns true when the command should end.
