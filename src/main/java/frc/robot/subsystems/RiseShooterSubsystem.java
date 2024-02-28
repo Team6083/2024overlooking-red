@@ -28,9 +28,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
     riseEncoder = new Encoder(0, 1);
     angleDegreeOffset = RiseShooterConstants.kRiseInitAngleDegree;
 
-    risePID = new PIDController(0.5, 0, 0);
-
-    risePID.setSetpoint(60.0);
+    risePID = new PIDController(RiseShooterConstants.kP, RiseShooterConstants.kI, RiseShooterConstants.kD);
 
     riseMotor.setInverted(RiseShooterConstants.kRiseShooterInverted);
 

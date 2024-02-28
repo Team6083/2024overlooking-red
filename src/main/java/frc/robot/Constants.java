@@ -56,6 +56,9 @@ public final class Constants {
         public static final double kRiseInitAngleDegree = 60;
         public static final double kRiseTriggerValue = 0.15;
         public static final double kSpeakerHeight = 5.0;
+        public static final double kP = 0.5;
+        public static final double kI = 0;
+        public static final double kD = 0;
         
     }
 

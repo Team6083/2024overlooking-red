@@ -25,7 +25,6 @@ public class RiseShooterPIDCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    riseShooterSubsystem.pidControl();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
