@@ -99,7 +99,6 @@ public class RobotContainer {
     // main.y().whileTrue(new HookManualCmd(hook));
     // mainController.pov(0).onTrue(new LinePIDCmd(hook));
     // mainController.pov(180).onTrue(new LinePIDCmd(hook));
-    TagTrackingLimelight.init();
   }
 
   public Command getAutonomousCommand() {

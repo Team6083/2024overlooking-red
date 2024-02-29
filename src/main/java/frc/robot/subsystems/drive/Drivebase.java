@@ -236,8 +236,8 @@ public class Drivebase extends SubsystemBase {
   }
 
   public void faceTarget() {
-    double offset = TagTrackingLimelight.getTx();
-    double hasTarget = TagTrackingLimelight.getTv();
+    double offset = aprilTagTracking.getTx();
+    double hasTarget = aprilTagTracking.getTv();
     double rot = 0;
     if (hasTarget == 1) {
       rot = facingTagPID.calculate(offset, 0);
@@ -246,8 +246,8 @@ public class Drivebase extends SubsystemBase {
   }
 
   public double faceTargetMethod2() {
-    double offset = TagTrackingLimelight.getTx();
-    double hasTarget = TagTrackingLimelight.getTv();
+    double offset = aprilTagTracking.getTx();
+    double hasTarget = aprilTagTracking.getTv();
     double rot = 0;
     if (hasTarget == 1) {
       rot = -facingTagPID.calculate(offset, 0);
@@ -257,13 +257,13 @@ public class Drivebase extends SubsystemBase {
   }
 
   public void follow() {
-    double offset = TagTrackingLimelight.getTx();
-    double hasTarget = TagTrackingLimelight.getTv();
+    double offset = aprilTagTracking.getTx();
+    double hasTarget = aprilTagTracking.getTv();
     double rot = 0;
     if (hasTarget == 1) {
       rot = facingTagPID.calculate(offset, 0);
     }
-    double[] bt = TagTrackingLimelight.getBT();
+    double[] bt = aprilTagTracking.getBT();
     double x_dis = bt[2];
     // double y_dis = bt[2];
     // double hasTarget = tag.getTv();
@@ -276,15 +276,15 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putNumber("x_dis_speed", xSpeed);
     // SmartDashboard.putNumber("y_dis_speed", ySpeed);
     drive(xSpeed, 0, -rot, false);
-    SmartDashboard.putNumber("distance", TagTrackingLimelight.getMyDistance());
+    SmartDashboard.putNumber("distance", aprilTagTracking.getMyDistance());
     // drive(0, 0, -rot, false);
   }
 
   public void fixDistanceBT() {
-    double[] bt = TagTrackingLimelight.getBT();
+    double[] bt = aprilTagTracking.getBT();
     double x_dis = bt[0];
     double y_dis = bt[1];
-    double hasTarget = TagTrackingLimelight.getTv();
+    double hasTarget = aprilTagTracking.getTv();
     double xSpeed = 0;
     double ySpeed = 0;
     if (hasTarget == 1) {
@@ -297,10 +297,10 @@ public class Drivebase extends SubsystemBase {
   }
 
   public void fixDistanceCT() {
-    double[] ct = TagTrackingLimelight.getCT();
+    double[] ct = aprilTagTracking.getCT();
     double x_dis = ct[0];
     double y_dis = ct[1];
-    double hasTarget = TagTrackingLimelight.getTv();
+    double hasTarget = aprilTagTracking.getTv();
     double xSpeed = 0;
     double ySpeed = 0;
     if (hasTarget == 1) {
@@ -347,7 +347,7 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putNumber("backRight_speed", swerveModuleStates[3].speedMetersPerSecond);
     SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
     SmartDashboard.putBoolean("trackingCondition", trackingCondition);
-    TagTrackingLimelight.putDashboard();
+    aprilTagTracking.putDashboard();
   }
 
   public Pose2d getPose2d() {

@@ -8,37 +8,37 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.Constants.AprilTagConstants;
 
 public class TagTrackingLimelight extends SubsystemBase {
-    public static NetworkTable table;
+    public NetworkTable table;
 
-    public static double v;
-    public static double a;
-    public static double x;
-    public static double y;
-    public static double area;
-    public static double ID;
-    public static double latency;
-    public static double tagLong;
-    public static double tagShort;
+    public double v;
+    public double a;
+    public double x;
+    public double y;
+    public double area;
+    public double ID;
+    public double latency;
+    public double tagLong;
+    public double tagShort;
 
-    public static double[] bt; // botpose_targetspace
-    public static double[] cr;// camerapose_robotspace
-    public static double[] tr; // targetpose_robotpose;
-    public static double[] ct; // camerapose_targetspace
+    public double[] bt; // botpose_targetspace
+    public double[] cr;// camerapose_robotspace
+    public double[] tr; // targetpose_robotpose;
+    public double[] ct; // camerapose_targetspace
 
-    public static double MyDistance;
+    public double MyDistance;
 
-    public static final double limelightLensHeightInches = 0;
-    public static final double limelightMountAngleDegrees = 0;
-    public static double targetOffsetAngle_Vertical;
-    public static double angleToGoalDegrees;
-    public static double angleToGoalRadians;
-    public static double goalHeightInches;
+    public final double limelightLensHeightInches = 0;
+    public final double limelightMountAngleDegrees = 0;
+    public double targetOffsetAngle_Vertical;
+    public double angleToGoalDegrees;
+    public double angleToGoalRadians;
+    public double goalHeightInches;
 
-    public static void init() {
+    public TagTrackingLimelight() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
     }
 
-    public static double getMyDistance() {
+    public double getMyDistance() {
         // readValue();
         double target_height = getBT()[1]; // botpose in targetspace y
         double x_dis = getBT()[0];
@@ -50,52 +50,52 @@ public class TagTrackingLimelight extends SubsystemBase {
         return MyDistance;
     }
 
-    public static double getTx() {
+    public double getTx() {
         x = table.getEntry("tx").getDouble(0);
         return x;
     }
 
-    public static double getTy() {
+    public double getTy() {
         y = table.getEntry("ty").getDouble(0);
         return y;
     }
 
-    public static double getTa() {
+    public double getTa() {
         a = table.getEntry("ta").getDouble(0);
         return a;
     }
 
-    public static double getTv() {
+    public double getTv() {
         v = table.getEntry("tv").getDouble(0);
         return v;
     }
 
-    public static double getTID() {
+    public double getTID() {
         ID = table.getEntry("tid").getDouble(0);
         return ID;
     }
 
-    public static double getTl() {
+    public double getTl() {
         latency = table.getEntry("tl").getDouble(0);
         return latency;
     }
 
-    public static double[] getBT() {
+    public double[] getBT() {
         bt = table.getEntry("botpose_targetspace").getDoubleArray(new double[6]);
         return bt;
     }
 
-    public static double[] getCT() {
+    public double[] getCT() {
         ct = table.getEntry("camerapose_targetspace").getDoubleArray(new double[6]);
         return ct;
     }
 
-    public static double getTlong() {
+    public double getTlong() {
         tagLong = table.getEntry("tlong").getDouble(0);
         return tagLong;
     }
 
-    public static double getTshort() {
+    public double getTshort() {
         tagShort = table.getEntry("tshort").getDouble(0);
         return tagShort;
     }
@@ -142,7 +142,7 @@ public class TagTrackingLimelight extends SubsystemBase {
     // }
     // }
 
-    public static void putDashboard() {
+    public void putDashboard() {
         // SmartDashboard.putNumber("hasTarget", getTv());
         SmartDashboard.putNumber("LimelightX", getTx());
         SmartDashboard.putNumber("LimelightY", getTy());

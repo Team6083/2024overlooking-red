@@ -71,8 +71,8 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   public double getAprilTagDegree() {
-    if (TagTrackingLimelight.getTx() == 1) {
-      return Math.toDegrees(Math.atan(RiseShooterConstants.kSpeakerHeight / TagTrackingLimelight.getBT()[2]));
+    if (aprilTagTracking.getTx() == 1) {
+      return Math.toDegrees(Math.atan(RiseShooterConstants.kSpeakerHeight / aprilTagTracking.getBT()[2]));
     } else {
       return getAngleDegree();
     }
