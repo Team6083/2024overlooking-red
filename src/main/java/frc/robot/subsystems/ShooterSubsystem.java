@@ -107,9 +107,11 @@ public class ShooterSubsystem extends SubsystemBase {
     return downMotor.getBusVoltage();
   }
 
-  public void haveNoteAndSpeed() {
-    if (transportSubsystem.isGetNote() && Math.abs(getUpEncoderRate()-ShooterConstants.kShooterRate)<1) {
-      riseShooterSubsystem.pidControl();
+  public Boolean haveNoteAndSpeed() {
+    if (transportSubsystem.isGetNote() && Math.abs(getUpEncoderRate()-ShooterConstants.kShooterRate)<1&&Math.abs(getDownEncoderRate()-ShooterConstants.kShooterRate)<1) {
+      return true;
+    }else{
+      return false;
     }
   }
 

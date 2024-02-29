@@ -4,37 +4,25 @@
 
 package frc.robot.commands.shooterCmds;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.Constants.RiseShooterConstants;
+import frc.robot.commands.riseShooterCmds.RiseShooterPIDCmd;
+import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class HaveNoteAndShoot extends Command {
-  /** Creates a new GetNoteAndShoot. */
-  private final ShooterSubsystem shooterSubsystem;
-  public HaveNoteAndShoot(ShooterSubsystem shooterSubsystem) {
-    this.shooterSubsystem = shooterSubsystem;
-    addRequirements(this.shooterSubsystem);
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class HaveNoteAndShoot extends ParallelCommandGroup {
+  /** Creates a new HaveNoteAndShoot. */
+  ShooterSubsystem shooterSubsystem;
+  RiseShooterSubsystem riseShooterSubsystem;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    shooterSubsystem.haveNoteAndSpeed();
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+  public HaveNoteAndShoot() {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    addCommands(
+      new IsHaveNote(shooterSubsystem),
+      new RiseShooterPIDCmd(riseShooterSubsystem,RiseShooterConstants.kRiseTriggerValue,RiseShooterConstants.kRiseTriggerValue));
+      }
 }
