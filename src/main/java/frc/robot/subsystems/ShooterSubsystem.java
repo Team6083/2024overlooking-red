@@ -8,10 +8,13 @@ import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 
 public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new Shooter. */
@@ -23,6 +26,9 @@ public class ShooterSubsystem extends SubsystemBase {
   private final SimpleMotorFeedforward upMotorFeedForwardControl;
   private final SimpleMotorFeedforward downMotorFeedForwardControl;
   private final PowerDistributionSubsystem powerDistribution;
+  private final TransportSubsystem transportSubsystem;
+  private final RiseShooterSubsystem riseShooterSubsystem;
+  private final TagTrackingLimelight aprilTagTracking;
 
   public ShooterSubsystem(PowerDistributionSubsystem powerDistribution) {
     upMotor = new VictorSPX(ShooterConstants.kUpMotorChannel);
@@ -45,6 +51,9 @@ public class ShooterSubsystem extends SubsystemBase {
         ShooterConstants.kDownMotorA);
 
     resetEncoder();
+    transportSubsystem = new TransportSubsystem(powerDistribution);
+    aprilTagTracking = new TagTrackingLimelight();
+    riseShooterSubsystem = new RiseShooterSubsystem(powerDistribution, aprilTagTracking);
 
     this.powerDistribution = powerDistribution;
   }
@@ -96,6 +105,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getDownMotorBusVoltage() {
     return downMotor.getBusVoltage();
+  }
+
+  public void haveNoteAndSpeed() {
+    if (transportSubsystem.isGetNote() && Math.abs(getUpEncoderRate()-ShooterConstants.kShooterRate)<1) {
+      riseShooterSubsystem.pidControl();
+    }
   }
 
   public void setUpMotor(double power) {
