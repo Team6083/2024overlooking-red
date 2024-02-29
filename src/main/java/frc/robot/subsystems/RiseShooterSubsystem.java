@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RiseShooterConstants;
+import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 
 public class RiseShooterSubsystem extends SubsystemBase {
 
@@ -20,9 +21,9 @@ public class RiseShooterSubsystem extends SubsystemBase {
   private double angleDegreeOffset;
   private final PIDController risePID;
   private final PowerDistributionSubsystem powerDistribution;
-  private final AprilTagTracking aprilTagTracking;
+  private final TagTrackingLimelight aprilTagTracking;
 
-  public RiseShooterSubsystem(PowerDistributionSubsystem powerDistribution, AprilTagTracking aprilTagTracking) {
+  public RiseShooterSubsystem(PowerDistributionSubsystem powerDistribution, TagTrackingLimelight aprilTagTracking) {
     riseMotor = new CANSparkMax(RiseShooterConstants.kRiseShooterChannel, MotorType.kBrushless);
 
     riseEncoder = new Encoder(RiseShooterConstants.kEncoderChannelA, RiseShooterConstants.kEncoderChannelB);
@@ -70,8 +71,8 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   public double getAprilTagDegree() {
-    if (aprilTagTracking.getTx() == 1) {
-      return Math.toDegrees(Math.atan(RiseShooterConstants.kSpeakerHeight / aprilTagTracking.getBT()[2]));
+    if (TagTrackingLimelight.getTx() == 1) {
+      return Math.toDegrees(Math.atan(RiseShooterConstants.kSpeakerHeight / TagTrackingLimelight.getBT()[2]));
     } else {
       return getAngleDegree();
     }

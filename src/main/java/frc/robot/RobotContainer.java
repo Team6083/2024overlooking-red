@@ -25,13 +25,14 @@ import frc.robot.commands.hookCmds.HookManualCmd;
 import frc.robot.commands.hookCmds.LinePIDCmd;
 import frc.robot.commands.AutoIntakeCmd;
 import frc.robot.Constants.XboxControllerConstants;
-import frc.robot.subsystems.AprilTagTracking;
+// import frc.robot.subsystems.AprilTagTracking;
 import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PowerDistributionSubsystem;
 import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
+import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 import frc.robot.subsystems.drive.Drivebase;
 
 public class RobotContainer {
@@ -44,13 +45,14 @@ public class RobotContainer {
   // private final Drivebase drivebase;
   // private final HookSubsystem hook;
   private final PowerDistributionSubsystem powerDistribution;
-  private final AprilTagTracking aprilTagTracking;
+  private final TagTrackingLimelight aprilTagTracking;
 
   private SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
     powerDistribution = new PowerDistributionSubsystem();
-    aprilTagTracking = new AprilTagTracking();
+    aprilTagTracking = new TagTrackingLimelight();
+
     mainController = new CommandXboxController(XboxControllerConstants.kMainController);
     // shooter = new ShooterSubsystem(powerDistribution);
     // trans = new TransportSubsystem(powerDistribution);
@@ -62,23 +64,32 @@ public class RobotContainer {
     configureBindings();
 
     // autoChooser = AutoBuilder.buildAutoChooser();
-    
+
     // autoChooser.setDefaultOption("DoNothing", new StopCmd(drivebase));
-    // autoChooser.addOption("Right", RightCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    // autoChooser.addOption("Middle", MiddleCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    // autoChooser.addOption("LeftSpeaker", LeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
-    // autoChooser.addOption("LeftNospeaker", LeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    // autoChooser.addOption("Right", RightCmdGroup.exampleAuto(drivebase, intake,
+    // riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    // autoChooser.addOption("Middle", MiddleCmdGroup.exampleAuto(drivebase, intake,
+    // riseShooter, mainLeftTrigger, mainRightTrigger, shooter));
+    // autoChooser.addOption("LeftSpeaker",
+    // LeftSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter,
+    // mainLeftTrigger, mainRightTrigger, shooter));
+    // autoChooser.addOption("LeftNospeaker",
+    // LeftNoSpeakerCmdGroup.exampleAuto(drivebase, intake, riseShooter,
+    // mainLeftTrigger, mainRightTrigger, shooter));
     // SmartDashboard.putData("Auto Choice", autoChooser);
     // NamedCommands.registerCommand("ThrowIntoSpeaker", new ShootPIDCmd(shooter));
     // NamedCommands.registerCommand("TransToShooter",new IntakeTransCmd(trans));
-    // NamedCommands.registerCommand("TakeNote", new IntakeCmd(intake).withTimeout(2));
+    // NamedCommands.registerCommand("TakeNote", new
+    // IntakeCmd(intake).withTimeout(2));
 
   }
 
   private void configureBindings() {
-    // mainController.y().toggleOnTrue(new TeleopIntakeCmd(intake, trans.isGetNote()).alongWith(new
+    // mainController.y().toggleOnTrue(new TeleopIntakeCmd(intake,
+    // trans.isGetNote()).alongWith(new
     // IntakeTransCmd(trans)));
-    riseShooter.setDefaultCommand(new RiseShooterPIDCmd(riseShooter, mainController.getLeftTriggerAxis(), mainController.getRightTriggerAxis()));
+    riseShooter.setDefaultCommand(
+        new RiseShooterPIDCmd(riseShooter, mainController.getLeftTriggerAxis(), mainController.getRightTriggerAxis()));
     // mainController.a().toggleOnTrue(new RiseShooterManualCmd(riseShooter));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
     // main.b().onTrue(new GyroResetCmd(drivebase) );
@@ -88,7 +99,7 @@ public class RobotContainer {
     // main.y().whileTrue(new HookManualCmd(hook));
     // mainController.pov(0).onTrue(new LinePIDCmd(hook));
     // mainController.pov(180).onTrue(new LinePIDCmd(hook));
-
+    TagTrackingLimelight.init();
   }
 
   public Command getAutonomousCommand() {

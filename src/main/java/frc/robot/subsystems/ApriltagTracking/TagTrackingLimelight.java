@@ -8,52 +8,37 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.Constants.AprilTagConstants;
 
 public class TagTrackingLimelight extends SubsystemBase {
-    public NetworkTable table;
-    public NetworkTableEntry tx;// = table.getEntry("tx");// table.getEntry("tx");
-    public NetworkTableEntry ty;// = table.getEntry("ty");
-    public NetworkTableEntry ta;// = table.getEntry("ta");
-    public NetworkTableEntry tv;
-    public NetworkTableEntry tid;
-    public NetworkTableEntry tl;
+    public static NetworkTable table;
 
-    public NetworkTableEntry BT;
-    public NetworkTableEntry CR;
-    public NetworkTableEntry TR;
-    public NetworkTableEntry CT;
+    public static double v;
+    public static double a;
+    public static double x;
+    public static double y;
+    public static double area;
+    public static double ID;
+    public static double latency;
+    public static double tagLong;
+    public static double tagShort;
 
-    public NetworkTableEntry tlong;
-    public NetworkTableEntry tshort;
+    public static double[] bt; // botpose_targetspace
+    public static double[] cr;// camerapose_robotspace
+    public static double[] tr; // targetpose_robotpose;
+    public static double[] ct; // camerapose_targetspace
 
-    public double v;
-    public double a;
-    public double x;
-    public double y;
-    public double area;
-    public double ID;
-    public double latency;
-    public double tagLong;
-    public double tagShort;
+    public static double MyDistance;
 
-    public double[] bt; // botpose_targetspace
-    public double[] cr;// camerapose_robotspace
-    public double[] tr; // targetpose_robotpose;
-    public double[] ct; // camerapose_targetspace
+    public static final double limelightLensHeightInches = 0;
+    public static final double limelightMountAngleDegrees = 0;
+    public static double targetOffsetAngle_Vertical;
+    public static double angleToGoalDegrees;
+    public static double angleToGoalRadians;
+    public static double goalHeightInches;
 
-    public double MyDistance;
-
-    public final double limelightLensHeightInches = 0;
-    public final double limelightMountAngleDegrees = 0;
-    public double targetOffsetAngle_Vertical;
-    public double angleToGoalDegrees;
-    public double angleToGoalRadians;
-    public double goalHeightInches;
-
-    public TagTrackingLimelight() {
+    public static void init() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
-
     }
 
-    public double getMyDistance() {
+    public static double getMyDistance() {
         // readValue();
         double target_height = getBT()[1]; // botpose in targetspace y
         double x_dis = getBT()[0];
@@ -65,98 +50,99 @@ public class TagTrackingLimelight extends SubsystemBase {
         return MyDistance;
     }
 
-    public double getTx() {
+    public static double getTx() {
         x = table.getEntry("tx").getDouble(0);
         return x;
     }
 
-    public double getTy() {
+    public static double getTy() {
         y = table.getEntry("ty").getDouble(0);
         return y;
     }
 
-    public double getTa() {
+    public static double getTa() {
         a = table.getEntry("ta").getDouble(0);
         return a;
     }
 
-    public double getTv() {
+    public static double getTv() {
         v = table.getEntry("tv").getDouble(0);
         return v;
     }
 
-    public double getTID() {
+    public static double getTID() {
         ID = table.getEntry("tid").getDouble(0);
         return ID;
     }
 
-    public double getTl() {
+    public static double getTl() {
         latency = table.getEntry("tl").getDouble(0);
         return latency;
     }
 
-    public double[] getBT() {
+    public static double[] getBT() {
         bt = table.getEntry("botpose_targetspace").getDoubleArray(new double[6]);
         return bt;
     }
 
-    public double[] getCT() {
+    public static double[] getCT() {
         ct = table.getEntry("camerapose_targetspace").getDoubleArray(new double[6]);
         return ct;
     }
 
-    public double getTlong(){
+    public static double getTlong() {
         tagLong = table.getEntry("tlong").getDouble(0);
         return tagLong;
     }
 
-    public double getTshort(){
-        tagShort = table. getEntry("tshort").getDouble(0);
+    public static double getTshort() {
+        tagShort = table.getEntry("tshort").getDouble(0);
         return tagShort;
     }
 
     // public void updatePoseEstimatorWithVisionBotPose() {
-    //     PoseLatency visionBotPose = m_visionSystem.getPoseLatency();
-    //     // invalid LL data
-    //     if (visionBotPose.pose2d.getX() == 0.0) {
-    //         return;
-    //     }
-
-    //     // distance from current pose to vision estimated pose
-    //     double poseDifference = m_poseEstimator.getEstimatedPosition().getTranslation()
-    //             .getDistance(visionBotPose.pose2d.getTranslation());
-
-    //     if (m_visionSystem.areAnyTargetsValid()) {
-    //         double xyStds;
-    //         double degStds;
-    //         // multiple targets detected
-    //         if (m_visionSystem.getNumberOfTargetsVisible() >= 2) {
-    //             xyStds = 0.5;
-    //             degStds = 6;
-    //         }
-    //         // 1 target with large area and close to estimated pose
-    //         else if (m_visionSystem.getBestTargetArea() > 0.8 && poseDifference < 0.5) {
-    //             xyStds = 1.0;
-    //             degStds = 12;
-    //         }
-    //         // 1 target farther away and estimated pose is close
-    //         else if (m_visionSystem.getBestTargetArea() > 0.1 && poseDifference < 0.3) {
-    //             xyStds = 2.0;
-    //             degStds = 30;
-    //         }
-    //         // conditions don't match to add a vision measurement
-    //         else {
-    //             return;
-    //         }
-
-    //         m_poseEstimator.setVisionMeasurementStdDevs(
-    //                 VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(degStds)));
-    //         m_poseEstimator.addVisionMeasurement(visionBotPose.pose2d,
-    //                 Timer.getFPGATimestamp() - visionBotPose.latencySeconds);
-    //     }
+    // PoseLatency visionBotPose = m_visionSystem.getPoseLatency();
+    // // invalid LL data
+    // if (visionBotPose.pose2d.getX() == 0.0) {
+    // return;
     // }
 
-    public void putDashboard() {
+    // // distance from current pose to vision estimated pose
+    // double poseDifference =
+    // m_poseEstimator.getEstimatedPosition().getTranslation()
+    // .getDistance(visionBotPose.pose2d.getTranslation());
+
+    // if (m_visionSystem.areAnyTargetsValid()) {
+    // double xyStds;
+    // double degStds;
+    // // multiple targets detected
+    // if (m_visionSystem.getNumberOfTargetsVisible() >= 2) {
+    // xyStds = 0.5;
+    // degStds = 6;
+    // }
+    // // 1 target with large area and close to estimated pose
+    // else if (m_visionSystem.getBestTargetArea() > 0.8 && poseDifference < 0.5) {
+    // xyStds = 1.0;
+    // degStds = 12;
+    // }
+    // // 1 target farther away and estimated pose is close
+    // else if (m_visionSystem.getBestTargetArea() > 0.1 && poseDifference < 0.3) {
+    // xyStds = 2.0;
+    // degStds = 30;
+    // }
+    // // conditions don't match to add a vision measurement
+    // else {
+    // return;
+    // }
+
+    // m_poseEstimator.setVisionMeasurementStdDevs(
+    // VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(degStds)));
+    // m_poseEstimator.addVisionMeasurement(visionBotPose.pose2d,
+    // Timer.getFPGATimestamp() - visionBotPose.latencySeconds);
+    // }
+    // }
+
+    public static void putDashboard() {
         // SmartDashboard.putNumber("hasTarget", getTv());
         SmartDashboard.putNumber("LimelightX", getTx());
         SmartDashboard.putNumber("LimelightY", getTy());
