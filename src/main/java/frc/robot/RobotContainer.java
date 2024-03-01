@@ -23,7 +23,7 @@ import frc.robot.commands.riseShooterCmds.RiseShooterPIDCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.Autos;
 import frc.robot.commands.hookCmds.HookManualCmd;
-import frc.robot.commands.hookCmds.LinePIDCmd;
+import frc.robot.commands.hookCmds.LineUpPIDCmd;
 import frc.robot.commands.AutoIntakeCmd;
 import frc.robot.Constants.DriveControllerConstants;
 // import frc.robot.subsystems.AprilTagTracking;

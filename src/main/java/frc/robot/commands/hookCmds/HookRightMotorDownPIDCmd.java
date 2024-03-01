@@ -11,22 +11,23 @@ import frc.robot.subsystems.HookSubsystem;
 public class HookRightMotorDownPIDCmd extends Command {
   /** Creates a new HookRightMotorDownPIDCmd. */
   private final HookSubsystem hookSubsystem;
+
   public HookRightMotorDownPIDCmd(HookSubsystem hookSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.hookSubsystem=hookSubsystem;
+    this.hookSubsystem = hookSubsystem;
     addRequirements(hookSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-   hookSubsystem.setRightMotorSetpoint(hookSubsystem.getRightHookMotorSetpoint() + HookConstants.kRightMotorUpModify);
-
+    hookSubsystem.hookRightMotorPIDControl();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    hookSubsystem.setRightMotorSetpoint(hookSubsystem.getRightHookMotorSetpoint() + HookConstants.kRightMotorDownModify);
     hookSubsystem.hookRightMotorPIDControl();
 
   }
@@ -34,13 +35,13 @@ public class HookRightMotorDownPIDCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    hookSubsystem.stopHookRightMotor();
+    hookSubsystem.hookRightMotorPIDControl();
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
