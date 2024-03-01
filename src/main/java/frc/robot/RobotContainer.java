@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.TeleopIntakeCmd;
@@ -24,7 +25,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.hookCmds.HookManualCmd;
 import frc.robot.commands.hookCmds.LinePIDCmd;
 import frc.robot.commands.AutoIntakeCmd;
-import frc.robot.Constants.XboxControllerConstants;
+import frc.robot.Constants.DriveControllerConstants;
 // import frc.robot.subsystems.AprilTagTracking;
 import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -37,6 +38,7 @@ import frc.robot.subsystems.drive.Drivebase;
 
 public class RobotContainer {
   private final CommandXboxController mainController;
+  private final CommandGenericHID controlPanel;
   // private final ShooterSubsystem shooter;
   // private final TransportSubsystem trans;
   // private final HookSubsystem hook;
@@ -53,7 +55,8 @@ public class RobotContainer {
     powerDistribution = new PowerDistributionSubsystem();
     aprilTagTracking = new TagTrackingLimelight();
 
-    mainController = new CommandXboxController(XboxControllerConstants.kMainController);
+    mainController = new CommandXboxController(DriveControllerConstants.kMainController);
+    controlPanel = new CommandGenericHID(DriveControllerConstants.kControlPanel);
     // shooter = new ShooterSubsystem(powerDistribution);
     // trans = new TransportSubsystem(powerDistribution);
     // intake = new IntakeSubsystem(powerDistribution);

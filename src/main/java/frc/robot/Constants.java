@@ -1,10 +1,9 @@
 package frc.robot;
 
-import javax.security.auth.login.FailedLoginException;
-
 public final class Constants {
-    public static class XboxControllerConstants {
+    public static class DriveControllerConstants {
         public static final int kMainController = 0;
+        public static final int kControlPanel = 2;
     }
 
     public static class ShooterConstants {

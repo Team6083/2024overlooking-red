@@ -7,15 +7,16 @@ package frc.robot.commands.hookCmds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.HookSubsystem;
 
-public class HookMotorPIDCmd extends Command {
+public class HookLeftMotorPIDCmd extends Command {
   /** Creates a new HookMotorCmd. */
   private final HookSubsystem hookSubsystem;
-  private double positionMudify;
-
-
-  public HookMotorPIDCmd(HookSubsystem hookSubsystem,double positionMudify) {
-    this.hookSubsystem = hookSubsystem;
-    this.positionMudify = positionMudify;
+  private double leftpositionMudify;
+  private double leftTriggerValue;
+  private double leftBumperValue;
+  public HookLeftMotorPIDCmd(HookSubsystem hookSubsrystem,double leftTriggerValue,double leftBumperValue) {
+    this.hookSubsystem = hookSubsrystem;
+    this.leftBumperValue=leftBumperValue;
+    this.leftTriggerValue=leftTriggerValue;
     addRequirements(this.hookSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,26 +24,22 @@ public class HookMotorPIDCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    hookSubsystem.stopLineMotor();
+    hookSubsystem.stopHookLeftMotor();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    positionMudify=0.0;
-    hookSubsystem.setLeftHookMotorSetpoint(hookSubsystem.getLeftHookMotorSetpoint()+positionMudify);//邏輯有問題，如果你的setpoint永遠是你的setpoint，那不就不會收線嗎
-    hookSubsystem.setRightMotorSetpoint(hookSubsystem.getRightHookMotorSetpoint()+positionMudify);
+    leftpositionMudify=leftTriggerValue-leftBumperValue;
+    hookSubsystem.setLeftHookMotorSetpoint(hookSubsystem.getLeftHookMotorSetpoint()+leftpositionMudify);//邏輯有問題，如果你的setpoint永遠是你的setpoint，那不就不會收線嗎
     hookSubsystem.hookLeftMotorPIDControl();
-    hookSubsystem.hookRightMotorPIDControl();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     hookSubsystem.stopHookLeftMotor();
-    hookSubsystem.stopHookRightMotor();
     hookSubsystem.hookLeftMotorPIDControl();
-    hookSubsystem.hookRightMotorPIDControl();  
  }
 
   // Returns true when the command should end.
