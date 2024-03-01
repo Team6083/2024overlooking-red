@@ -84,6 +84,7 @@ public final class Constants {
         public static final double kLinePower = 0;
         public static final double kHookMotorLeftVoltage = 0.0;
         public static final double kHookMotorRightVoltage = 0.0;
+        public static final double kmanualControlLineMotorPower=0.25;
         public static final double kmanualControlLeftHookMotorPower = 0.25;
         public static final double kmanualControlRightHookMotorPower = 0.25;
         public static final boolean kHookMotorLeftInverted = false;

@@ -8,11 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.HookConstants;
 import frc.robot.subsystems.HookSubsystem;
 
-public class HookManualCmd extends Command {
-  /** Creates a new HookCmd. */
+public class HookLeftManualCmd extends Command {
+  /** Creates a new HookLeftManual. */
   private final HookSubsystem hookSubsystem;
-
-  public HookManualCmd(HookSubsystem hookSubsystem) {
+  public HookLeftManualCmd(HookSubsystem hookSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.hookSubsystem = hookSubsystem;
     addRequirements(this.hookSubsystem);
@@ -21,20 +20,19 @@ public class HookManualCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    hookSubsystem.stopLineMotor();
+    hookSubsystem.stopHookLeftMotor();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.manualControlLeftHookMotor(HookConstants.kmanualControlLeftHookMotorPower);// 建議改成一個constants
-    hookSubsystem.manualControlRightHookMotor(HookConstants.kmanualControlRightHookMotorPower);
+     hookSubsystem.manualControlLeftHookMotor(HookConstants.kmanualControlLeftHookMotorPower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    hookSubsystem.stopLineMotor();
+    hookSubsystem.stopHookLeftMotor();
   }
 
   // Returns true when the command should end.
