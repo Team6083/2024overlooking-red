@@ -5,18 +5,14 @@
 package frc.robot.commands.hookCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.HookConstants;
 import frc.robot.subsystems.HookSubsystem;
 
-public class HookLeftMotorPIDCmd extends Command {
+public class HookLeftMotorUpPIDCmd extends Command {
   /** Creates a new HookMotorCmd. */
   private final HookSubsystem hookSubsystem;
-  private double leftpositionMudify;
-  private double leftTriggerValue;
-  private double leftBumperValue;
-  public HookLeftMotorPIDCmd(HookSubsystem hookSubsrystem,double leftTriggerValue,double leftBumperValue) {
+  public HookLeftMotorUpPIDCmd(HookSubsystem hookSubsrystem) {
     this.hookSubsystem = hookSubsrystem;
-    this.leftBumperValue=leftBumperValue;
-    this.leftTriggerValue=leftTriggerValue;
     addRequirements(this.hookSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -24,23 +20,22 @@ public class HookLeftMotorPIDCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    hookSubsystem.stopHookLeftMotor();
+    hookSubsystem.hookLeftMotorPIDControl();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    leftpositionMudify=leftTriggerValue-leftBumperValue;
-    hookSubsystem.setLeftHookMotorSetpoint(hookSubsystem.getLeftHookMotorSetpoint()+leftpositionMudify);//邏輯有問題，如果你的setpoint永遠是你的setpoint，那不就不會收線嗎
+    hookSubsystem.setLeftHookMotorSetpoint(hookSubsystem.getLeftHookMotorSetpoint() + HookConstants.kLeftMotorUpModify);
     hookSubsystem.hookLeftMotorPIDControl();
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    hookSubsystem.stopHookLeftMotor();
     hookSubsystem.hookLeftMotorPIDControl();
- }
+}
 
   // Returns true when the command should end.
   @Override

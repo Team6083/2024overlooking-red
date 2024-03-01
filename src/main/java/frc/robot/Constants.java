@@ -89,7 +89,10 @@ public final class Constants {
         public static final boolean kHookMotorLeftInverted = false;
         public static final boolean kHookMotorRightInverted = false;
         public static final double kInitSetpoint = 0.0;
-
+        public static final double kLeftMotorUpModify=0.0;//未定值需更改
+        public static final double kLeftMotorDownModify=0.0;
+        public static final double kRightMotorUpModify=0.0;
+        public static final double kRightMotorDownModify=0.0;
     }
 
     public static class DrivebaseConstants {
