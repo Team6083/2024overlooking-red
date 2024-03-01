@@ -10,7 +10,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class ShootPIDCmd extends Command {
   /** Creates a new ShootPIDCmd. */
   private final ShooterSubsystem shooterSubsystem;
-  
+
   public ShootPIDCmd(ShooterSubsystem shooterSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
     addRequirements(this.shooterSubsystem);

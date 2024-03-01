@@ -3,8 +3,8 @@ package frc.robot.commands.TransportCmds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TransportSubsystem;
 
-public class IntakeTransCmd extends Command{
-    
+public class IntakeTransCmd extends Command {
+
   /** Creates a new ReTrans. */
   private final TransportSubsystem transportSubsystem;
 
@@ -38,4 +38,3 @@ public class IntakeTransCmd extends Command{
     return transportSubsystem.isGetNote();
   }
 }
-

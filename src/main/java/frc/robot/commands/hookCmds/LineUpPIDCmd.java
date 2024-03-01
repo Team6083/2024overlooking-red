@@ -12,7 +12,7 @@ public class LineUpPIDCmd extends Command {
   /** Creates a new HookPIDCmd. */
   private final HookSubsystem hookSubsystem;
 
-  public LineUpPIDCmd(HookSubsystem hookSubsystem, boolean pov270value, boolean pov90value) {
+  public LineUpPIDCmd(HookSubsystem hookSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.hookSubsystem = hookSubsystem;
     addRequirements(hookSubsystem);
@@ -29,7 +29,7 @@ public class LineUpPIDCmd extends Command {
   @Override
   public void execute() {
     hookSubsystem.linePIDControl();
-    hookSubsystem.setLineSetpoint(hookSubsystem.getLineSetpoint() + HookConstants.kLineMotorUpModify);
+    hookSubsystem.setLineSetpoint(hookSubsystem.getLineSetpoint() + HookConstants.kLineMotorModify);
 
   }
 

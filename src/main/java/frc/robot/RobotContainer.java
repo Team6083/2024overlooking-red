@@ -22,6 +22,8 @@ import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterPIDCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.Autos;
+import frc.robot.commands.hookCmds.HookLeftMotorDownPIDCmd;
+import frc.robot.commands.hookCmds.HookLeftMotorUpPIDCmd;
 import frc.robot.commands.hookCmds.HookManualCmd;
 import frc.robot.commands.hookCmds.LineUpPIDCmd;
 import frc.robot.commands.AutoIntakeCmd;
@@ -41,7 +43,7 @@ public class RobotContainer {
   private final CommandGenericHID controlPanel;
   // private final ShooterSubsystem shooter;
   // private final TransportSubsystem trans;
-  // private final HookSubsystem hook;
+  private final HookSubsystem hook;
   // private final IntakeSubsystem intake;
   private final RiseShooterSubsystem riseShooter;
   // private final Drivebase drivebase;
@@ -62,7 +64,7 @@ public class RobotContainer {
     // intake = new IntakeSubsystem(powerDistribution);
     riseShooter = new RiseShooterSubsystem(powerDistribution, aprilTagTracking);
     // drivebase = new Drivebase();
-    // hook = new HookSubsystem(powerDistribution);
+    hook = new HookSubsystem(powerDistribution);
     // AprilTagTracking.init();
     configureBindings();
 
@@ -93,6 +95,8 @@ public class RobotContainer {
     // IntakeTransCmd(trans)));
     riseShooter.setDefaultCommand(
         new RiseShooterPIDCmd(riseShooter, mainController.getLeftTriggerAxis(), mainController.getRightTriggerAxis()));
+    mainController.leftBumper().whileTrue(new HookLeftMotorUpPIDCmd(hook));
+    mainController.leftTrigger().whileTrue(new HookLeftMotorDownPIDCmd(hook));
     // mainController.a().toggleOnTrue(new RiseShooterManualCmd(riseShooter));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
     // main.b().onTrue(new GyroResetCmd(drivebase) );

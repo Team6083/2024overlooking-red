@@ -27,9 +27,8 @@ public class HookRightMotorDownPIDCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.setRightMotorSetpoint(hookSubsystem.getRightHookMotorSetpoint() + HookConstants.kRightMotorDownModify);
+    hookSubsystem.setRightMotorSetpoint(hookSubsystem.getRightHookMotorSetpoint() - HookConstants.kRightMotorModify);
     hookSubsystem.hookRightMotorPIDControl();
-
   }
 
   // Called once the command ends or is interrupted.

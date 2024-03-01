@@ -11,7 +11,7 @@ import frc.robot.subsystems.HookSubsystem;
 public class HookManualCmd extends Command {
   /** Creates a new HookCmd. */
   private final HookSubsystem hookSubsystem;
-  
+
   public HookManualCmd(HookSubsystem hookSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.hookSubsystem = hookSubsystem;
@@ -21,13 +21,13 @@ public class HookManualCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  hookSubsystem.stopLineMotor();
+    hookSubsystem.stopLineMotor();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.manualControlLeftHookMotor(HookConstants.kmanualControlLeftHookMotorPower);//建議改成一個constants
+    hookSubsystem.manualControlLeftHookMotor(HookConstants.kmanualControlLeftHookMotorPower);// 建議改成一個constants
     hookSubsystem.manualControlRightHookMotor(HookConstants.kmanualControlRightHookMotorPower);
   }
 

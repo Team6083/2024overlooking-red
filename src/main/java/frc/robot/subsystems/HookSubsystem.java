@@ -29,7 +29,7 @@ public class HookSubsystem extends SubsystemBase {
   private final PowerDistributionSubsystem powerDistribution;
   private double linePositionOffset = 0.0;
   private double leftPositionOffset = 0.0;
-  private double rightPositionOffset =0.0;
+  private double rightPositionOffset = 0.0;
 
   public HookSubsystem(PowerDistributionSubsystem powerDistribution) {
     line = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
@@ -170,8 +170,8 @@ public class HookSubsystem extends SubsystemBase {
     setLeftHookMotorPower(voltage / getHookLeftMotorBusVoltage());
   }
 
-  public void setRightHookMotorVoltage(double voltage){
-  setRightHookMotorPower(voltage/getHookRightMotorBusVoltage());
+  public void setRightHookMotorVoltage(double voltage) {
+    setRightHookMotorPower(voltage / getHookRightMotorBusVoltage());
   }
 
   public void setLeftHookMotorPower(double power) {

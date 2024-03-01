@@ -13,7 +13,8 @@ public class RiseShooterManualCmd extends Command {
   private double leftTriggerValue;
   private double rightTriggerValue;
 
-  public RiseShooterManualCmd(RiseShooterSubsystem riseShooterSubsytem,double leftTriggerValue,double rightTriggerValue) {
+  public RiseShooterManualCmd(RiseShooterSubsystem riseShooterSubsytem, double leftTriggerValue,
+      double rightTriggerValue) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.riseShooterSubsytem = riseShooterSubsytem;
     this.rightTriggerValue = rightTriggerValue;
@@ -24,7 +25,7 @@ public class RiseShooterManualCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double risePower = (leftTriggerValue - rightTriggerValue)*0.7;
+    double risePower = (leftTriggerValue - rightTriggerValue) * 0.7;
     riseShooterSubsytem.manualControl(risePower);
   }
 

@@ -10,6 +10,7 @@ import frc.robot.subsystems.TransportSubsystem;
 public class TransCmd extends Command {
   /** Creates a new Trans. */
   private final TransportSubsystem transportSubsystem;
+
   public TransCmd(TransportSubsystem transportSubsystem) {
     this.transportSubsystem = transportSubsystem;
     addRequirements(this.transportSubsystem);

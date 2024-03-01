@@ -11,6 +11,7 @@ import frc.robot.subsystems.HookSubsystem;
 public class HookLeftMotorUpPIDCmd extends Command {
   /** Creates a new HookMotorCmd. */
   private final HookSubsystem hookSubsystem;
+
   public HookLeftMotorUpPIDCmd(HookSubsystem hookSubsrystem) {
     this.hookSubsystem = hookSubsrystem;
     addRequirements(this.hookSubsystem);
@@ -26,7 +27,7 @@ public class HookLeftMotorUpPIDCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.setLeftHookMotorSetpoint(hookSubsystem.getLeftHookMotorSetpoint() + HookConstants.kLeftMotorUpModify);
+    hookSubsystem.setLeftHookMotorSetpoint(hookSubsystem.getLeftHookMotorSetpoint() + HookConstants.kLeftMotorModify);
     hookSubsystem.hookLeftMotorPIDControl();
 
   }
@@ -35,7 +36,7 @@ public class HookLeftMotorUpPIDCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     hookSubsystem.hookLeftMotorPIDControl();
-}
+  }
 
   // Returns true when the command should end.
   @Override

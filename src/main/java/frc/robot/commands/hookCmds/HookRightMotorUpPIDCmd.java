@@ -30,8 +30,7 @@ public class HookRightMotorUpPIDCmd extends Command {
   @Override
   public void execute() {
     hookSubsystem.hookRightMotorPIDControl();
-    hookSubsystem.setRightMotorSetpoint(hookSubsystem.getRightHookMotorSetpoint() + HookConstants.kRightMotorUpModify);
-
+    hookSubsystem.setRightMotorSetpoint(hookSubsystem.getRightHookMotorSetpoint() + HookConstants.kRightMotorModify);
   }
 
   // Called once the command ends or is interrupted.

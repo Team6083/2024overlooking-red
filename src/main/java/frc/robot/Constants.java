@@ -67,34 +67,31 @@ public final class Constants {
         public static final int kHookLineChannel = 22;
         public static final int kHookLeftMotorCnannel = 1;
         public static final int kHookRightMotorCnannel = 2;
-        public static final int kHookLeftEncoderChannelA=0;
-        public static final int kHookLeftEncoderChannelB=1;
-        public static final int kHookRightEncoderChannelA=2;
-        public static final int kHookRightEncoderChannelB=3;
+        public static final int kHookLeftEncoderChannelA = 0;
+        public static final int kHookLeftEncoderChannelB = 1;
+        public static final int kHookRightEncoderChannelA = 2;
+        public static final int kHookRightEncoderChannelB = 3;
         public static final double kP = 0.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kLinePositionMax = 60.0;
         public static final double kLinePositionMin = 0.0;
-        public static final double kLeftPositionMax=60.0;
-        public static final double kLeftPositionMin=0.0;
-        public static final double kRightPositionMax=60.0;
-        public static final double kRightPositionMin=0.0;
+        public static final double kLeftPositionMax = 60.0;
+        public static final double kLeftPositionMin = 0.0;
+        public static final double kRightPositionMax = 60.0;
+        public static final double kRightPositionMin = 0.0;
         public static final double kHookPositionConversionfactor = 1.0;
         public static final double kLinePower = 0;
         public static final double kHookMotorLeftVoltage = 0.0;
         public static final double kHookMotorRightVoltage = 0.0;
-        public static final double kmanualControlLeftHookMotorPower=0.25;
-        public static final double kmanualControlRightHookMotorPower=0.25;
+        public static final double kmanualControlLeftHookMotorPower = 0.25;
+        public static final double kmanualControlRightHookMotorPower = 0.25;
         public static final boolean kHookMotorLeftInverted = false;
         public static final boolean kHookMotorRightInverted = false;
         public static final double kInitSetpoint = 0.0;
-        public static final double kLeftMotorUpModify=0.0;//以下皆未定值需更改
-        public static final double kLeftMotorDownModify=0.0;
-        public static final double kRightMotorUpModify=0.0;
-        public static final double kRightMotorDownModify=0.0;
-        public static final double kLineMotorUpModify=0.0;
-        public static final double kLineMotorDownModify=0.0;
+        public static final double kLeftMotorModify = 0.0;// 以下皆未定值需更改
+        public static final double kRightMotorModify = 0.0;
+        public static final double kLineMotorModify = 0.0;
     }
 
     public static class DrivebaseConstants {

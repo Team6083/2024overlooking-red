@@ -27,7 +27,7 @@ public class LineDownPIDCmd extends Command {
   @Override
   public void execute() {
     hookSubsystem.linePIDControl();
-    hookSubsystem.setLineSetpoint(hookSubsystem.getLineSetpoint() + HookConstants.kLineMotorDownModify);
+    hookSubsystem.setLineSetpoint(hookSubsystem.getLineSetpoint() - HookConstants.kLineMotorModify);
   }
 
   // Called once the command ends or is interrupted.

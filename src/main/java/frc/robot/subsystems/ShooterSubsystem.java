@@ -108,9 +108,10 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public Boolean haveNoteAndSpeed() {
-    if (transportSubsystem.isGetNote() && Math.abs(getUpEncoderRate()-ShooterConstants.kShooterRate)<1&&Math.abs(getDownEncoderRate()-ShooterConstants.kShooterRate)<1) {
+    if (transportSubsystem.isGetNote() && Math.abs(getUpEncoderRate() - ShooterConstants.kShooterRate) < 1
+        && Math.abs(getDownEncoderRate() - ShooterConstants.kShooterRate) < 1) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
