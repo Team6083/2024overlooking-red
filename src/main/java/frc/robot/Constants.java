@@ -1,5 +1,7 @@
 package frc.robot;
 
+import javax.security.auth.login.FailedLoginException;
+
 public final class Constants {
     public static class XboxControllerConstants {
         public static final int kMainController = 0;
@@ -66,15 +68,25 @@ public final class Constants {
         public static final int kHookLineChannel = 22;
         public static final int kHookLeftMotorCnannel = 1;
         public static final int kHookRightMotorCnannel = 2;
+        public static final int kHookLeftEncoderChannelA=0;
+        public static final int kHookLeftEncoderChannelB=1;
+        public static final int kHookRightEncoderChannelA=2;
+        public static final int kHookRightEncoderChannelB=3;
         public static final double kP = 0.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
-        public static final double kHookPositionMax = 60.0;
-        public static final double kHookPositionMin = 0.0;
+        public static final double kLinePositionMax = 60.0;
+        public static final double kLinePositionMin = 0.0;
+        public static final double kLeftPositionMax=60.0;
+        public static final double kLeftPositionMin=0.0;
+        public static final double kRightPositionMax=60.0;
+        public static final double kRightPositionMin=0.0;
         public static final double kHookPositionConversionfactor = 1.0;
         public static final double kLinePower = 0;
-        public static final double kHookMotorLeftPower = 0.0;
-        public static final double kHookMotorRightPower = 0.0;
+        public static final double kHookMotorLeftVoltage = 0.0;
+        public static final double kHookMotorRightVoltage = 0.0;
+        public static final double kmanualControlLeftHookMotorPower=0.25;
+        public static final double kmanualControlRightHookMotorPower=0.25;
         public static final boolean kHookMotorLeftInverted = false;
         public static final boolean kHookMotorRightInverted = false;
         public static final double kInitSetpoint = 0.0;

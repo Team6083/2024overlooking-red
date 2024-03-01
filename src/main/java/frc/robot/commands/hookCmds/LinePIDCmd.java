@@ -10,7 +10,7 @@ import frc.robot.subsystems.HookSubsystem;
 public class LinePIDCmd extends Command {
   /** Creates a new HookPIDCmd. */
   private final HookSubsystem hookSubsystem;
-
+  private double lineMudify;
   public LinePIDCmd(HookSubsystem hookSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.hookSubsystem=hookSubsystem;
@@ -26,7 +26,7 @@ public class LinePIDCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.setHookMotorsetpoint(hookSubsystem.getLineSetpoint());//邏輯有問題，如果你的setpoint永遠是你的setpoint，那不就不會收線嗎
+    hookSubsystem.setLineSetpoint(hookSubsystem.getLineSetpoint()+lineMudify);//邏輯有問題，如果你的setpoint永遠是你的setpoint，那不就不會收線嗎
     hookSubsystem.linePIDControl();
   }
 
@@ -34,6 +34,7 @@ public class LinePIDCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     hookSubsystem.stopLineMotor();
+    hookSubsystem.linePIDControl();
   }
 
   // Returns true when the command should end.

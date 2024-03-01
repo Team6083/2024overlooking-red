@@ -10,10 +10,13 @@ import frc.robot.subsystems.HookSubsystem;
 public class HookMotorPIDCmd extends Command {
   /** Creates a new HookMotorCmd. */
   private final HookSubsystem hookSubsystem;
+  private double positionMudify;
 
-  public HookMotorPIDCmd(HookSubsystem hookSubsystem) {
+
+  public HookMotorPIDCmd(HookSubsystem hookSubsystem,double positionMudify) {
     this.hookSubsystem = hookSubsystem;
-    addRequirements(hookSubsystem);
+    this.positionMudify = positionMudify;
+    addRequirements(this.hookSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -26,16 +29,21 @@ public class HookMotorPIDCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.setHookMotorsetpoint(hookSubsystem.getHookMotorSetpoint());//邏輯有問題，如果你的setpoint永遠是你的setpoint，那不就不會收線嗎
-    hookSubsystem.hookLeftMotorPIDContro();
+    positionMudify=0.0;
+    hookSubsystem.setLeftHookMotorSetpoint(hookSubsystem.getLeftHookMotorSetpoint()+positionMudify);//邏輯有問題，如果你的setpoint永遠是你的setpoint，那不就不會收線嗎
+    hookSubsystem.setRightMotorSetpoint(hookSubsystem.getRightHookMotorSetpoint()+positionMudify);
+    hookSubsystem.hookLeftMotorPIDControl();
+    hookSubsystem.hookRightMotorPIDControl();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-        hookSubsystem.stopLineMotor();
-
-  }
+    hookSubsystem.stopHookLeftMotor();
+    hookSubsystem.stopHookRightMotor();
+    hookSubsystem.hookLeftMotorPIDControl();
+    hookSubsystem.hookRightMotorPIDControl();  
+ }
 
   // Returns true when the command should end.
   @Override

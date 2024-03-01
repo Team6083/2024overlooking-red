@@ -5,6 +5,7 @@
 package frc.robot.commands.hookCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.HookConstants;
 import frc.robot.subsystems.HookSubsystem;
 
 public class HookManualCmd extends Command {
@@ -26,8 +27,8 @@ public class HookManualCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.controlHookMotor(0.25);//建議改成一個constants
-
+    hookSubsystem.manualControlLeftHookMotor(HookConstants.kmanualControlLeftHookMotorPower);//建議改成一個constants
+    hookSubsystem.manualControlRightHookMotor(HookConstants.kmanualControlRightHookMotorPower);
   }
 
   // Called once the command ends or is interrupted.
