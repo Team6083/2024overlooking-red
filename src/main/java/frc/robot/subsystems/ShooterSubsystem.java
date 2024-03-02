@@ -76,11 +76,11 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void stopUpMotor() {
-    setUpMotor(0);
+    upMotor.set(VictorSPXControlMode.PercentOutput, 0.0);
   }
 
   public void stopDownMotor() {
-    setDownMotor(0);
+    downMotor.set(VictorSPXControlMode.PercentOutput, 0.0);
   }
 
   public double getUpEncoderRate() {

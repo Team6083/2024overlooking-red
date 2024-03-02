@@ -30,31 +30,34 @@ public class TransportSubsystem extends SubsystemBase {
   }
 
   public void setTrans() {
-    setMotor(TransportConstants.kTransSpeed);
+    setMotor(TransportConstants.kTransVoltage);
   }
 
   public void setReTrans() {
-    setMotor(TransportConstants.kReTransSpeed);
+    setMotor(TransportConstants.kReTransVoltage);
   }
 
   public boolean isGetNote() {
     if (dist.isRangeValid()) {
       SmartDashboard.putNumber("Range dist", dist.getRange());
       SmartDashboard.putNumber("Timestamp dist", dist.getTimestamp());
+      return dist.getRange() <= TransportConstants.kDistRange;
+    } else {
+      return false;
     }
-    return dist.getRange() <= TransportConstants.kDistRange;
+
   }
 
   public void stopMotor() {
-    setMotor(0);
+    trans.set(0);
   }
 
-  public void setMotor(double power) {
+  public void setMotor(double voltage) {
     if (powerDistribution.isTransportOverCurrent()) {
       stopMotor();
       return;
     }
-    trans.set(power);
+    trans.setVoltage(voltage);
   }
 
   @Override

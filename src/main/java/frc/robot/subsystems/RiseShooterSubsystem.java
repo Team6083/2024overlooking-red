@@ -35,6 +35,8 @@ public class RiseShooterSubsystem extends SubsystemBase {
 
     this.powerDistribution = powerDistribution;
     this.tagTrackingLimelight = aprilTagTracking;
+    setSetpoint(60.0);
+    risePID.enableContinuousInput(-180.0, 180.0);
   }
 
   public void manualControl(double RiseSpeed) {
@@ -86,7 +88,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   public void addError(double error) {
-    
+
   }
 
   public void resetEncoder() {

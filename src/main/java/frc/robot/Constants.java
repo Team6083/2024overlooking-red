@@ -34,16 +34,16 @@ public final class Constants {
     public static class TransportConstants {
         public static final int kTrantsportChannel = 22;
         public static final boolean kTransportInverted = true;
-        public static final double kTransSpeed = 5;
-        public static final double kReTransSpeed = -5;
+        public static final double kTransVoltage = 5;
+        public static final double kReTransVoltage = -5;
         public static final double kDistRange = 8.0;
     }
 
     public static class IntakeConstants {
         public static final int kIntakeChannel = 24;
         public static final Boolean kIntakeInverted = true;
-        public static final double kIntakeVoltage = 7;
-        public static final double kThrowPrecentage = -4;
+        public static final double kIntakeVoltage = 7.0;
+        public static final double kThrowPrecentage = -4.0;
     }
 
     public static class RiseShooterConstants {
@@ -51,9 +51,10 @@ public final class Constants {
         public static final Boolean kRiseShooterInverted = true;
         public static final Boolean kEncoderInverted = true;
         public static final int kEncoderChannel = 2;
-        public static final double kRiseVoltLimit = 5;
-        public static final double kRiseAngleMin = -5;
-        public static final double kRiseAngleMax = 65;
+        public static final double kInitDegree = 60.0;
+        public static final double kRiseVoltLimit = 5.0;
+        public static final double kRiseAngleMin = -5.0;
+        public static final double kRiseAngleMax = 65.0;
         public static final double kRiseAngleOffset = 0.52;
         public static final double kRiseTriggerValue = 0.15;
         public static final double kSpeakerHeight = 2.0;
@@ -83,9 +84,9 @@ public final class Constants {
         public static final double kLinePower = 0;
         public static final double kHookMotorLeftVoltage = 0.0;
         public static final double kHookMotorRightVoltage = 0.0;
-        public static final double kmanualControlLineMotorPower = 0.25;
-        public static final double kmanualControlLeftHookMotorPower = 0.25;
-        public static final double kmanualControlRightHookMotorPower = 0.25;
+        public static final double kManualControlLineMotorPower = 0.25;
+        public static final double kManualControlLeftHookMotorPower = 0.25;
+        public static final double kManualControlRightHookMotorPower = 0.25;
         public static final boolean kHookMotorLeftInverted = false;
         public static final boolean kHookMotorRightInverted = false;
         public static final double kInitSetpoint = 0.0;
@@ -118,7 +119,7 @@ public final class Constants {
         public static final double kBackLeftCanCoderMagOffset = 0.351562;
         public static final double kBackRightCanCoderMagOffset = -0.333740;
 
-        public static final double kMaxSpeed = 3;
+        public static final double kMaxSpeed = 5;
         public static final double kMinSpeed = 0.25;
         public static final double kMinJoyStickValue = 0.3;
         public static final double kMaxAngularSpeed = 2.5 * Math.PI; // 1/2 rotation per second

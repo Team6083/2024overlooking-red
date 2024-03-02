@@ -34,12 +34,12 @@ public class IntakeSubsystem extends SubsystemBase {
     setMotor(0);
   }
 
-  public void setMotor(double power) {
+  public void setMotor(double voltage) {
     if (powerDistributionSubsystem.isIntakeOverCurrent()) {
       stopMotor();
       return;
     }
-    intakeMotor.set(VictorSPXControlMode.PercentOutput, power);
+    intakeMotor.set(VictorSPXControlMode.PercentOutput, voltage / getIntakeMotorBusVoltage());
   }
 
   public double getIntakeMotorBusVoltage() {

@@ -27,7 +27,7 @@ public class HookUpRightManualCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.manualControlRightHookMotor(HookConstants.kmanualControlRightHookMotorPower);
+    hookSubsystem.manualControlRightHookMotor(HookConstants.kManualControlRightHookMotorPower);
   }
 
   // Called once the command ends or is interrupted.
