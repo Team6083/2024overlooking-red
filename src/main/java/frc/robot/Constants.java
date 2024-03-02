@@ -7,64 +7,63 @@ public final class Constants {
     }
 
     public static class ShooterConstants {
-        public static final int kUpMotorChannel = 3;
-        public static final int kDownMotorChannel = 5;
-        public static final int kUpEncoderChannelA = 2;
-        public static final int kUpEncoderChannelB = 3;
-        public static final int kDownEncoderChannelA = 5;
-        public static final int kDownEncoderChannelB = 6;
+        public static final int kUpMotorChannel = 26;
+        public static final int kDownMotorChannel = 25;
+        public static final int kUpEncoderChannelA = 0;
+        public static final int kUpEncoderChannelB = 1;
+        public static final int kDownEncoderChannelA = 8;
+        public static final int kDownEncoderChannelB = 9;
         public static final Boolean kUpMotorInverted = false;
         public static final Boolean kDownMotorInverted = false;
         public static final Boolean kUpEncoderInverted = true;
         public static final Boolean kDownEncoderInverted = true;
         public static final double kUpMotorManualVoltage = 10.0;
         public static final double kDownMotorManualVoltage = 10.0;
-        public static final double kShooterRate = 55.0;
+        public static final double kShooterRate = 60.0;
         public static final double kP = 0.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
-        public static final double kUpMotorS = 0.756;
-        public static final double kUpMotorV = 0.149;
+        public static final double kUpMotorS = 1.65;
+        public static final double kUpMotorV = 0.123;
         public static final double kUpMotorA = 0.0;
-        public static final double kDownMotorS = 0.856;
-        public static final double kDownMotorV = 0.149;
+        public static final double kDownMotorS = 0.681;
+        public static final double kDownMotorV = 0.165;
         public static final double kDownMotorA = 0.0;
     }
 
     public static class TransportConstants {
-        public static final int kTrantsportChannel = 4;
+        public static final int kTrantsportChannel = 22;
         public static final boolean kTransportInverted = true;
-        public static final double kTransSpeed = 0.8;
-        public static final double kReTransSpeed = -0.5;
+        public static final double kTransSpeed = 5;
+        public static final double kReTransSpeed = -5;
         public static final double kDistRange = 8.0;
     }
 
     public static class IntakeConstants {
-        public static final int kIntakeChannel = 2;
+        public static final int kIntakeChannel = 24;
         public static final Boolean kIntakeInverted = true;
-        public static final double kIntakePrecentage = 0.65;
-        public static final double kThrowPrecentage = -0.4;
+        public static final double kIntakeVoltage = 7;
+        public static final double kThrowPrecentage = -4;
     }
 
     public static class RiseShooterConstants {
         public static final int kRiseShooterChannel = 21;
         public static final Boolean kRiseShooterInverted = true;
-        public static final int kEncoderChannelA = 0;
-        public static final int kEncoderChannelB = 1;
+        public static final Boolean kEncoderInverted = true;
+        public static final int kEncoderChannel = 2;
         public static final double kRiseVoltLimit = 5;
         public static final double kRiseAngleMin = -5;
         public static final double kRiseAngleMax = 65;
-        public static final double kRiseEncoderPulse = 2048;
-        public static final double kRiseInitAngleDegree = 60;
+        public static final double kRiseAngleOffset = 0.52;
         public static final double kRiseTriggerValue = 0.15;
-        public static final double kSpeakerHeight = 5.0;
+        public static final double kSpeakerHeight = 2.0;
         public static final double kP = 0.5;
         public static final double kI = 0;
         public static final double kD = 0;
     }
 
     public static class HookConstants {
-        public static final int kHookLineChannel = 22;
+        public static final int kHookLineChannel = 23;
         public static final int kHookLeftMotorCnannel = 1;
         public static final int kHookRightMotorCnannel = 2;
         public static final int kHookLeftEncoderChannelA = 0;
@@ -84,7 +83,7 @@ public final class Constants {
         public static final double kLinePower = 0;
         public static final double kHookMotorLeftVoltage = 0.0;
         public static final double kHookMotorRightVoltage = 0.0;
-        public static final double kmanualControlLineMotorPower=0.25;
+        public static final double kmanualControlLineMotorPower = 0.25;
         public static final double kmanualControlLeftHookMotorPower = 0.25;
         public static final double kmanualControlRightHookMotorPower = 0.25;
         public static final boolean kHookMotorLeftInverted = false;

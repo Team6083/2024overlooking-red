@@ -23,7 +23,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setIntaking() {
-    setMotor(IntakeConstants.kIntakePrecentage);
+    setMotor(IntakeConstants.kIntakeVoltage);
   }
 
   public void setThrowing() {
