@@ -114,9 +114,6 @@ public class RiseShooterSubsystem extends SubsystemBase {
     riseMotor.setVoltage(voltage);
   }
 
-  public boolean haveNoteAndSpeed(){
-    return shooterSubsystem.haveNoteAndSpeed();
-  }
   private int isPhyLimitExceed(double angle) {
     return (angle < RiseShooterConstants.kRiseAngleMin ? -1 : (angle > RiseShooterConstants.kRiseAngleMax ? 1 : 0));
   }

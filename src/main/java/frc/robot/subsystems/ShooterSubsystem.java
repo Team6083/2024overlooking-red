@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 
 public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new Shooter. */
@@ -23,10 +22,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private final PIDController ratePidController;
   private final SimpleMotorFeedforward upMotorFeedForwardControl;
   private final SimpleMotorFeedforward downMotorFeedForwardControl;
-  private final PowerDistributionSubsystem powerDistributionSubsystem;
-  private final TransportSubsystem transportSubsystem;
-  private final RiseShooterSubsystem riseShooterSubsystem;
-  private final TagTrackingLimelight aprilTagTracking;
+  private final PowerDistributionSubsystem powerDistribution;
 
   public ShooterSubsystem(PowerDistributionSubsystem powerDistribution) {
     upMotor = new VictorSPX(ShooterConstants.kUpMotorChannel);
@@ -49,11 +45,7 @@ public class ShooterSubsystem extends SubsystemBase {
         ShooterConstants.kDownMotorA);
 
     resetEncoder();
-    transportSubsystem = new TransportSubsystem(powerDistribution);
-    aprilTagTracking = new TagTrackingLimelight();
-    riseShooterSubsystem = new RiseShooterSubsystem(powerDistribution, aprilTagTracking);
-
-    this.powerDistributionSubsystem = powerDistribution;
+    this.powerDistribution = powerDistribution;
   }
 
   public void resetEncoder() {
@@ -105,17 +97,8 @@ public class ShooterSubsystem extends SubsystemBase {
     return downMotor.getBusVoltage();
   }
 
-  public Boolean haveNoteAndSpeed() {
-    if (transportSubsystem.isGetNote() && Math.abs(getUpEncoderRate() - ShooterConstants.kShooterRate) < 1
-        && Math.abs(getDownEncoderRate() - ShooterConstants.kShooterRate) < 1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   public void setUpMotor(double power) {
-    if (powerDistributionSubsystem.isShooterUpOverCurrent()) {
+    if (powerDistribution.isShooterUpOverCurrent()) {
       stopUpMotor();
       return;
     }
@@ -123,7 +106,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setDownMotor(double power) {
-    if (powerDistributionSubsystem.isShooterDownOverCurrent()) {
+    if (powerDistribution.isShooterDownOverCurrent()) {
       stopDownMotor();
       return;
     }
