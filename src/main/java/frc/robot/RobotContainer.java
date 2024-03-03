@@ -22,6 +22,7 @@ import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterPIDCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.Autos;
+import frc.robot.commands.IntakeWithTransportCmd;
 import frc.robot.commands.hookCmds.ManualControl.HookUpLeftManualCmd;
 import frc.robot.commands.hookCmds.ManualControl.HookUpRightManualCmd;
 import frc.robot.commands.hookCmds.ManualControl.LineUpManualCmd;
@@ -47,9 +48,9 @@ public class RobotContainer {
   private final CommandXboxController mainController;
   private final CommandGenericHID controlPanel;
   // private final ShooterSubsystem shooter;
-  // private final TransportSubsystem trans;
+  private final TransportSubsystem transport;
   private final HookSubsystem hook;
-  // private final IntakeSubsystem intake;
+  private final IntakeSubsystem intake;
   private final RiseShooterSubsystem riseShooter;
   // private final Drivebase drivebase;
   // private final HookSubsystem hook;
@@ -65,8 +66,8 @@ public class RobotContainer {
     mainController = new CommandXboxController(DriveControllerConstants.kMainController);
     controlPanel = new CommandGenericHID(DriveControllerConstants.kControlPanel);
     // shooter = new ShooterSubsystem(powerDistribution);
-    // trans = new TransportSubsystem(powerDistribution);
-    // intake = new IntakeSubsystem(powerDistribution);
+    transport = new TransportSubsystem(powerDistribution);
+    intake = new IntakeSubsystem(powerDistribution);
     riseShooter = new RiseShooterSubsystem(powerDistribution, aprilTagTracking);
     // drivebase = new Drivebase();
     hook = new HookSubsystem(powerDistribution);
@@ -106,13 +107,13 @@ public class RobotContainer {
     mainController.rightTrigger().whileTrue(new HookRightMotorDownPIDCmd(hook));
     mainController.pov(90).whileTrue(new LineUpPIDCmd(hook));
     mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
-     mainController.leftBumper().whileTrue(new HookLeftMotorDownPIDCmd(hook));
+    mainController.leftBumper().whileTrue(new HookLeftMotorDownPIDCmd(hook));
     mainController.leftTrigger().whileTrue(new HookUpLeftManualCmd(hook));
     mainController.rightBumper().whileTrue(new HookRightMotorDownPIDCmd(hook));
     mainController.rightTrigger().whileTrue(new HookUpRightManualCmd(hook));
     mainController.pov(90).whileTrue(new LineUpManualCmd(hook));
     mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
-    
+
     // mainController.a().toggleOnTrue(new RiseShooterManualCmd(riseShooter));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
     // main.b().onTrue(new GyroResetCmd(drivebase) );
@@ -122,6 +123,9 @@ public class RobotContainer {
     // main.y().whileTrue(new HookManualCmd(hook));
     // mainController.pov(0).onTrue(new LinePIDCmd(hook));
     // mainController.pov(180).onTrue(new LinePIDCmd(hook));
+
+    // intake and transport
+    mainController.y().toggleOnTrue(new IntakeWithTransportCmd(transport, intake)); // onTrue could be okay, too
   }
 
   public Command getAutonomousCommand() {
