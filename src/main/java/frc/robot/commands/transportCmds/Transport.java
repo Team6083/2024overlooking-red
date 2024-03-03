@@ -7,11 +7,11 @@ package frc.robot.commands.transportCmds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TransportSubsystem;
 
-public class TransportCmd extends Command {
-  /** Creates a new Trans. */
+public class Transport extends Command {
+  /** Creates a new Transport. */
   private final TransportSubsystem transportSubsystem;
 
-  public TransportCmd(TransportSubsystem transportSubsystem) {
+  public Transport(TransportSubsystem transportSubsystem) {
     this.transportSubsystem = transportSubsystem;
     addRequirements(this.transportSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
