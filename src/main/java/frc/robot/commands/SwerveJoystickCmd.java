@@ -18,7 +18,7 @@ public class SwerveJoystickCmd extends Command {
   private final SlewRateLimiter yLimiter;
   private final SlewRateLimiter rotLimiter;
   private final double drivebaseMaxSpeed = DrivebaseConstants.kMaxSpeed;
-  private double ySpeed, xSpeed, rotSpeed;
+  private double xSpeed, ySpeed, rotSpeed;
 
   public SwerveJoystickCmd(Drivebase drivebase, CommandXboxController main) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -33,10 +33,10 @@ public class SwerveJoystickCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ySpeed = yLimiter.calculate(main.getLeftY()) * drivebaseMaxSpeed;// forward
-    xSpeed = xLimiter.calculate(main.getLeftX()) * drivebaseMaxSpeed;// side
+    xSpeed = yLimiter.calculate(main.getLeftY()) * drivebaseMaxSpeed; // forward
+    ySpeed = xLimiter.calculate(main.getLeftX()) * drivebaseMaxSpeed; // side
     rotSpeed = rotLimiter.calculate(main.getRightX()) * drivebaseMaxSpeed;
-    drivebase.drive(-ySpeed, xSpeed, rotSpeed, true);
+    drivebase.drive(-xSpeed, ySpeed, rotSpeed, true);
   }
 
   // Called once the command ends or is interrupted.
