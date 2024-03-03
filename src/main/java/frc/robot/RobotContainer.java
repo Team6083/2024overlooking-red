@@ -57,23 +57,23 @@ public class RobotContainer {
   private final RiseShooterSubsystem riseShooter;
   // private final Drivebase drivebase;
   // private final HookSubsystem hook;
-  private final PowerDistributionSubsystem powerDistribution;
+  private final PowerDistributionSubsystem powerDistributionSubsystem;
   private final TagTrackingLimelight aprilTagTracking;
 
   private SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-    powerDistribution = new PowerDistributionSubsystem();
+    powerDistributionSubsystem = new PowerDistributionSubsystem();
     aprilTagTracking = new TagTrackingLimelight();
 
     mainController = new CommandXboxController(DriveControllerConstants.kMainController);
     controlPanel = new CommandGenericHID(DriveControllerConstants.kControlPanel);
     // shooter = new ShooterSubsystem(powerDistribution);
-    transport = new TransportSubsystem(powerDistribution);
-    intake = new IntakeSubsystem(powerDistribution);
-    riseShooter = new RiseShooterSubsystem(powerDistribution, aprilTagTracking);
+    transport = new TransportSubsystem(powerDistributionSubsystem);
+    intake = new IntakeSubsystem(powerDistributionSubsystem);
+    riseShooter = new RiseShooterSubsystem(powerDistributionSubsystem, aprilTagTracking);
     // drivebase = new Drivebase();
-    hook = new HookSubsystem(powerDistribution);
+    hook = new HookSubsystem(powerDistributionSubsystem);
     // AprilTagTracking.init();
     configureBindings();
 
