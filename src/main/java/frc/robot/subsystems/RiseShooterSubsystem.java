@@ -22,6 +22,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
   private final PIDController risePID;
   private final PowerDistributionSubsystem powerDistribution;
   private final TagTrackingLimelight tagTrackingLimelight;
+  private final ShooterSubsystem shooterSubsystem;
 
   public RiseShooterSubsystem(PowerDistributionSubsystem powerDistribution, TagTrackingLimelight aprilTagTracking) {
     riseMotor = new CANSparkMax(RiseShooterConstants.kRiseShooterChannel, MotorType.kBrushless);
@@ -32,7 +33,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
     risePID = new PIDController(RiseShooterConstants.kP, RiseShooterConstants.kI, RiseShooterConstants.kD);
 
     riseMotor.setInverted(RiseShooterConstants.kRiseShooterInverted);
-
+    shooterSubsystem = new ShooterSubsystem(powerDistribution);
     this.powerDistribution = powerDistribution;
     this.tagTrackingLimelight = aprilTagTracking;
     setSetpoint(60.0);
@@ -82,7 +83,9 @@ public class RiseShooterSubsystem extends SubsystemBase {
 
   public double getAngleDegree() {
     double degree = (RiseShooterConstants.kEncoderInverted ? -1.0 : 1.0)
-        * (riseEncoder.getAbsolutePosition() - angleDegreeOffset) * 360.0;
+        * ((riseEncoder.getAbsolutePosition() * 360.0) - 251.0);
+    ;
+
     SmartDashboard.putNumber("riseShooterDegree", degree);
     return degree;
   }
@@ -111,6 +114,9 @@ public class RiseShooterSubsystem extends SubsystemBase {
     riseMotor.setVoltage(voltage);
   }
 
+  public boolean haveNoteAndSpeed(){
+    return shooterSubsystem.haveNoteAndSpeed();
+  }
   private int isPhyLimitExceed(double angle) {
     return (angle < RiseShooterConstants.kRiseAngleMin ? -1 : (angle > RiseShooterConstants.kRiseAngleMax ? 1 : 0));
   }

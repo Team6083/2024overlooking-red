@@ -14,6 +14,7 @@ import frc.robot.commands.autoTimerCmds.GoForwardCmd;
 import frc.robot.commands.autoTimerCmds.GoLeftCmd;
 import frc.robot.commands.autoTimerCmds.GoRightCmd;
 import frc.robot.commands.autoTimerCmds.StopCmd;
+import frc.robot.commands.intakeCmds.AutoIntakeCmd;
 import frc.robot.commands.noteTrackingCmds.TrackingNoteClockwiseCmd;
 import frc.robot.commands.noteTrackingCmds.TrackingNoteCounterclockwiseCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterAutoControlCmd;

@@ -52,6 +52,8 @@ public class Drivebase extends SubsystemBase {
 
   private final AHRS gyro;
 
+  private double magnification;
+
   private final PIDController facingNotePID;
   private final PIDController facingTagPID;
   private final PIDController followingTagPID;
@@ -74,7 +76,7 @@ public class Drivebase extends SubsystemBase {
 
   private double noteTrackTargetError = 0.0;
 
-  private Boolean trackingCondition = false;
+  private boolean trackingCondition = false;
 
   private final PowerDistributionSubsystem powerDistributionSubsystem;
   private final NoteTrackingPhotovision note;
@@ -118,8 +120,11 @@ public class Drivebase extends SubsystemBase {
             backRight.getPosition()
         });
 
+    // initialize magnification value
+    magnification = 1.0;
+
     // reset the gyro
-    resetgyro();
+    resetGyro();
 
     // set the swerve speed equal 0
     drive(0, 0, 0, false);
@@ -161,7 +166,7 @@ public class Drivebase extends SubsystemBase {
     );
   }
 
-  public void resetgyro() {
+  public void resetGyro() {
     gyro.reset();
   }
 
@@ -204,6 +209,14 @@ public class Drivebase extends SubsystemBase {
     frontRight.setDesiredState(swerveModuleStates[1]);
     backLeft.setDesiredState(swerveModuleStates[2]);
     backRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  public void setMagnification(double magnification) {
+    this.magnification = magnification;
+  }
+
+  public double getMagnification() {
+    return magnification;
   }
 
   public double facingNoteRot(double currentRot) {

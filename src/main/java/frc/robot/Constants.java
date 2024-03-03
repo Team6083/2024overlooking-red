@@ -90,9 +90,9 @@ public final class Constants {
         public static final boolean kHookMotorLeftInverted = false;
         public static final boolean kHookMotorRightInverted = false;
         public static final double kInitSetpoint = 0.0;
-        public static final double kLeftMotorModify = 0.0;// 以下皆未定值需更改
-        public static final double kRightMotorModify = 0.0;
-        public static final double kLineMotorModify = 0.0;
+        public static final double kLeftMotorModify = 0.0; // TO DO
+        public static final double kRightMotorModify = 0.0; // TO DO
+        public static final double kLineMotorModify = 0.0; // TO DO
     }
 
     public static class DrivebaseConstants {
@@ -136,6 +136,9 @@ public final class Constants {
         public static final double kPNoteTrackingValue = 1.0;
         public static final boolean kGyroInverted = false; // wheather gyro is under the robot
         public static final double kGyroOffSet = 0;
+
+        public static final double kLowMagnification = 1.0;
+        public static final double kHighMagnification = 1.2;
     }
 
     public static final class ModuleConstants {

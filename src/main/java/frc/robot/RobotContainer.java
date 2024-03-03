@@ -15,13 +15,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.commands.TeleopIntakeCmd;
 import frc.robot.commands.autoTimerCmds.StopCmd;
+import frc.robot.commands.controllerCmds.DrivebaseAccelerateCmd;
+import frc.robot.commands.controllerCmds.DrivebaseDefaultSpeedCmd;
+import frc.robot.commands.controllerCmds.SwerveJoystickCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterPIDCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.Autos;
+import frc.robot.commands.IntakeWithTransportCmd;
+import frc.robot.commands.ReIntakeWithTransportCmd;
 import frc.robot.commands.hookCmds.ManualControl.HookUpLeftManualCmd;
 import frc.robot.commands.hookCmds.ManualControl.HookUpRightManualCmd;
 import frc.robot.commands.hookCmds.ManualControl.LineUpManualCmd;
@@ -31,7 +34,8 @@ import frc.robot.commands.hookCmds.PIDControl.HookRightMotorDownPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.HookRightMotorUpPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.LineDownPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.LineUpPIDCmd;
-import frc.robot.commands.AutoIntakeCmd;
+import frc.robot.commands.intakeCmds.AutoIntakeCmd;
+import frc.robot.commands.intakeCmds.TeleopIntakeCmd;
 import frc.robot.Constants.DriveControllerConstants;
 // import frc.robot.subsystems.AprilTagTracking;
 import frc.robot.subsystems.HookSubsystem;
@@ -47,9 +51,9 @@ public class RobotContainer {
   private final CommandXboxController mainController;
   private final CommandGenericHID controlPanel;
   // private final ShooterSubsystem shooter;
-  // private final TransportSubsystem trans;
+  private final TransportSubsystem transport;
   private final HookSubsystem hook;
-  // private final IntakeSubsystem intake;
+  private final IntakeSubsystem intake;
   private final RiseShooterSubsystem riseShooter;
   // private final Drivebase drivebase;
   // private final HookSubsystem hook;
@@ -65,8 +69,8 @@ public class RobotContainer {
     mainController = new CommandXboxController(DriveControllerConstants.kMainController);
     controlPanel = new CommandGenericHID(DriveControllerConstants.kControlPanel);
     // shooter = new ShooterSubsystem(powerDistribution);
-    // trans = new TransportSubsystem(powerDistribution);
-    // intake = new IntakeSubsystem(powerDistribution);
+    transport = new TransportSubsystem(powerDistribution);
+    intake = new IntakeSubsystem(powerDistribution);
     riseShooter = new RiseShooterSubsystem(powerDistribution, aprilTagTracking);
     // drivebase = new Drivebase();
     hook = new HookSubsystem(powerDistribution);
@@ -106,22 +110,29 @@ public class RobotContainer {
     mainController.rightTrigger().whileTrue(new HookRightMotorDownPIDCmd(hook));
     mainController.pov(90).whileTrue(new LineUpPIDCmd(hook));
     mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
-     mainController.leftBumper().whileTrue(new HookLeftMotorDownPIDCmd(hook));
+    mainController.leftBumper().whileTrue(new HookLeftMotorDownPIDCmd(hook));
     mainController.leftTrigger().whileTrue(new HookUpLeftManualCmd(hook));
     mainController.rightBumper().whileTrue(new HookRightMotorDownPIDCmd(hook));
     mainController.rightTrigger().whileTrue(new HookUpRightManualCmd(hook));
     mainController.pov(90).whileTrue(new LineUpManualCmd(hook));
     mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
-    
+
     // mainController.a().toggleOnTrue(new RiseShooterManualCmd(riseShooter));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
-    // main.b().onTrue(new GyroResetCmd(drivebase) );
+    //mainController.back().onTrue(new GyroResetCmd(drivebase) );
     // mainController.a().toggleOnTrue(new ShootPIDCmd(shooter));
     // mainController.x().toggleOnTrue(new TransCmd(trans));
     // mainController.back().toggleOnTrue(new ReTransCmd(trans));
     // main.y().whileTrue(new HookManualCmd(hook));
     // mainController.pov(0).onTrue(new LinePIDCmd(hook));
     // mainController.pov(180).onTrue(new LinePIDCmd(hook));
+
+    // intake and transport
+    // mainController.y().toggleOnTrue(new IntakeWithTransportCmd(transport, intake)); // onTrue could be okay, too
+    // mainController.x().whileTrue(new ReIntakeWithTransportCmd(transport, intake));
+
+    // mainController.pov(0).toggleOnTrue(new DrivebaseAccelerateCmd(drivebase));
+    // mainController.pov(180).toggleOnTrue(new DrivebaseDefaultSpeedCmd(drivebase));
   }
 
   public Command getAutonomousCommand() {
