@@ -1,17 +1,14 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands.transportCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TransportSubsystem;
 
-public class TransCmd extends Command {
-  /** Creates a new Trans. */
+public class IntakeTransportCmd extends Command {
+
+  /** Creates a new ReTrans. */
   private final TransportSubsystem transportSubsystem;
 
-  public TransCmd(TransportSubsystem transportSubsystem) {
+  public IntakeTransportCmd(TransportSubsystem transportSubsystem) {
     this.transportSubsystem = transportSubsystem;
     addRequirements(this.transportSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -38,6 +35,6 @@ public class TransCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return transportSubsystem.isGetNote();
   }
 }
