@@ -20,7 +20,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
   private final DutyCycleEncoder riseEncoder;
   private final double angleDegreeOffset;
   private final PIDController risePID;
-  private final PowerDistributionSubsystem powerDistribution;
+  private final PowerDistributionSubsystem powerDistributionSubsystem;
   private final TagTrackingLimelight tagTrackingLimelight;
   private final ShooterSubsystem shooterSubsystem;
 
@@ -34,7 +34,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
 
     riseMotor.setInverted(RiseShooterConstants.kRiseShooterInverted);
     shooterSubsystem = new ShooterSubsystem(powerDistribution);
-    this.powerDistribution = powerDistribution;
+    this.powerDistributionSubsystem = powerDistribution;
     this.tagTrackingLimelight = aprilTagTracking;
     setSetpoint(60.0);
     risePID.enableContinuousInput(-180.0, 180.0);
@@ -107,7 +107,7 @@ public class RiseShooterSubsystem extends SubsystemBase {
   }
 
   public void setMotor(double voltage) {
-    if (powerDistribution.isRiseShooterOverCurrent()) {
+    if (powerDistributionSubsystem.isRiseShooterOverCurrent()) {
       stopMotor();
       return;
     }

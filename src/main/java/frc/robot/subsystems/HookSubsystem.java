@@ -26,7 +26,7 @@ public class HookSubsystem extends SubsystemBase {
   private final RelativeEncoder lineEncoder;
   private final Encoder hookRightEncoder;
   private final Encoder hookLeftEncoder;
-  private final PowerDistributionSubsystem powerDistribution;
+  private final PowerDistributionSubsystem powerDistributionSubsystem;
   private double linePositionOffset = 0.0;
   private double leftPositionOffset = 0.0;
   private double rightPositionOffset = 0.0;
@@ -43,7 +43,7 @@ public class HookSubsystem extends SubsystemBase {
     hookRightEncoder = new Encoder(HookConstants.kHookRightEncoderChannelA, HookConstants.kHookRightEncoderChannelB);
     lineEncoder.setPositionConversionFactor(HookConstants.kHookPositionConversionfactor);
     line.setInverted(HookConstants.kHookMotorLeftInverted);
-    this.powerDistribution = powerDistribution;
+    this.powerDistributionSubsystem = powerDistribution;
   }
 
   public void manualControlLine(double hookControlSpeed) {
@@ -175,7 +175,7 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void setLeftHookMotorPower(double power) {
-    if (powerDistribution.isHookLeftOverCurrent()) {
+    if (powerDistributionSubsystem.isHookLeftOverCurrent()) {
       stopHookLeftMotor();
       return;
     }
@@ -183,7 +183,7 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void setRightHookMotorPower(double power) {
-    if (powerDistribution.isHookRightOverCurrent()) {
+    if (powerDistributionSubsystem.isHookRightOverCurrent()) {
       stopHookRightMotor();
       return;
     }
@@ -191,7 +191,7 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void setLineMotor(double voltage) {
-    if (powerDistribution.isLineMoterOverCurrent()) {
+    if (powerDistributionSubsystem.isLineMoterOverCurrent()) {
       stopLineMotor();
       return;
     }

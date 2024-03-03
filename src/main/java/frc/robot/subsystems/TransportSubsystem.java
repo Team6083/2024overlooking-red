@@ -17,7 +17,7 @@ public class TransportSubsystem extends SubsystemBase {
   /** Creates a new TransportSubsystem. */
   private final CANSparkMax trans;
   private final Rev2mDistanceSensor dist;
-  private final PowerDistributionSubsystem powerDistribution;
+  private final PowerDistributionSubsystem powerDistributionSubsystem;
 
   public TransportSubsystem(PowerDistributionSubsystem powerDistribution) {
 
@@ -26,7 +26,7 @@ public class TransportSubsystem extends SubsystemBase {
 
     dist = new Rev2mDistanceSensor(Port.kOnboard);
 
-    this.powerDistribution = powerDistribution;
+    this.powerDistributionSubsystem = powerDistribution;
   }
 
   public void setTrans() {
@@ -53,7 +53,7 @@ public class TransportSubsystem extends SubsystemBase {
   }
 
   public void setMotor(double voltage) {
-    if (powerDistribution.isTransportOverCurrent()) {
+    if (powerDistributionSubsystem.isTransportOverCurrent()) {
       stopMotor();
       return;
     }
