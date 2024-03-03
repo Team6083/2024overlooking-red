@@ -142,6 +142,37 @@ public class TagTrackingLimelight extends SubsystemBase {
     // }
     // }
 
+    /**
+     * Returns goal height in metres
+     * 
+     * @param offset tag to goal (metres)
+     * @return goal height (metres)
+     */
+    public double getGoalHeight(double offset) {
+        double goalHeight = Math.abs(getBT()[1]) + offset;
+        return goalHeight;
+    }
+
+    /**
+     * Returns bot to tag horizontal distance in metres
+     * @return bot to tag horizontal distance (metres)
+     */
+    public double getHorizontalDis3() {
+        double angle = getBT()[4];
+        double angle_Radian = angle * (3.14159 / 180.0);
+        double horDis = Math.abs(getBT()[2]) / Math.cos(angle_Radian);
+        return horDis;
+    }
+
+    /**
+     * Returns bot to speaker angle in degree
+     * @return bot to speaker angle (degree)
+     */
+    public double getSpeakerDegree() {
+        double degree = Math.atan(getGoalHeight(0.515) / getHorizontalDis3());
+        return degree;
+    }
+
     public void putDashboard() {
         // SmartDashboard.putNumber("hasTarget", getTv());
         SmartDashboard.putNumber("LimelightX", getTx());
@@ -155,10 +186,12 @@ public class TagTrackingLimelight extends SubsystemBase {
         SmartDashboard.putNumber("bt_y", getBT()[1]);
         SmartDashboard.putNumber("bt_z", getBT()[2]);
 
-        // campose in targetspace
-        SmartDashboard.putNumber("ct_x", getCT()[0]);
-        SmartDashboard.putNumber("ct_y", getCT()[1]);
-        SmartDashboard.putNumber("ct_z", getCT()[2]);
+        SmartDashboard.putNumber("hor_Dis", getHorizontalDis3());
+
+        // // campose in targetspace
+        // SmartDashboard.putNumber("ct_x", getCT()[0]);
+        // SmartDashboard.putNumber("ct_y", getCT()[1]);
+        // SmartDashboard.putNumber("ct_z", getCT()[2]);
 
         SmartDashboard.putNumber("MyDistance", getMyDistance());
     }
