@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.controllerCmds;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,7 +18,7 @@ public class SwerveJoystickCmd extends Command {
   private final SlewRateLimiter yLimiter;
   private final SlewRateLimiter rotLimiter;
   private final double drivebaseMaxSpeed = DrivebaseConstants.kMaxSpeed;
-  private double xSpeed, ySpeed, rotSpeed;
+  private double xSpeed, ySpeed, rotSpeed, magnification;
 
   public SwerveJoystickCmd(Drivebase drivebase, CommandXboxController main) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -33,8 +33,9 @@ public class SwerveJoystickCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    xSpeed = yLimiter.calculate(main.getLeftY()) * drivebaseMaxSpeed; // forward
-    ySpeed = xLimiter.calculate(main.getLeftX()) * drivebaseMaxSpeed; // side
+    magnification = drivebase.getMagnification();
+    xSpeed = yLimiter.calculate(main.getLeftY()) * drivebaseMaxSpeed * magnification; // forward
+    ySpeed = xLimiter.calculate(main.getLeftX()) * drivebaseMaxSpeed * magnification; // side
     rotSpeed = rotLimiter.calculate(main.getRightX()) * drivebaseMaxSpeed;
     drivebase.drive(-xSpeed, ySpeed, rotSpeed, true);
   }
