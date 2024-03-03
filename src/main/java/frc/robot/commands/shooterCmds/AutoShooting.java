@@ -9,11 +9,11 @@ import frc.robot.subsystems.RiseShooterSubsystem;
 
 public class AutoShooting extends Command {
   /** Creates a new AutoShooting. */
-  RiseShooterSubsystem riseShooterSubsystem;
-  double leftTriggerValue;
-  double rightTriggerValue;
+  private final RiseShooterSubsystem riseShooterSubsystem;
+  private final double leftTriggerValue;
+  private final double rightTriggerValue;
   double armAngleModify;
-  public AutoShooting(RiseShooterSubsystem riseShooterSubsystem, double mainLeftTrigger, double mainRightTrigger) {
+  public AutoShooting(RiseShooterSubsystem riseShooterSubsystem, double mainLeftTrigger, double mainRightTrigger, boolean hasNoteAndSpeed) {
     this.riseShooterSubsystem = riseShooterSubsystem;
     this.leftTriggerValue = mainLeftTrigger;
     this.rightTriggerValue = mainRightTrigger;
@@ -23,7 +23,9 @@ public class AutoShooting extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    riseShooterSubsystem.pidControl();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -36,9 +38,6 @@ public class AutoShooting extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {   
-    if(riseShooterSubsystem.haveNoteAndSpeed())
-    armAngleModify = (leftTriggerValue - rightTriggerValue) * 0.7;
-    riseShooterSubsystem.setSetpoint(riseShooterSubsystem.getSetpoint() + armAngleModify);
     riseShooterSubsystem.pidControl();
 
   }

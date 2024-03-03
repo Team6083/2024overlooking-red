@@ -18,12 +18,13 @@ public class TransportSubsystem extends SubsystemBase {
   private final CANSparkMax trans;
   private final Rev2mDistanceSensor dist;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
+  private final ShooterSubsystem shooterSubsystem;
 
   public TransportSubsystem(PowerDistributionSubsystem powerDistribution) {
 
     trans = new CANSparkMax(TransportConstants.kTrantsportChannel, MotorType.kBrushless);
     trans.setInverted(TransportConstants.kTransportInverted);
-
+    shooterSubsystem = new ShooterSubsystem(powerDistribution);
     dist = new Rev2mDistanceSensor(Port.kOnboard);
 
     this.powerDistributionSubsystem = powerDistribution;
@@ -58,6 +59,9 @@ public class TransportSubsystem extends SubsystemBase {
       return;
     }
     trans.setVoltage(voltage);
+  }
+  public Boolean HavaNoteAndSpeed(){
+    return shooterSubsystem.haveNoteAndSpeed();
   }
 
   @Override
