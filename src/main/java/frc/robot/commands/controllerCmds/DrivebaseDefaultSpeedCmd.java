@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.subsystems.drive.Drivebase;
 
-public class DrivebaseAccelerateCmd extends Command {
+public class DrivebaseDefaultSpeedCmd extends Command {
   Drivebase drivebase;
 
-  /** Creates a new DriveTrainAccelerationCmd. */
-  public DrivebaseAccelerateCmd(Drivebase drivebase) {
+  /** Creates a new DrivebaseDefaultSpeedCmd. */
+  public DrivebaseDefaultSpeedCmd(Drivebase drivebase) {
     this.drivebase = drivebase;
     addRequirements(this.drivebase);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -27,13 +27,12 @@ public class DrivebaseAccelerateCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivebase.setMagnification(DrivebaseConstants.kHighMagnification);
+    drivebase.setMagnification(DrivebaseConstants.kLowMagnification);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivebase.setMagnification(DrivebaseConstants.kLowMagnification);
   }
 
   // Returns true when the command should end.

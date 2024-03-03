@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.autoTimerCmds.StopCmd;
+import frc.robot.commands.controllerCmds.DrivebaseAccelerateCmd;
+import frc.robot.commands.controllerCmds.DrivebaseDefaultSpeedCmd;
 import frc.robot.commands.controllerCmds.SwerveJoystickCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterPIDCmd;
@@ -128,6 +130,9 @@ public class RobotContainer {
     // intake and transport
     // mainController.y().toggleOnTrue(new IntakeWithTransportCmd(transport, intake)); // onTrue could be okay, too
     // mainController.x().whileTrue(new ReIntakeWithTransportCmd(transport, intake));
+
+    // mainController.pov(0).toggleOnTrue(new DrivebaseAccelerateCmd(drivebase));
+    // mainController.pov(180).toggleOnTrue(new DrivebaseDefaultSpeedCmd(drivebase));
   }
 
   public Command getAutonomousCommand() {
