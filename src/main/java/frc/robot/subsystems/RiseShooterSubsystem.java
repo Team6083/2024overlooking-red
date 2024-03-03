@@ -22,7 +22,6 @@ public class RiseShooterSubsystem extends SubsystemBase {
   private final PIDController risePID;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
   private final TagTrackingLimelight tagTrackingLimelight;
-  private final ShooterSubsystem shooterSubsystem;
 
   public RiseShooterSubsystem(PowerDistributionSubsystem powerDistribution, TagTrackingLimelight aprilTagTracking) {
     riseMotor = new CANSparkMax(RiseShooterConstants.kRiseShooterChannel, MotorType.kBrushless);
@@ -33,10 +32,9 @@ public class RiseShooterSubsystem extends SubsystemBase {
     risePID = new PIDController(RiseShooterConstants.kP, RiseShooterConstants.kI, RiseShooterConstants.kD);
 
     riseMotor.setInverted(RiseShooterConstants.kRiseShooterInverted);
-    shooterSubsystem = new ShooterSubsystem(powerDistribution);
     this.powerDistributionSubsystem = powerDistribution;
     this.tagTrackingLimelight = aprilTagTracking;
-    setSetpoint(60.0);
+    setSetpoint(angleDegreeOffset);
     risePID.enableContinuousInput(-180.0, 180.0);
   }
 

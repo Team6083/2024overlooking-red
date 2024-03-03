@@ -30,8 +30,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.NoteTrackingConstants;
-// import frc.robot.subsystems.AprilTagTracking;
-import frc.robot.subsystems.PowerDistributionSubsystem;
 import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 import frc.robot.subsystems.NoteTracking.NoteTrackingPhotovision;
 
@@ -78,15 +76,13 @@ public class Drivebase extends SubsystemBase {
 
   private boolean trackingCondition = false;
 
-  private final PowerDistributionSubsystem powerDistributionSubsystem;
   private final NoteTrackingPhotovision note;
   private final TagTrackingLimelight aprilTagTracking;
 
   private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
 
-  public Drivebase(PowerDistributionSubsystem powerDistributionSubsystem, NoteTrackingPhotovision note,
+  public Drivebase(NoteTrackingPhotovision note,
       TagTrackingLimelight aprilTagTracking) {
-    this.powerDistributionSubsystem = powerDistributionSubsystem;
     this.note = note;
     this.aprilTagTracking = aprilTagTracking;
     frontLeftLocation = new Translation2d(0.3, 0.3);
