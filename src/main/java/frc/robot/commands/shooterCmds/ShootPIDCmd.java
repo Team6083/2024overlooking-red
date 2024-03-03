@@ -6,13 +6,16 @@ package frc.robot.commands.shooterCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TransportSubsystem;
 
 public class ShootPIDCmd extends Command {
   /** Creates a new ShootPIDCmd. */
   private final ShooterSubsystem shooterSubsystem;
+  private boolean isGetNote;
 
-  public ShootPIDCmd(ShooterSubsystem shooterSubsystem) {
+  public ShootPIDCmd(ShooterSubsystem shooterSubsystem,boolean isGetNote) {
     this.shooterSubsystem = shooterSubsystem;
+    this.isGetNote = isGetNote;
     addRequirements(this.shooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -28,6 +31,11 @@ public class ShootPIDCmd extends Command {
   @Override
   public void execute() {
     shooterSubsystem.setRateControl();
+    if(shooterSubsystem.shooterMotoropen() == true){
+      isGetNote = true;
+    }else{
+      isGetNote = false;
+    }
   }
 
   // Called once the command ends or is interrupted.

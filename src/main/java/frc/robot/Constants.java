@@ -20,6 +20,7 @@ public final class Constants {
         public static final double kUpMotorManualVoltage = 10.0;
         public static final double kDownMotorManualVoltage = 10.0;
         public static final double kShooterRate = 60.0;
+        public static final double kDeadbandRate = 55.0;
         public static final double kP = 0.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;

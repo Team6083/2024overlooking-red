@@ -22,7 +22,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private final PIDController ratePidController;
   private final SimpleMotorFeedforward upMotorFeedForwardControl;
   private final SimpleMotorFeedforward downMotorFeedForwardControl;
-  private final PowerDistributionSubsystem powerDistribution;
+  private final PowerDistributionSubsystem powerDistributionSubsystem;
 
   public ShooterSubsystem(PowerDistributionSubsystem powerDistribution) {
     upMotor = new VictorSPX(ShooterConstants.kUpMotorChannel);
@@ -45,7 +45,8 @@ public class ShooterSubsystem extends SubsystemBase {
         ShooterConstants.kDownMotorA);
 
     resetEncoder();
-    this.powerDistribution = powerDistribution;
+
+    this.powerDistributionSubsystem = powerDistribution;
   }
 
   public void resetEncoder() {
@@ -98,7 +99,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setUpMotor(double power) {
-    if (powerDistribution.isShooterUpOverCurrent()) {
+    if (powerDistributionSubsystem.isShooterUpOverCurrent()) {
       stopUpMotor();
       return;
     }
@@ -106,11 +107,19 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setDownMotor(double power) {
-    if (powerDistribution.isShooterDownOverCurrent()) {
+    if (powerDistributionSubsystem.isShooterDownOverCurrent()) {
       stopDownMotor();
       return;
     }
     downMotor.set(VictorSPXControlMode.PercentOutput, power);
+  }
+
+    public boolean shooterMotoropen(){
+    if(getUpEncoderRate() >= ShooterConstants.kDeadbandRate && getDownEncoderRate() >= ShooterConstants.kDeadbandRate){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   @Override
