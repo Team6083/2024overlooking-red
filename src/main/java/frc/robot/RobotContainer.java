@@ -16,13 +16,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.commands.TeleopIntakeCmd;
 import frc.robot.commands.autoTimerCmds.StopCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterPIDCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeWithTransportCmd;
+import frc.robot.commands.ReIntakeWithTransportCmd;
 import frc.robot.commands.hookCmds.ManualControl.HookUpLeftManualCmd;
 import frc.robot.commands.hookCmds.ManualControl.HookUpRightManualCmd;
 import frc.robot.commands.hookCmds.ManualControl.LineUpManualCmd;
@@ -32,7 +32,8 @@ import frc.robot.commands.hookCmds.PIDControl.HookRightMotorDownPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.HookRightMotorUpPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.LineDownPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.LineUpPIDCmd;
-import frc.robot.commands.AutoIntakeCmd;
+import frc.robot.commands.intakeCmds.AutoIntakeCmd;
+import frc.robot.commands.intakeCmds.TeleopIntakeCmd;
 import frc.robot.Constants.DriveControllerConstants;
 // import frc.robot.subsystems.AprilTagTracking;
 import frc.robot.subsystems.HookSubsystem;
@@ -125,7 +126,8 @@ public class RobotContainer {
     // mainController.pov(180).onTrue(new LinePIDCmd(hook));
 
     // intake and transport
-    mainController.y().toggleOnTrue(new IntakeWithTransportCmd(transport, intake)); // onTrue could be okay, too
+    // mainController.y().toggleOnTrue(new IntakeWithTransportCmd(transport, intake)); // onTrue could be okay, too
+    // mainController.x().whileTrue(new ReIntakeWithTransportCmd(transport, intake));
   }
 
   public Command getAutonomousCommand() {
