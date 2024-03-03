@@ -82,7 +82,9 @@ public class RiseShooterSubsystem extends SubsystemBase {
 
   public double getAngleDegree() {
     double degree = (RiseShooterConstants.kEncoderInverted ? -1.0 : 1.0)
-        * (riseEncoder.getAbsolutePosition() - angleDegreeOffset) * 360.0;
+        * ((riseEncoder.getAbsolutePosition() * 360.0) - 251.0);
+    ;
+
     SmartDashboard.putNumber("riseShooterDegree", degree);
     return degree;
   }
