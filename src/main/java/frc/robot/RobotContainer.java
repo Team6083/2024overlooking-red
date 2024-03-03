@@ -119,7 +119,7 @@ public class RobotContainer {
 
     // mainController.a().toggleOnTrue(new RiseShooterManualCmd(riseShooter));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
-    // main.b().onTrue(new GyroResetCmd(drivebase) );
+    //mainController.back().onTrue(new GyroResetCmd(drivebase) );
     // mainController.a().toggleOnTrue(new ShootPIDCmd(shooter));
     // mainController.x().toggleOnTrue(new TransCmd(trans));
     // mainController.back().toggleOnTrue(new ReTransCmd(trans));
