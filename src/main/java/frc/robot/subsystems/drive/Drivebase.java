@@ -119,7 +119,7 @@ public class Drivebase extends SubsystemBase {
         });
 
     // reset the gyro
-    resetgyro();
+    resetGyro();
 
     // set the swerve speed equal 0
     drive(0, 0, 0, false);
@@ -161,7 +161,7 @@ public class Drivebase extends SubsystemBase {
     );
   }
 
-  public void resetgyro() {
+  public void resetGyro() {
     gyro.reset();
   }
 
