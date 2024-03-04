@@ -22,6 +22,7 @@ import frc.robot.commands.controllerCmds.SwerveJoystickCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterManualCmd;
 import frc.robot.commands.riseShooterCmds.RiseShooterPIDCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
+import frc.robot.commands.transportCmds.ShootTransportCmd;
 import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeWithTransportCmd;
 import frc.robot.commands.ReIntakeWithTransportCmd;
@@ -120,10 +121,11 @@ public class RobotContainer {
 
     // mainController.a().toggleOnTrue(new RiseShooterManualCmd(riseShooter));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
-    //mainController.back().onTrue(new GyroResetCmd(drivebase) );
-    //mainController.a().toggleOnTrue(new ShootPIDCmd(shooter,transport.isGetNote()));
+    //mainController.back().onTrue(new GyroResetCmd(drivebase));
+    //mainController.a().toggleOnTrue(new ShootPIDCmd(shooter));
     // mainController.x().toggleOnTrue(new TransCmd(trans));
     // mainController.back().toggleOnTrue(new ReTransCmd(trans));
+    //mainController.a().toggleOnTrue(new ShootTransportCmd(transport, false));
     // main.y().whileTrue(new HookManualCmd(hook));
     // mainController.pov(0).onTrue(new LinePIDCmd(hook));
     // mainController.pov(180).onTrue(new LinePIDCmd(hook));
