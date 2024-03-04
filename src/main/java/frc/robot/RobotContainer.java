@@ -43,7 +43,7 @@ public class RobotContainer {
   private final HookSubsystem hook;
   private final IntakeSubsystem intake;
   private final RiseShooterSubsystem riseShooter;
-  private final Drivebase drivebase;
+  // private final Drivebase drivebase;
   // private final HookSubsystem hook;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
   private final TagTrackingLimelight aprilTagTracking;
@@ -62,7 +62,7 @@ public class RobotContainer {
     transport = new TransportSubsystem(powerDistributionSubsystem);
     intake = new IntakeSubsystem(powerDistributionSubsystem);
     riseShooter = new RiseShooterSubsystem(powerDistributionSubsystem, aprilTagTracking);
-    drivebase = new Drivebase();
+    // drivebase = new Drivebase();
     hook = new HookSubsystem(powerDistributionSubsystem);
     // AprilTagTracking.init();
     configureBindings();
@@ -154,7 +154,8 @@ public class RobotContainer {
       if (isRed) {
       initial = (initial == "left" ? "right" : (initial == "right" ? "left" : "middle"));
     }
-    return Autos.auto(drivebase, autoNumber, initial);
+    // return Autos.auto(drivebase, autoNumber, initial);
+    return Commands.none();
   }
 
 }
