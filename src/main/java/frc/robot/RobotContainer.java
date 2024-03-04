@@ -51,7 +51,7 @@ import frc.robot.subsystems.drive.Drivebase;
 public class RobotContainer {
   private final CommandXboxController mainController;
   private final CommandGenericHID controlPanel;
-  // private final ShooterSubsystem shooter;
+  //private final ShooterSubsystem shooter;
   private final TransportSubsystem transport;
   private final HookSubsystem hook;
   private final IntakeSubsystem intake;
@@ -125,7 +125,7 @@ public class RobotContainer {
     //mainController.a().toggleOnTrue(new ShootPIDCmd(shooter));
     // mainController.x().toggleOnTrue(new TransCmd(trans));
     // mainController.back().toggleOnTrue(new ReTransCmd(trans));
-    //mainController.a().toggleOnTrue(new ShootTransportCmd(transport, false));
+    //mainController.a().toggleOnTrue(new ShootTransportCmd(transport, shooter.getRate()));
     // main.y().whileTrue(new HookManualCmd(hook));
     // mainController.pov(0).onTrue(new LinePIDCmd(hook));
     // mainController.pov(180).onTrue(new LinePIDCmd(hook));
