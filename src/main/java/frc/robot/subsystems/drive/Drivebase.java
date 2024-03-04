@@ -4,10 +4,12 @@
 
 package frc.robot.subsystems.drive;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -22,13 +24,16 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivebaseConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.NoteTrackingConstants;
 import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 import frc.robot.subsystems.NoteTracking.NoteTrackingPhotovision;
@@ -48,7 +53,10 @@ public class Drivebase extends SubsystemBase {
   private final SwerveDriveKinematics kinematics;
   private final SwerveDriveOdometry odometry;
 
-  private final AHRS gyro;
+  // private final AHRS gyro;
+  private final Pigeon2 gyro;
+
+  private final Field2d field2d;
 
   private double magnification;
 
@@ -100,7 +108,8 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putData("backLeft", backLeft);
     SmartDashboard.putData("backRight", backRight);
 
-    gyro = new AHRS(Port.kMXP);
+    // gyro = new AHRS(Port.kMXP);
+    gyro = new Pigeon2(30);
 
     kinematics = new SwerveDriveKinematics(
         frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
@@ -115,6 +124,7 @@ public class Drivebase extends SubsystemBase {
             backLeft.getPosition(),
             backRight.getPosition()
         });
+    field2d = new Field2d();
 
     // initialize magnification value
     magnification = 1.0;
@@ -374,7 +384,16 @@ public class Drivebase extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     updateOdometry();
+    field2d.setRobotPose(getPose2d());
     putDashboard();
+  }
+
+  public void resetPose2dAndEncoder() {
+    frontLeft.resetAllEncoder();
+    frontRight.resetAllEncoder();
+    backLeft.resetAllEncoder();
+    backRight.resetAllEncoder();
+    resetPose(new Pose2d(0, 0, new Rotation2d(0)));
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds() {
@@ -382,6 +401,15 @@ public class Drivebase extends SubsystemBase {
         frontRight.getState(),
         backLeft.getState(),
         backRight.getState());
+  }
+
+  public double calShooterAngleByPose2d() {
+    double x = getPose2d().getX();
+    double y = getPose2d().getY();
+    double distance = Math.sqrt(x * x + y * y);
+    double backAngleDegree = Math.toDegrees(Math.atan((FieldConstants.speakerBackTall - 32.464) / distance));
+    double frontAngleDegree = Math.toDegrees(Math.atan((FieldConstants.speakerFrontTall - 32.464) / distance));
+    return (backAngleDegree + frontAngleDegree) / 2;
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
@@ -425,7 +453,23 @@ public class Drivebase extends SubsystemBase {
     );
   }
 
-  public Command followAutoCommand(String autoName) {
-    return new PathPlannerAuto(autoName);
+  public Command pathFindingThenFollowPath(String pathName, double maxVelocity, double maxAcceleration,
+      double maxAngularVelocity, double maxAngularAcceleration, double rotationDelayDistance) {
+    PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+    PathConstraints constraints = new PathConstraints(
+        maxVelocity, maxAcceleration,
+        Units.degreesToRadians(maxAngularVelocity), Units.degreesToRadians(maxAngularAcceleration));
+    return AutoBuilder.pathfindThenFollowPath(path, constraints, rotationDelayDistance);
+  }
+
+  public Command pathFindingToPose(double x, double y, double degrees, double maxVelocity, double maxAcceleration,
+      double maxAngularVelocity, double maxAngularAcceleration, double goalEndVelocity,
+      double rotationDelayDistance) {
+
+    Pose2d targetPose = new Pose2d(x, y, Rotation2d.fromDegrees(degrees));
+    PathConstraints constraints = new PathConstraints(
+        maxVelocity, maxAcceleration,
+        Units.degreesToRadians(maxAngularVelocity), Units.degreesToRadians(maxAngularAcceleration));
+    return AutoBuilder.pathfindToPose(targetPose, constraints, goalEndVelocity, rotationDelayDistance);
   }
 }
