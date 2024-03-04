@@ -173,6 +173,28 @@ public class TagTrackingLimelight extends SubsystemBase {
         return degree;
     }
 
+    public double getTestSpeakerDegree() {
+        double pitch = getTy();
+        double yaw = getTx();
+        double y = 0.615 * (1 / Math.tan(Math.toRadians(pitch + 10.0)));
+        double x = y * Math.tan(Math.toRadians(yaw - 0.0))
+                - 0;
+        double distance = Math.sqrt(Math.pow(y, 2.0) + Math.pow(x, 2.0));
+        double degree = Math.toDegrees(Math.atan((1.385 / distance)));
+        return degree;
+    }
+
+    public double getTestTwoDegree(double nowDegree) {
+            if (getTv() == 1) {
+                double horDis =  Math.abs(getBT()[2])-0.21;
+                double degree = Math.toDegrees(Math.atan(1.6 / horDis));
+                return degree;
+            } else {
+                return nowDegree;
+            }
+        }
+
+
     public void putDashboard() {
         // SmartDashboard.putNumber("hasTarget", getTv());
         SmartDashboard.putNumber("LimelightX", getTx());
