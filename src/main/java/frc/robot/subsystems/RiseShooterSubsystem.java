@@ -70,11 +70,13 @@ public class RiseShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("rise_volt", modifiedRiseVolt);
   }
 
-  public double getAprilTagDegree() {
+  public double getAprilTagDegree(double nowSetpoint) {
     if (tagTrackingLimelight.getTv() == 1) {
-      return Math.toDegrees(Math.atan(RiseShooterConstants.kSpeakerHeight / tagTrackingLimelight.getBT()[2]));
+      double horDis = Math.abs(tagTrackingLimelight.getBT()[2]) - 0.21*Math.cos(Math.toRadians(getAngleDegree()));
+      double degree = Math.toDegrees(Math.atan((1.6+Math.sin(Math.toRadians(getAngleDegree())) / horDis)));
+      return degree;
     } else {
-      return getAngleDegree();
+      return nowSetpoint;
     }
 
   }
