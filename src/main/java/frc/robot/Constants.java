@@ -108,6 +108,7 @@ public final class Constants {
     }
 
     public static class DrivebaseConstants {
+        // drive motor channel
         public static final int kFrontLeftDriveMotorChannel = 11;
         public static final int kFrontRightDriveMotorChannel = 15;
         public static final int kBackLeftDriveMotorChannel = 13;
@@ -126,10 +127,10 @@ public final class Constants {
         public static final int kBackRightTurningEncoderChannel = 34;
 
         // can coder magnet offset value
-        public static final double kFrontLeftCanCoderMagOffset = -0.060303;
-        public static final double kFrontRightCanCoderMagOffset = -0.442871;
-        public static final double kBackLeftCanCoderMagOffset = 0.351562;
-        public static final double kBackRightCanCoderMagOffset = -0.333740;
+        public static final double kFrontLeftCanCoderMagOffset = -0.079590;
+        public static final double kFrontRightCanCoderMagOffset = -0.458984;
+        public static final double kBackLeftCanCoderMagOffset = 0.355225;
+        public static final double kBackRightCanCoderMagOffset = -0.333984;
 
         public static final double kMaxSpeed = 5;
         public static final double kMinSpeed = 0.25;
@@ -145,7 +146,6 @@ public final class Constants {
         public static final boolean kBackLeftDriveMotorInverted = true;
         public static final boolean kBackRightDriveMotorInverted = false;
 
-        public static final double kPNoteTrackingValue = 1.0;
         public static final boolean kGyroInverted = false; // wheather gyro is under the robot
         public static final double kGyroOffSet = 0;
 
@@ -155,14 +155,25 @@ public final class Constants {
 
     public static final class ModuleConstants {
         public static final double kWheelRadius = 0.046;
+
         public static final double kWheelDiameterMeters = 0.15;
-        public static final double kMaxModuleDriveVoltage = 12.0;
-        public static final double kClosedLoopRampRate = 0.25;// 1 second 1 unit
+
+        public static final double kMaxModuleDriveVoltage = 8.0;
+
+        public static final double kDriveClosedLoopRampRate = 0.8;// 1 second 1 unit
+        public static final double kTurningClosedLoopRampRate = 0.25;
+
         public static final double kDesireSpeedtoMotorVoltage = kMaxModuleDriveVoltage / DrivebaseConstants.kMaxSpeed;
-        public static final double kMaxModuleTuringVoltage = 7.0;
+
+        public static final double kMaxModuleTuringVoltage = 5.0;
+
         public static final double kMaxSpeedTurningDegree = 180.0;
+
         public static final double kPRotController = kMaxModuleTuringVoltage / kMaxSpeedTurningDegree;
+        public static final double kIRotController = 0.0;
         public static final double kDRotController = 0.0004;
+
+        public static final boolean kTurningMotorInverted = true;
     }
 
     public static final class PdConstants {

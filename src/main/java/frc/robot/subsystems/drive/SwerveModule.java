@@ -1,4 +1,3 @@
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -8,11 +7,11 @@ package frc.robot.subsystems.drive;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -37,47 +36,57 @@ public class SwerveModule extends SubsystemBase {
 
   public SwerveModule(int driveMotorChannel,
       int turningMotorChannel,
-      int turningEncoderChannelA, boolean driveInverted) {
+      int turningEncoderChannel, boolean driveInverted, double canCoderMagOffset) {
 
     driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
 
-    turningEncoder = new CANcoder(turningEncoderChannelA);
+    driveMotor.setInverted(driveInverted);
+    turningMotor.setInverted(ModuleConstants.kTurningMotorInverted);
+
+    turningEncoder = new CANcoder(turningEncoderChannel);
     CANcoderConfiguration turningEncoderConfiguration = new CANcoderConfiguration();
     turningEncoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    turningEncoderConfiguration.MagnetSensor.MagnetOffset = canCoderMagOffset;
     turningEncoder.getConfigurator().apply(turningEncoderConfiguration);
 
     driveEncoder = driveMotor.getEncoder();
 
-    driveMotor.setInverted(driveInverted);
+    rotController = new PIDController(ModuleConstants.kPRotController, ModuleConstants.kIRotController,
+        ModuleConstants.kDRotController);
+    rotController.enableContinuousInput(-180.0, 180.0);
+  }
 
-    turningMotor.setInverted(false);
+  public void init() {
+    configDriveMotor();
+    configTurningMotor();
+    configDriveEncoder();
+    resetAllEncoder();
+    clearSticklyFault();
+    stopModule();
+  }
 
+  public void configDriveMotor() {
     driveMotor.setSmartCurrentLimit(10, 80);
     driveMotor.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus0, 40);
     driveMotor.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus1, 150);
     driveMotor.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus2, 150);
-    driveMotor.setClosedLoopRampRate(ModuleConstants.kClosedLoopRampRate);
-    turningMotor.setSmartCurrentLimit(20);
-    driveMotor.setClosedLoopRampRate(0.25);
-
+    driveMotor.setClosedLoopRampRate(ModuleConstants.kDriveClosedLoopRampRate);
     driveMotor.setIdleMode(IdleMode.kBrake);
-    turningMotor.setIdleMode(IdleMode.kBrake);
-
-    rotController = new PIDController(ModuleConstants.kPRotController, 0, ModuleConstants.kDRotController);
-    rotController.enableContinuousInput(-180.0, 180.0);
-
-    configDriveMotor();
+    driveMotor.enableVoltageCompensation(ModuleConstants.kMaxModuleDriveVoltage);
     driveMotor.burnFlash();
-    turningMotor.burnFlash();
-    resetAllEncoder();
-    clearSticklyFault();
-    stopModule();
-    SmartDashboard.putNumber("degree", 0);
   }
 
-  public void configDriveMotor() {
-    driveMotor.enableVoltageCompensation(ModuleConstants.kMaxModuleDriveVoltage);
+  public void configTurningMotor() {
+    turningMotor.setSmartCurrentLimit(20);
+    turningMotor.setClosedLoopRampRate(ModuleConstants.kDriveClosedLoopRampRate);
+    turningMotor.setIdleMode(IdleMode.kBrake);
+    turningMotor.burnFlash();
+  }
+
+  public void configDriveEncoder() {
+    driveEncoder.setPositionConversionFactor(1.0 / 6.75 * 2.0 * Math.PI * ModuleConstants.kWheelRadius);
+    driveEncoder.setVelocityConversionFactor(1.0 / 60.0 / 6.75 * 2 * Math.PI * ModuleConstants.kWheelRadius);
   }
 
   public void resetAllEncoder() {
@@ -98,21 +107,22 @@ public class SwerveModule extends SubsystemBase {
   public SwerveModuleState getState() {
     return new SwerveModuleState(
         getDriveRate(), new Rotation2d(Math.toRadians(getRotation())));
+
   }
 
   // to get the drive distance
   public double getDriveDistance() {
-    return driveEncoder.getPosition() / 6.75 * 2 * Math.PI * ModuleConstants.kWheelRadius;
+    return driveEncoder.getPosition();
   }
 
   // calculate the rate of the drive
   public double getDriveRate() {
-    return driveEncoder.getVelocity() / 60.0 / 6.75 * 2 * Math.PI * ModuleConstants.kWheelRadius;
+    return driveEncoder.getVelocity();
   }
 
   // to get rotation of turning motor
   public double getRotation() {
-    return turningEncoder.getAbsolutePosition().getValue() * 360.0;
+    return turningEncoder.getAbsolutePosition().getValueAsDouble() * 360.0;
   }
 
   // to the get the postion by wpi function
@@ -135,15 +145,15 @@ public class SwerveModule extends SubsystemBase {
     } else {
       var moduleState = optimizeOutputVoltage(desiredState, getRotation());
       driveMotor.setVoltage(moduleState[0]);
-      turningMotor.setVoltage(-moduleState[1]);
-      SmartDashboard.putNumber(turningEncoder + "_voltage", moduleState[0]);
+      turningMotor.setVoltage(moduleState[1]);
+      SmartDashboard.putNumber("turningEncoder_ID" + turningEncoder.getDeviceID() + "_voltage", moduleState[0]);
     }
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber(turningEncoder + "_degree", getRotation());
+    SmartDashboard.putNumber("turningEncoder_ID" + turningEncoder.getDeviceID() + "_degree", getRotation());
   }
 
 }
