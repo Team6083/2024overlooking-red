@@ -16,6 +16,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.TargetCorner;
 
 import com.pathplanner.lib.util.GeometryUtil;
 
@@ -27,6 +28,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.proto.Geometry3D;
@@ -39,6 +41,7 @@ import frc.robot.Constants.VisionConstants;
 public class TagTrackingPhotonvision extends SubsystemBase {
     /** Creates a new VisionTrackingPhotovision. */
 
+    private double m_latestLatency;
     public AprilTagFieldLayout aprilTagFieldLayout;
 
     private final boolean tag = true;
@@ -114,6 +117,7 @@ public class TagTrackingPhotonvision extends SubsystemBase {
      */
     public PhotonTrackedTarget getBestTarget() {
         results = getPipelineResult();
+        m_latestLatency = results.getLatencyMillis() / 1000.;
         PhotonTrackedTarget target = null;
         if (results.hasTargets()) {
             target = results.getBestTarget();
@@ -135,7 +139,8 @@ public class TagTrackingPhotonvision extends SubsystemBase {
 
     /**
      * Returns a list of 2 demesional tag poses
-     * @return {@link}
+     * 
+     * @return {@link List}<{@link Pose2d}> poses
      */
     public List<Pose2d> getTags() {
         List<Pose2d> poses = new ArrayList<Pose2d>();
@@ -156,46 +161,6 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         return poses;
     }
 
-    public double[] getTagInfo() {
-        double[] tagInfo = new double[2];
-        PhotonTrackedTarget target = getBestTarget();
-        ID = target.getFiducialId();
-        distance = PhotonUtils.calculateDistanceToTargetMeters(
-                cameraHeight, // height
-                cameraHeight * (1 / Math.tan(Math.toRadians(target.getPitch() + pitchDegree))),
-                Math.toRadians(target.getPitch()),
-                Units.degreesToRadians(results.getBestTarget().getPitch()));
-        tagInfo[0] = results.hasTargets() ? ID : 0;
-        tagInfo[1] = results.hasTargets() ? distance : 0;
-        return tagInfo;
-    }
-
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose3d prevEstimatedRobotPose) {
-        photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-        return photonPoseEstimator.update();
-    }
-
-    // public Pose2d getTag() {
-    // Pose2d pose;
-
-    // if (!tagCamera.isConnected()) {
-    // System.out.println("Camera not connected");
-    // }
-
-    // PhotonTrackedTarget targets = getBestTarget();
-
-    // while (targets != null) {
-    // // this calc assumes pitch angle is positive UP, so flip the camera's pitch
-    // pitch = targets.getPitch();
-    // yaw = targets.getYaw();
-    // y = cameraHeight * (1 / Math.tan(Math.toRadians(pitch - pitchDegree)));
-    // x = y * Math.tan(Math.toRadians(yaw - yawDegree)) + cameraWeight;
-    // pose = new Pose2d(x, y, new Rotation2d(0));
-    // }
-    // pose = null;
-    // return pose;
-    // }
-
     /**
      * Return the last tag of the getTargets() list
      * 
@@ -212,6 +177,59 @@ public class TagTrackingPhotonvision extends SubsystemBase {
      */
     public Pose2d getLastPose() {
         return getTags().get(0);
+    }
+
+    public double[] getTagInfo() {
+        double[] tagInfo = new double[2];
+        PhotonTrackedTarget target = getBestTarget();
+        ID = target.getFiducialId();
+        distance = PhotonUtils.calculateDistanceToTargetMeters(
+                cameraHeight, // height
+                cameraHeight * (1 / Math.tan(Math.toRadians(target.getPitch() + pitchDegree))),
+                Math.toRadians(target.getPitch()),
+                Units.degreesToRadians(results.getBestTarget().getPitch()));
+        tagInfo[0] = results.hasTargets() ? ID : 0;
+        tagInfo[1] = results.hasTargets() ? distance : 0;
+        return tagInfo;
+    }
+
+    public double[] getTagInfo2() {
+        double[] tagInfo = new double[5];
+        PhotonTrackedTarget target = getBestTarget();
+        ID = target.getFiducialId();
+        distance = PhotonUtils.calculateDistanceToTargetMeters(
+                cameraHeight, // height
+                cameraHeight * (1 / Math.tan(Math.toRadians(target.getPitch() + pitchDegree))),
+                Math.toRadians(target.getPitch()),
+                Units.degreesToRadians(results.getBestTarget().getPitch()));
+        double yaw = target.getYaw();
+        double pitch = target.getPitch();
+        double area = target.getArea();
+        // Transform3d pose = target.getBestCameraToTarget();
+        // List<TargetCorner> corners = target.getDetectedCorners();
+        tagInfo[0] = results.hasTargets() ? ID : 0;
+        tagInfo[1] = results.hasTargets() ? distance : 0;
+        tagInfo[2] = hasTarget() ? yaw : 0;
+        tagInfo[3] = hasTarget() ? pitch : 0;
+        tagInfo[4] = hasTarget() ? area : 0;
+        return tagInfo;
+    }
+
+    /**
+     * Get the transform that maps camera space (X = forward, Y = left, Z = up) to
+     * object/fiducial tag space (X forward, Y left, Z up) with the lowest
+     * reprojection error
+     * 
+     * @return {@link Transform3d} best cam to tag
+     */
+    public Transform3d getTagTransform3d() {
+        Transform3d pose = getLastTag().getBestCameraToTarget();
+        return pose;
+    }
+
+    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose3d prevEstimatedRobotPose) {
+        photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+        return photonPoseEstimator.update();
     }
 
     public int getTagID() {
@@ -248,6 +266,70 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         return distance;
     }
 
+    public Rotation2d getYaw(Pose2d robotPose, Pose2d targetPose) {
+        Rotation2d targetYaw = PhotonUtils.getYawToPose(robotPose, targetPose);
+        return targetYaw;
+    }
+
+    public Pose2d getLatestEstimatedRobotPose() {
+        PhotonTrackedTarget target = getBestTarget();
+
+        if (target != null) {
+            Transform3d cameraToTarget = target.getBestCameraToTarget();
+
+            Optional<Pose3d> tagPose = m_layout.getTagPose(target.getFiducialId());
+            // Use Optional so we don't need to do null check
+
+            Transform3d camToRobot = new Transform3d();
+
+            if (tagPose.isPresent()) {
+                Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(cameraToTarget, tagPose.get(), camToRobot);
+                return robotPose.toPose2d();
+            }
+        }
+        return new Pose2d();
+    }
+
+    /**
+     * Gets the pose of a target.
+     * 
+     * @param robotPose The current robot pose.
+     * @param offset    The offset of the desired pose from the target. Positive is
+     *                  backwards (X) and right (Y).
+     * @return The pose of the specified offset from the target.
+     */
+    public Pose2d getTargetPose(Pose2d robotPose, Transform3d offset) {
+        PhotonTrackedTarget target = getBestTarget();
+
+        if (target != null) {
+            Transform3d cameraToTarget = target.getBestCameraToTarget();
+
+            Transform3d targetOffset = cameraToTarget.plus(offset);
+
+            Pose3d pose = new Pose3d(robotPose);
+            // Constructs a 3D pose from a 2D pose in the X-Y plane
+
+            Pose3d scoringPose = pose.plus(targetOffset);
+
+            // WARNING: The following code is scuffed. Please proceed with caution.
+            Pose2d newPose = scoringPose.toPose2d();
+
+            Rotation2d newRotation = Rotation2d.fromDegrees(newPose.getRotation().getDegrees() - 180.);
+
+            Pose2d finalPose = new Pose2d(newPose.getTranslation(), newRotation).plus(
+                    new Transform2d(
+                            VisionConstants.krobottocam.getTranslation().toTranslation2d(),
+                            VisionConstants.krobottocam.getRotation().toRotation2d()));
+            return finalPose;
+        }
+
+        return robotPose;
+    }
+
+    public double getLatestLatency() {
+        return m_latestLatency;
+    }
+
     public void clearTagSolutions(Field2d field) {
         if (field == null)
             return;
@@ -281,7 +363,7 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         }
     }
 
-        /**
+    /**
      * Gets the best tag's pose in 2 dimension
      * 
      * @return best tagPose
