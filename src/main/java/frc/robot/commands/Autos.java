@@ -200,8 +200,6 @@ public final class Autos {
               .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
       }
-
-      pre = cur;
     }
 
     return runAutoCommand;
