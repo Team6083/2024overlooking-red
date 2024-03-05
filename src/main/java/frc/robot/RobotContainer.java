@@ -154,7 +154,7 @@ public class RobotContainer {
       if (isRed) {
       initial = (initial == "left" ? "right" : (initial == "right" ? "left" : "middle"));
     }
-    // return Autos.auto(drivebase, autoNumber, initial);
+    // return Autos.auto(drivebase, riseShooter, shooter, transport, intake, autoNumber, initial);
     return Commands.none();
   }
 

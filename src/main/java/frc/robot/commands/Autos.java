@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.autoCmds.AutoAimAndShootCmd;
+import frc.robot.commands.autoCmds.AutoIntakeCmd;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
@@ -21,11 +23,13 @@ public final class Autos {
   }
 
   public static Command auto(Drivebase drivebase, RiseShooterSubsystem riseShooterSubsystem,
-      ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, String autoNumber, String initial) {
+      ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem,
+      String autoNumber, String initial) {
     int length = autoNumber.length();
     Command runAutoCommand = new InstantCommand();
     // Command runAutoCommand = new ShootCmd();
     char pre = '0';
+    boolean firstTime = true;
 
     switch (initial) {
       case "left":
@@ -142,9 +146,15 @@ public final class Autos {
       }
 
       if (!drivebase.hasTargets()) {
-        continue;
+        if (firstTime) {
+          firstTime = false;
+          i--;
+          continue;
+        }
+        pre = cur;
+        firstTime = true;
       }
-      // runAutoCommand.andThen(new IntakeCmd());
+      runAutoCommand.andThen(new AutoIntakeCmd(drivebase, transportSubsystem, intakeSubsystem));
 
       switch (cur) {
         case '1':

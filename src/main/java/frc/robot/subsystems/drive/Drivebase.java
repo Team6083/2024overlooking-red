@@ -168,7 +168,7 @@ public class Drivebase extends SubsystemBase {
                                                                                                             // PID
                                                                                                             // constants
             DrivebaseConstants.kMaxSpeed, // Max module speed, in m/s
-            AutoConstants.drivebaseRadius, // Drive base radius in meters. Distance from robot center to furthest
+            AutoConstants.kDrivebaseRadius, // Drive base radius in meters. Distance from robot center to furthest
                                            // module.
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
@@ -467,7 +467,7 @@ public class Drivebase extends SubsystemBase {
                                                                                                             // PID
                                                                                                             // constants
             DrivebaseConstants.kMaxSpeed, // Max module speed, in m/s
-            AutoConstants.drivebaseRadius, // Drive base radius in meters. Distance from robot center to furthest
+            AutoConstants.kDrivebaseRadius, // Drive base radius in meters. Distance from robot center to furthest
                                            // module.
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),

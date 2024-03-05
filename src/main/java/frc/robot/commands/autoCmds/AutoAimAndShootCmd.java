@@ -24,8 +24,8 @@ public class AutoAimAndShootCmd extends SequentialCommandGroup {
   public AutoAimAndShootCmd(Drivebase drivebase, RiseShooterSubsystem riseShooterSubsystem,
       ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem) {
 
-    addCommands(new FaceTag(drivebase).withTimeout(0.5),
-        new RiseShooterAutoControlCmd(riseShooterSubsystem).withTimeout(0.1),
+    addCommands(
+        Commands.parallel(new FaceTag(drivebase), new RiseShooterAutoControlCmd(riseShooterSubsystem)).withTimeout(0.5),
         Commands.deadline(new WaitCommand(1), new ShootPIDCmd(shooterSubsystem),
             new ShootTransportCmd(transportSubsystem, shooterSubsystem.isEnoughRate())
                 .onlyWhile(shooterSubsystem::isEnoughRate)));
