@@ -28,6 +28,12 @@ public class NoteTrackingPhotovision {
         noteCamera.setDriverMode(driveMode);
     }
 
+    /**
+     * Return a list of 2 dimensional note pose. X axis by bot's front, Y axis by
+     * bot's sideways. Pitch is up and down angle. Yaw is right and left.
+     * 
+     * @return {@link Pose2d} note pose
+     */
     public List<Pose2d> getNotes() {
         List<Pose2d> poses = new ArrayList<Pose2d>();
 
