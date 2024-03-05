@@ -25,6 +25,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -53,8 +54,10 @@ public class Drivebase extends SubsystemBase {
   private final SwerveDriveKinematics kinematics;
   private final SwerveDriveOdometry odometry;
 
-  // private final AHRS gyro;
+  // private final AHRS gyro2;
   private final Pigeon2 gyro;
+  // private final ADXRS450_Gyro gyro;
+
 
   private final Field2d field2d;
 
@@ -117,6 +120,7 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putData("backRight", backRight);
 
     // gyro = new AHRS(Port.kMXP);
+    // gyro = new ADXRS450_Gyro();
     gyro = new Pigeon2(30);
 
     kinematics = new SwerveDriveKinematics(
