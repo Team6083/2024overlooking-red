@@ -11,6 +11,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.autoCmds.AutoAimAndShootCmd;
 import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TransportSubsystem;
 import frc.robot.subsystems.drive.Drivebase;
 
 public final class Autos {
@@ -19,7 +20,8 @@ public final class Autos {
     return Commands.sequence();
   }
 
-  public static Command auto(Drivebase drivebase, RiseShooterSubsystem riseShooterSubsystem, ShooterSubsystem shooterSubsystem, String autoNumber, String initial) {
+  public static Command auto(Drivebase drivebase, RiseShooterSubsystem riseShooterSubsystem,
+      ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, String autoNumber, String initial) {
     int length = autoNumber.length();
     Command runAutoCommand = new InstantCommand();
     // Command runAutoCommand = new ShootCmd();
@@ -139,46 +141,55 @@ public final class Autos {
         }
       }
 
-      if (!drivebase.get)
-    //   runAutoCommand.andThen(new IntakeCmd());
+      if (!drivebase.hasTargets()) {
+        continue;
+      }
+      // runAutoCommand.andThen(new IntakeCmd());
 
       switch (cur) {
         case '1':
-          runAutoCommand.andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem));
+          runAutoCommand
+              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '2':
-          runAutoCommand.andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem));
+          runAutoCommand
+              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '3':
-          runAutoCommand.andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem));
+          runAutoCommand
+              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '4':
           runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.topRelayToRTS,
               AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
-              AutoConstants.kMaxAngularAcceleration, 0.0)).andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem));
+              AutoConstants.kMaxAngularAcceleration, 0.0))
+              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '5':
           runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.topRelayToRTS,
               AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
-              AutoConstants.kMaxAngularAcceleration, 0.0)).andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem));
+              AutoConstants.kMaxAngularAcceleration, 0.0))
+              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '6':
           runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.topRelayToRTS,
               AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
-              AutoConstants.kMaxAngularAcceleration, 0.0)).andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem));
+              AutoConstants.kMaxAngularAcceleration, 0.0))
+              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '7':
           runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.bottomRelayToRBS,
               AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
-              AutoConstants.kMaxAngularAcceleration, 0.0)).andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem));
+              AutoConstants.kMaxAngularAcceleration, 0.0))
+              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '8':
           runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.bottomRelayToRBS,
               AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
-              AutoConstants.kMaxAngularAcceleration, 0.0)).andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem));
+              AutoConstants.kMaxAngularAcceleration, 0.0))
+              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
       }
-      
 
       pre = cur;
     }

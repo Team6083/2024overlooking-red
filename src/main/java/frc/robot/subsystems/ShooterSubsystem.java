@@ -114,7 +114,7 @@ public class ShooterSubsystem extends SubsystemBase {
     downMotor.set(VictorSPXControlMode.PercentOutput, power);
   }
 
-    public boolean getRate(){
+    public Boolean isEnoughRate(){
     return getUpEncoderRate() >= ShooterConstants.kDeadbandRate && getDownEncoderRate() >= ShooterConstants.kDeadbandRate;
   }
 

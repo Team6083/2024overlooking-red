@@ -28,6 +28,10 @@ public class NoteTrackingPhotovision {
         noteCamera.setDriverMode(driveMode);
     }
 
+    public boolean hasTargets() {
+        return noteCamera.getLatestResult().hasTargets();
+    }
+
     /**
      * Return a list of 2 dimensional note pose. X axis by bot's front, Y axis by
      * bot's sideways. Pitch is up and down angle. Yaw is right and left.

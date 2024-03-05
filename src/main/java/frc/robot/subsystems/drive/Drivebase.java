@@ -236,6 +236,10 @@ public class Drivebase extends SubsystemBase {
     return magnification;
   }
 
+  public boolean hasTargets() {
+    return note.hasTargets();
+  }
+
   public double facingNoteRot(double currentRot) {
     var target = note.getNotes();
     if (target.size() > 0) {
