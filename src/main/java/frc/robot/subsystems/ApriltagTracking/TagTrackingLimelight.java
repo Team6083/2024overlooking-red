@@ -158,7 +158,7 @@ public class TagTrackingLimelight extends SubsystemBase {
      * @return bot to tag horizontal distance (metres)
      */
     public double getHorizontalDis3() {
-        double angle = getBT()[4];
+        double angle = getBT()[4]; // roll 
         double angle_Radian = angle * (3.14159 / 180.0);
         double horDis = Math.abs(getBT()[2]) / Math.cos(angle_Radian);
         return horDis;
