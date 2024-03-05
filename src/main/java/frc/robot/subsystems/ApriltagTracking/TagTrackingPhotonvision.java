@@ -36,7 +36,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
-public class TagTrackingPhotovision extends SubsystemBase {
+public class TagTrackingPhotonvision extends SubsystemBase {
     /** Creates a new VisionTrackingPhotovision. */
 
     public AprilTagFieldLayout aprilTagFieldLayout;
@@ -68,7 +68,7 @@ public class TagTrackingPhotovision extends SubsystemBase {
     public double y;
     public double ID;
 
-    public TagTrackingPhotovision() {
+    public TagTrackingPhotonvision() {
         tagCamera = new PhotonCamera(cameraName);
         tagCamera.setPipelineIndex(0);
         tagCamera.setDriverMode(false);
@@ -130,15 +130,6 @@ public class TagTrackingPhotovision extends SubsystemBase {
     public List<PhotonTrackedTarget> getTargets() {
         // results = getPipelineResult();
         List<PhotonTrackedTarget> tags = getPipelineResult().getTargets();
-
-        // for (PhotonTrackedTarget trackedTags : tags) {
-        // // this calc assumes pitch angle is positive UP, so flip the camera's pitch
-        // pitch = trackedTags.getPitch();
-        // yaw = trackedTags.getYaw();
-        // y = cameraHeight * (1 / Math.tan(Math.toRadians(pitch + pitchDegree)));
-        // x = y * Math.tan(Math.toRadians(yaw - yawDegree)) + cameraWeight;
-        // // poses.add(new Pose2d(x, y, new Rotation2d(0)));
-        // }
         return tags;
     }
 
