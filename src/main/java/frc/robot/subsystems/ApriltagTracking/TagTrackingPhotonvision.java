@@ -266,7 +266,7 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         return distance;
     }
 
-    public Rotation2d getYaw(Pose2d robotPose, Pose2d targetPose) {
+    public Rotation2d getYawToPoseRotation2d(Pose2d robotPose, Pose2d targetPose) {
         Rotation2d targetYaw = PhotonUtils.getYawToPose(robotPose, targetPose);
         return targetYaw;
     }
@@ -379,8 +379,11 @@ public class TagTrackingPhotonvision extends SubsystemBase {
     }
 
     public void putDashboard() {
-        SmartDashboard.putNumber("distance", getTagInfo()[1]);
-        SmartDashboard.putNumber("ID", getTagInfo()[0]);
+        SmartDashboard.putNumber("range", getTagInfo2()[1]);
+        SmartDashboard.putNumber("ID", getTagInfo2()[0]);
+        SmartDashboard.putNumber("yaw", getTagInfo2()[2]);
+        SmartDashboard.putNumber("pitch", getTagInfo2()[3]);
+        SmartDashboard.putNumber("area", getTagInfo2()[4]);
     }
 
     @Override

@@ -396,7 +396,7 @@ public class Drivebase extends SubsystemBase {
    * Photonvision version of face target.
    */
   public void facePhoton() {
-    Rotation2d offset = photonTracking.getYaw(getPose2d(), photonTracking.getTagPose2d());
+    Rotation2d offset = photonTracking.getYawToPoseRotation2d(getPose2d(), photonTracking.getTagPose2d());
     double angle = offset.getDegrees();
 
     boolean hasTarget = photonTracking.hasTarget();
@@ -418,6 +418,7 @@ public class Drivebase extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     updateOdometry();
+    photonTracking.putDashboard();
     field2d.setRobotPose(getPose2d());
     putDashboard();
   }
