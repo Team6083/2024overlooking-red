@@ -364,8 +364,9 @@ public class TagTrackingPhotonvision extends SubsystemBase {
     }
 
     /**
-     * Gets the best tag's pose in 2 dimension
+     * Get the pose of the desired tag in 2 dimension
      * 
+     * @param index tag ID
      * @return best tagPose
      */
     public Pose2d getDesiredTagPose(int index) {

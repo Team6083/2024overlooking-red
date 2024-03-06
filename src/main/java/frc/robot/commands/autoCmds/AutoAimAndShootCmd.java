@@ -7,7 +7,7 @@ package frc.robot.commands.autoCmds;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.ApriltagCmd.FaceTag;
+import frc.robot.commands.apriltagCmd.FaceTag;
 import frc.robot.commands.riseShooterCmds.RiseShooterAutoControlCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.transportCmds.ShootTransportCmd;
