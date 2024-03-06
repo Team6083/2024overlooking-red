@@ -350,6 +350,12 @@ public class Drivebase extends SubsystemBase {
     drive(xSpeed, 0, 0, true);
   }
 
+  public void setRedSpeakerPipeline() {
+    aprilTagTracking.setCamMode(1);
+    aprilTagTracking.setLedMode(1);
+    aprilTagTracking.setPipeline(4);
+  }
+
   public void switchTrackCondition() {
     trackingCondition = !trackingCondition;
   }

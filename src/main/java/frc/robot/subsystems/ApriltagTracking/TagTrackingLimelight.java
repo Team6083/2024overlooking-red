@@ -38,6 +38,14 @@ public class TagTrackingLimelight extends SubsystemBase {
         table = NetworkTableInstance.getDefault().getTable("limelight");
     }
 
+    public void setCamMode(int camMode) {
+        table.getEntry("camMode").setNumber(camMode);
+    }
+
+    public void setLedMode(int ledMode) {
+        table.getEntry("ledMode").setNumber(ledMode);
+    }
+
     public double getMyDistance() {
         // readValue();
         double target_height = getBT()[1]; // botpose in targetspace y
@@ -155,10 +163,11 @@ public class TagTrackingLimelight extends SubsystemBase {
 
     /**
      * Returns bot to tag horizontal distance in metres
+     * 
      * @return bot to tag horizontal distance (metres)
      */
     public double getHorizontalDis3() {
-        double angle = getBT()[4]; // roll 
+        double angle = getBT()[4]; // roll
         double angle_Radian = angle * (3.14159 / 180.0);
         double horDis = Math.abs(getBT()[2]) / Math.cos(angle_Radian);
         return horDis;
@@ -166,6 +175,7 @@ public class TagTrackingLimelight extends SubsystemBase {
 
     /**
      * Returns bot to speaker angle in degree
+     * 
      * @return bot to speaker angle (degree)
      */
     public double getSpeakerDegree() {
@@ -185,15 +195,27 @@ public class TagTrackingLimelight extends SubsystemBase {
     }
 
     public double getTestTwoDegree(double nowDegree) {
-            if (getTv() == 1) {
-                double horDis =  Math.abs(getBT()[2])-0.21;
-                double degree = Math.toDegrees(Math.atan(1.6 / horDis));
-                return degree;
-            } else {
-                return nowDegree;
-            }
+        if (getTv() == 1) {
+            double horDis = Math.abs(getBT()[2]) - 0.21;
+            double degree = Math.toDegrees(Math.atan(1.6 / horDis));
+            return degree;
+        } else {
+            return nowDegree;
         }
+    }
 
+    /**
+     * Set priority tag iD
+     * 
+     * @param priorityID the priority tag ID (int)
+     */
+    public void setPriorityInViewTag(int priorityID) {
+        table.getEntry("priorityid").setNumber(priorityID);
+    }
+
+    public void setPipeline(int pipeline) {
+        table.getEntry("pipeline").setNumber(pipeline);
+    }
 
     public void putDashboard() {
         // SmartDashboard.putNumber("hasTarget", getTv());
