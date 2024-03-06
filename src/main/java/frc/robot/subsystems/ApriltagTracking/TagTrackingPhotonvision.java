@@ -47,16 +47,16 @@ public class TagTrackingPhotonvision extends SubsystemBase {
     private final boolean tag = true;
     private final String cameraName = "Microsoft_LifeCam_HD-3000";
     private final PhotonCamera tagCamera;
-    private final Transform3d tagCamPosition = new Transform3d(
-            new Translation3d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0), Units.inchesToMeters(0.0)),
-            new Rotation3d(Math.toRadians(0.0), Math.toRadians(0.0), Math.toRadians(0.0)));
+    // private final Transform3d tagCamPosition = new Transform3d(
+    // new Translation3d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0),
+    // Units.inchesToMeters(0.0)),
+    // new Rotation3d(Math.toRadians(0.0), Math.toRadians(0.0),
+    // Math.toRadians(0.0)));
 
     public final double cameraHeight = 0.36;
-    public final double cameraWeight = 0.0;
+    public final double cameraWeight = 0.0; // I'm still quite confused abt the meaning of having this
     public final double pitchDegree = 15; // 90 - cam_offset
     public final double yawDegree = 0;
-
-    public boolean hasTarget;
 
     public PhotonPipelineResult results;
     public Transform3d robotToCam = VisionConstants.krobottocam;
@@ -70,12 +70,12 @@ public class TagTrackingPhotonvision extends SubsystemBase {
     public double x;
     public double y;
     public double ID;
+    public boolean hasTarget;
 
     public TagTrackingPhotonvision() {
         tagCamera = new PhotonCamera(cameraName);
         tagCamera.setPipelineIndex(0);
         tagCamera.setDriverMode(false);
-        // Cam mounted facing forward, half a metre forward of center, half a meter up
         // Construct PhotonPoseEstimator
         photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
                 PoseStrategy.CLOSEST_TO_REFERENCE_POSE, tagCamera, robotToCam);
@@ -83,11 +83,8 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         try {
             m_layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
         } catch (IOException err) {
-            // IOException is the base class for exceptions thrown while accessing
-            // information using streams, files and directories
             throw new RuntimeException();
         }
-
     }
 
     /**
@@ -101,7 +98,7 @@ public class TagTrackingPhotonvision extends SubsystemBase {
     }
 
     /**
-     * If tag's detected
+     * Whether the tag's detected
      * 
      * @return hasTarget
      */
@@ -122,7 +119,6 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         if (results.hasTargets()) {
             target = results.getBestTarget();
         }
-
         return target;
     }
 
@@ -179,20 +175,6 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         return getTags().get(0);
     }
 
-    public double[] getTagInfo() {
-        double[] tagInfo = new double[2];
-        PhotonTrackedTarget target = getBestTarget();
-        ID = target.getFiducialId();
-        distance = PhotonUtils.calculateDistanceToTargetMeters(
-                cameraHeight, // height
-                cameraHeight * (1 / Math.tan(Math.toRadians(target.getPitch() + pitchDegree))),
-                Math.toRadians(target.getPitch()),
-                Units.degreesToRadians(results.getBestTarget().getPitch()));
-        tagInfo[0] = results.hasTargets() ? ID : 0;
-        tagInfo[1] = results.hasTargets() ? distance : 0;
-        return tagInfo;
-    }
-
     public double[] getTagInfo2() {
         double[] tagInfo = new double[5];
         PhotonTrackedTarget target = getBestTarget();
@@ -207,8 +189,8 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         double area = target.getArea();
         // Transform3d pose = target.getBestCameraToTarget();
         // List<TargetCorner> corners = target.getDetectedCorners();
-        tagInfo[0] = results.hasTargets() ? ID : 0;
-        tagInfo[1] = results.hasTargets() ? distance : 0;
+        tagInfo[0] = hasTarget() ? ID : 0;
+        tagInfo[1] = hasTarget() ? distance : 0;
         tagInfo[2] = hasTarget() ? yaw : 0;
         tagInfo[3] = hasTarget() ? pitch : 0;
         tagInfo[4] = hasTarget() ? area : 0;
@@ -224,6 +206,18 @@ public class TagTrackingPhotonvision extends SubsystemBase {
      */
     public Transform3d getTagTransform3d() {
         Transform3d pose = getLastTag().getBestCameraToTarget();
+        return pose;
+    }
+
+    /**
+     * Get best transform that maps camera space (X = forward, Y = left, Z = up) to
+     * object/fiducial tag space (X forward, Y left, Z up) with the lowest
+     * reprojection error
+     * 
+     * @return {@link Transform3d} best cam to tag
+     */
+    public Transform3d getBestTagTransform3d() {
+        Transform3d pose = getBestTarget().getBestCameraToTarget();
         return pose;
     }
 
@@ -244,7 +238,6 @@ public class TagTrackingPhotonvision extends SubsystemBase {
 
     public Pose3d getBotPose() {
         if (getBestTarget() != null) {
-            Rotation3d rotation3d = new Rotation3d(0., 0., 0.);
             Transform3d camToTag = getBestTarget().getBestCameraToTarget();
             Optional<Pose3d> tag_Pose3d = m_layout.getTagPose(getTagID());
             if (tag_Pose3d.isPresent()) {
@@ -255,7 +248,8 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         return new Pose3d();
     }
 
-    // not yet done
+    // well any way let's just leave it like that ^^
+    // repeat. same as getTagInfo()[1]
     public double getDistance() {
         // List<Double> distances = new ArrayList<Double>();
         distance = PhotonUtils.calculateDistanceToTargetMeters(
@@ -266,18 +260,19 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         return distance;
     }
 
+    // used in facePhoton() method in drivebase
     public Rotation2d getYawToPoseRotation2d(Pose2d robotPose, Pose2d targetPose) {
         Rotation2d targetYaw = PhotonUtils.getYawToPose(robotPose, targetPose);
         return targetYaw;
     }
 
+    // 
     public Pose2d getLatestEstimatedRobotPose() {
-        PhotonTrackedTarget target = getBestTarget();
+        
+        if (hasTarget()) {
+            Transform3d cameraToTarget = getBestTarget().getBestCameraToTarget();
 
-        if (target != null) {
-            Transform3d cameraToTarget = target.getBestCameraToTarget();
-
-            Optional<Pose3d> tagPose = m_layout.getTagPose(target.getFiducialId());
+            Optional<Pose3d> tagPose = m_layout.getTagPose(getBestTarget().getFiducialId());
             // Use Optional so we don't need to do null check
 
             Transform3d camToRobot = new Transform3d();
