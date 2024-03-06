@@ -273,6 +273,15 @@ public class Drivebase extends SubsystemBase {
     return speed;
   }
 
+  public boolean hasFaceTarget() {
+    double offset = aprilTagTracking.getTx();
+    double hasTarget = aprilTagTracking.getTv();
+    if (hasTarget == 0) {
+      return false;
+    }
+    return Math.abs(offset) < 4;
+  }
+
   public void faceTarget() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
