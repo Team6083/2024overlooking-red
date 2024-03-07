@@ -64,6 +64,7 @@ public class RobotContainer {
     riseShooter = new RiseShooterSubsystem(powerDistributionSubsystem, aprilTagTracking);
     // drivebase = new Drivebase();
     hook = new HookSubsystem(powerDistributionSubsystem);
+
     // AprilTagTracking.init();
     configureBindings();
 
@@ -124,6 +125,7 @@ public class RobotContainer {
     mainController.rightTrigger().whileTrue(new HookUpRightManualCmd(hook));
     mainController.pov(90).whileTrue(new LineUpManualCmd(hook));
     mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
+   
 
     // mainController.a().toggleOnTrue(new RiseShooterManualCmd(riseShooter));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
