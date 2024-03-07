@@ -25,12 +25,12 @@ import frc.robot.commands.hookCmds.PIDControl.HookRightMotorDownPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.HookRightMotorUpPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.LineDownPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.LineUpPIDCmd;
-import frc.robot.commands.riseShooterCmds.RiseShooterPIDCmd;
+import frc.robot.commands.rotateShooterCmds.RotateShooterPIDCmd;
 // import frc.robot.subsystems.AprilTagTracking;
 import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PowerDistributionSubsystem;
-import frc.robot.subsystems.RiseShooterSubsystem;
+import frc.robot.subsystems.RotateShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
 import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
@@ -44,7 +44,7 @@ public class RobotContainer {
   private final TransportSubsystem transport;
   private final HookSubsystem hook;
   private final IntakeSubsystem intake;
-  private final RiseShooterSubsystem riseShooter;
+  private final RotateShooterSubsystem riseShooter;
   private final Drivebase drivebase;
   // private final HookSubsystem hook;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
@@ -64,7 +64,7 @@ public class RobotContainer {
     shooter = new ShooterSubsystem(powerDistributionSubsystem);
     transport = new TransportSubsystem(powerDistributionSubsystem);
     intake = new IntakeSubsystem(powerDistributionSubsystem);
-    riseShooter = new RiseShooterSubsystem(powerDistributionSubsystem, aprilTagTracking);
+    riseShooter = new RotateShooterSubsystem(powerDistributionSubsystem, aprilTagTracking);
     drivebase = new Drivebase(noteTracking, aprilTagTracking);
     hook = new HookSubsystem(powerDistributionSubsystem);
 
@@ -115,7 +115,7 @@ public class RobotContainer {
     // trans.isGetNote()).alongWith(new
     // IntakeTransCmd(trans)));
     riseShooter.setDefaultCommand(
-        new RiseShooterPIDCmd(riseShooter, mainController.getLeftTriggerAxis(), mainController.getRightTriggerAxis()));
+        new RotateShooterPIDCmd(riseShooter, mainController.getLeftTriggerAxis(), mainController.getRightTriggerAxis()));
     mainController.leftBumper().whileTrue(new HookLeftMotorUpPIDCmd(hook));
     mainController.leftTrigger().whileTrue(new HookLeftMotorDownPIDCmd(hook));
     mainController.rightBumper().whileTrue(new HookRightMotorUpPIDCmd(hook));

@@ -24,7 +24,7 @@ import frc.robot.commands.autoCmds.AutoShootCmd;
 // import frc.robot.commands.riseShooterCmds.RiseShooterAutoControlCmd;
 // import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.RiseShooterSubsystem;
+import frc.robot.subsystems.RotateShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
 import frc.robot.subsystems.drive.Drivebase;
@@ -35,7 +35,7 @@ public final class Autos {
     return Commands.sequence();
   }
 
-  public static Command auto(Drivebase drivebase, RiseShooterSubsystem riseShooterSubsystem,
+  public static Command auto(Drivebase drivebase, RotateShooterSubsystem riseShooterSubsystem,
       ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem,
       String autoNumber, String initial) {
     int length = autoNumber.length();
@@ -219,7 +219,7 @@ public final class Autos {
     return runAutoCommand;
   }
 
-  public static Command autoOptimize(Drivebase drivebase, RiseShooterSubsystem riseShooterSubsystem,
+  public static Command autoOptimize(Drivebase drivebase, RotateShooterSubsystem riseShooterSubsystem,
       ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem,
       String autoNumber, String initial) {
 
@@ -406,7 +406,7 @@ public final class Autos {
 
   }
 
-  public static Command autoWithOnlyPose(Drivebase drivebase, RiseShooterSubsystem riseShooterSubsystem,
+  public static Command autoWithOnlyPose(Drivebase drivebase, RotateShooterSubsystem riseShooterSubsystem,
       ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem,
       String autoNumber, String initial) {
     int length = autoNumber.length();

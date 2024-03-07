@@ -92,8 +92,8 @@ public class PowerDistributionSubsystem {
 
   }
 
-  public boolean isRiseShooterOverCurrent() {
-    SmartDashboard.putBoolean("isRiseShooterOverCurrent", isRiseShooterOverCurrent());
+  public boolean isRotateShooterOverCurrent() {
+    SmartDashboard.putBoolean("isRiseShooterOverCurrent", isRotateShooterOverCurrent());
     return (riseShooterCurrent() > PdConstants.kRiseShooterMaxCurrent);
   }
 

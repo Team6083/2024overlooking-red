@@ -28,7 +28,6 @@ public class ShootPIDCmd extends Command {
   @Override
   public void execute() {
     shooterSubsystem.setRateControl();
-    //這邊我改掉了，應該是速度夠才讓transport動，所以應該要把檢查速度夠不夠的函式放在transport的cmd
   }
 
   // Called once the command ends or is interrupted.

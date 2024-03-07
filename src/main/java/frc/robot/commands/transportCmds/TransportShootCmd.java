@@ -1,15 +1,20 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.commands.transportCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TransportSubsystem;
 
-public class IntakeTransportCmd extends Command {
-
-  /** Creates a new ReTrans. */
+public class TransportShootCmd extends Command {
+  /** Creates a new Trans. */
   private final TransportSubsystem transportSubsystem;
+  private final boolean isEnoughRate;
 
-  public IntakeTransportCmd(TransportSubsystem transportSubsystem) {
+  public TransportShootCmd(TransportSubsystem transportSubsystem, boolean isEnoughRate) {
     this.transportSubsystem = transportSubsystem;
+    this.isEnoughRate = isEnoughRate;
     addRequirements(this.transportSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -35,6 +40,6 @@ public class IntakeTransportCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return transportSubsystem.isGetNote();
+    return !isEnoughRate;
   }
 }

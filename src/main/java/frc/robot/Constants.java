@@ -68,13 +68,13 @@ public final class Constants {
         public static final double kThrowPrecentage = -4.0;
     }
 
-    public static class RiseShooterConstants {
+    public static class RotateShooterConstants {
         public static final int kRiseShooterChannel = 21;
         public static final Boolean kRiseShooterInverted = true;
         public static final Boolean kEncoderInverted = true;
         public static final int kEncoderChannel = 2;
         public static final double kInitDegree = 60.0;
-        public static final double kRiseVoltLimit = 5.0;
+        public static final double kRotateVoltLimit = 5.0;
         public static final double kRiseAngleMin = -5.0;
         public static final double kRiseAngleMax = 65.0;
         public static final double kRiseAngleOffset = 0.52;

@@ -16,14 +16,14 @@ import frc.robot.Constants.TransportConstants;
 public class TransportSubsystem extends SubsystemBase {
   /** Creates a new TransportSubsystem. */
   private final CANSparkMax trans;
-  private final Rev2mDistanceSensor dist;
+  private final Rev2mDistanceSensor distanceSensor;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
 
   public TransportSubsystem(PowerDistributionSubsystem powerDistribution) {
 
     trans = new CANSparkMax(TransportConstants.kTrantsportChannel, MotorType.kBrushless);
     trans.setInverted(TransportConstants.kTransportInverted);
-    dist = new Rev2mDistanceSensor(Port.kOnboard);
+    distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
 
     this.powerDistributionSubsystem = powerDistribution;
   }
@@ -37,10 +37,10 @@ public class TransportSubsystem extends SubsystemBase {
   }
 
   public boolean isGetNote() {
-    if (dist.isRangeValid()) {
-      SmartDashboard.putNumber("Range dist", dist.getRange());
-      SmartDashboard.putNumber("Timestamp dist", dist.getTimestamp());
-      return dist.getRange() <= TransportConstants.kDistRange;
+    if (distanceSensor.isRangeValid()) {
+      SmartDashboard.putNumber("Range dist", distanceSensor.getRange());
+      SmartDashboard.putNumber("Timestamp dist", distanceSensor.getTimestamp());
+      return distanceSensor.getRange() <= TransportConstants.kDistRange;
     } else {
       return false;
     }
