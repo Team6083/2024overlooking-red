@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.apriltagCmd.FaceTag;
-import frc.robot.commands.riseShooterCmds.RiseShooterAutoControlCmd;
+import frc.robot.commands.rotateShooterCmds.RotateShooterAutoControlCmd;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
-import frc.robot.commands.transportCmds.ShootTransportCmd;
-import frc.robot.subsystems.RiseShooterSubsystem;
+import frc.robot.commands.transportCmds.TransportShootCmd;
+import frc.robot.subsystems.RotateShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
 import frc.robot.subsystems.drive.Drivebase;
@@ -21,13 +21,13 @@ import frc.robot.subsystems.drive.Drivebase;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoAimAndShootCmd extends SequentialCommandGroup {
   /** Creates a new autoAimAndShootCmd. */
-  public AutoAimAndShootCmd(Drivebase drivebase, RiseShooterSubsystem riseShooterSubsystem,
+  public AutoAimAndShootCmd(Drivebase drivebase, RotateShooterSubsystem riseShooterSubsystem,
       ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem) {
 
     addCommands(
-        Commands.parallel(new FaceTag(drivebase), new RiseShooterAutoControlCmd(riseShooterSubsystem)).withTimeout(0.5),
+        Commands.parallel(new FaceTag(drivebase), new RotateShooterAutoControlCmd(riseShooterSubsystem)).withTimeout(0.5),
         Commands.deadline(new WaitCommand(1), new ShootPIDCmd(shooterSubsystem),
-            new ShootTransportCmd(transportSubsystem, shooterSubsystem.isEnoughRate())
+            new TransportShootCmd(transportSubsystem, shooterSubsystem.isEnoughRate())
                 .onlyWhile(shooterSubsystem::isEnoughRate)));
   }
 }

@@ -2,18 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.riseShooterCmds;
+package frc.robot.commands.rotateShooterCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.RiseShooterSubsystem;
+import frc.robot.subsystems.RotateShooterSubsystem;
 
-public class AutoShooting extends Command {
-  /** Creates a new AutoShooting. */
-  private final RiseShooterSubsystem riseShooterSubsystem;
-  private final double leftTriggerValue;
-  private final double rightTriggerValue;
-  double armAngleModify;
-  public AutoShooting(RiseShooterSubsystem riseShooterSubsystem, double mainLeftTrigger, double mainRightTrigger, boolean hasNoteAndSpeed) {
+public class RotateShooterPIDCmd extends Command {
+  private final RotateShooterSubsystem riseShooterSubsystem;
+  private double leftTriggerValue;
+  private double rightTriggerValue;
+  private double armAngleModify;
+
+  /** Creates a new RiseShooterPIDCmd. */
+  public RotateShooterPIDCmd(RotateShooterSubsystem riseShooterSubsystem, double mainLeftTrigger, double mainRightTrigger) {
     this.riseShooterSubsystem = riseShooterSubsystem;
     this.leftTriggerValue = mainLeftTrigger;
     this.rightTriggerValue = mainRightTrigger;
@@ -24,7 +25,7 @@ public class AutoShooting extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    riseShooterSubsystem.pidControl();
+      riseShooterSubsystem.pidControl();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,11 +38,10 @@ public class AutoShooting extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {   
+  public void end(boolean interrupted) {
     riseShooterSubsystem.pidControl();
-
   }
-    
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {

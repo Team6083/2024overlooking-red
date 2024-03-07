@@ -5,13 +5,13 @@
 package frc.robot.commands.autoCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.RiseShooterSubsystem;
+import frc.robot.subsystems.RotateShooterSubsystem;
 
 public class AutoRiseShooterCmd extends Command {
-  RiseShooterSubsystem riseShooterSubsystem;
+  RotateShooterSubsystem riseShooterSubsystem;
 
   /** Creates a new AutoAimCmd. */
-  public AutoRiseShooterCmd(RiseShooterSubsystem riseShooterSubsystem) {
+  public AutoRiseShooterCmd(RotateShooterSubsystem riseShooterSubsystem) {
     this.riseShooterSubsystem = riseShooterSubsystem;
     addRequirements(this.riseShooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.

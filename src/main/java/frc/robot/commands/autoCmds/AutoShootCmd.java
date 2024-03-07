@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.shooterCmds.ShootPIDCmd;
-import frc.robot.commands.transportCmds.ShootTransportCmd;
+import frc.robot.commands.transportCmds.TransportShootCmd;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
 import frc.robot.subsystems.drive.Drivebase;
@@ -22,7 +22,7 @@ public class AutoShootCmd extends ParallelDeadlineGroup {
     super(new WaitCommand(1));
     addCommands(
         Commands.deadline(new WaitCommand(1), new ShootPIDCmd(shooterSubsystem),
-            new ShootTransportCmd(transportSubsystem, shooterSubsystem.isEnoughRate())
+            new TransportShootCmd(transportSubsystem, shooterSubsystem.isEnoughRate())
                 .onlyWhile(shooterSubsystem::isEnoughRate).onlyWhile(drivebase::hasFaceTarget)));
   }
 }
