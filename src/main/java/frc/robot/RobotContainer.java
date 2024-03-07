@@ -31,6 +31,7 @@ import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PowerDistributionSubsystem;
 import frc.robot.subsystems.RiseShooterSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
 import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 import frc.robot.subsystems.drive.Drivebase;
@@ -157,6 +158,7 @@ public class RobotContainer {
       initial = (initial == "left" ? "right" : (initial == "right" ? "left" : "middle"));
     }
     // return Autos.auto(drivebase, riseShooter, shooter, transport, intake, autoNumber, initial);
+    // return Autos.autoOptimize(drivebase, riseShooter, shooter, transport, intake, autoNumber, initial);
     return Commands.none();
   }
 
