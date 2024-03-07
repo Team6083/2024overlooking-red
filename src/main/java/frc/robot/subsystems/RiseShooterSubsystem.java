@@ -5,9 +5,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.SparkMaxRelativeEncoder;
+// import com.revrobotics.RelativeEncoder;
+// import com.revrobotics.SparkMaxAbsoluteEncoder;
+// import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -25,18 +25,18 @@ public class RiseShooterSubsystem extends SubsystemBase {
   private final PIDController risePID;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
   private final TagTrackingLimelight tagTrackingLimelight;
-  private final SparkMaxRelativeEncoder riseEncoderSPX;
+  // private final SparkMaxRelativeEncoder riseEncoderSPX;
 
-  public RiseShooterSubsystem(PowerDistributionSubsystem powerDistribution, TagTrackingLimelight aprilTagTracking) {
+  public RiseShooterSubsystem(PowerDistributionSubsystem powerDistributionSubsystem, TagTrackingLimelight aprilTagTracking) {
     riseMotor = new CANSparkMax(RiseShooterConstants.kRiseShooterChannel, MotorType.kBrushless);
-
+    
     riseEncoder = new DutyCycleEncoder(RiseShooterConstants.kEncoderChannel);
     angleDegreeOffset = RiseShooterConstants.kRiseAngleOffset;
 
     risePID = new PIDController(RiseShooterConstants.kP, RiseShooterConstants.kI, RiseShooterConstants.kD);
 
     riseMotor.setInverted(RiseShooterConstants.kRiseShooterInverted);
-    this.powerDistributionSubsystem = powerDistribution;
+    this.powerDistributionSubsystem = powerDistributionSubsystem;
     this.tagTrackingLimelight = aprilTagTracking;
     setSetpoint(angleDegreeOffset);
     risePID.enableContinuousInput(-180.0, 180.0);
@@ -96,13 +96,13 @@ public class RiseShooterSubsystem extends SubsystemBase {
   public double getAngleDegree() {
     double degree = (RiseShooterConstants.kEncoderInverted ? -1.0 : 1.0)
         * ((riseEncoder.getAbsolutePosition() * 360.0) - 251.0);
-    double degreeSPX = ((RiseShooterSubsystem) riseEncoderSPX).getAngleDegree();
-    double degreeFin = degree-degreeSPX;
-    if(degree-degreeSPX>1){
-      degreeFin=degree;
-    }else{
-      degreeFin = degree-degreeSPX;
-    }
+    // double degreeSPX = ((RiseShooterSubsystem) riseEncoderSPX).getAngleDegree();
+    // double degreeFin = degree-degreeSPX;
+    // if(degree-degreeSPX>1){
+    //   degreeFin=degree;
+    // }else{
+    //   degreeFin = degree-degreeSPX;
+    // }
     SmartDashboard.putNumber("riseShooterDegree", degree);
     return degree;
   }
