@@ -6,23 +6,23 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+// import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.commands.ApriltagCmd.FaceTag;
+// import frc.robot.commands.ApriltagCmd.FaceTag;
 import frc.robot.commands.autoCmds.AutoAimAndShootCmd;
 import frc.robot.commands.autoCmds.AutoIntakeCmd;
 import frc.robot.commands.autoCmds.AutoRiseShooterCmd;
 import frc.robot.commands.autoCmds.AutoShootCmd;
-import frc.robot.commands.autoTimerCmds.GoBackCmd;
-import frc.robot.commands.autoTimerCmds.GoForwardCmd;
-import frc.robot.commands.autoTimerCmds.GoLeftCmd;
-import frc.robot.commands.autoTimerCmds.GoRightCmd;
-import frc.robot.commands.autoTimerCmds.StopCmd;
-import frc.robot.commands.intakeCmds.IntakeCmd;
-import frc.robot.commands.noteTrackingCmds.TrackingNoteClockwiseCmd;
-import frc.robot.commands.noteTrackingCmds.TrackingNoteCounterclockwiseCmd;
-import frc.robot.commands.riseShooterCmds.RiseShooterAutoControlCmd;
-import frc.robot.commands.shooterCmds.ShootPIDCmd;
+// import frc.robot.commands.autoTimerCmds.GoBackCmd;
+// import frc.robot.commands.autoTimerCmds.GoForwardCmd;
+// import frc.robot.commands.autoTimerCmds.GoLeftCmd;
+// import frc.robot.commands.autoTimerCmds.GoRightCmd;
+// import frc.robot.commands.autoTimerCmds.StopCmd;
+// import frc.robot.commands.intakeCmds.IntakeCmd;
+// import frc.robot.commands.noteTrackingCmds.TrackingNoteClockwiseCmd;
+// import frc.robot.commands.noteTrackingCmds.TrackingNoteCounterclockwiseCmd;
+// import frc.robot.commands.riseShooterCmds.RiseShooterAutoControlCmd;
+// import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -406,6 +406,7 @@ public final class Autos {
 
   }
 
+  
   // public static Command Example(Drivebase drivebase){
   // return drivebase.followPathCommand(AutoConstants.pathGoToSpeaker);
   // }
