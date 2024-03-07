@@ -406,6 +406,31 @@ public final class Autos {
 
   }
 
+  public static Command autoWithOnlyPose(Drivebase drivebase, RiseShooterSubsystem riseShooterSubsystem,
+      ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem,
+      String autoNumber, String initial) {
+    int length = autoNumber.length();
+    // Command runAutoCommand = new InstantCommand();
+    Command runAutoCommand = new AutoRiseShooterCmd(riseShooterSubsystem);
+    runAutoCommand.andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem,
+        transportSubsystem));
+    char pre = '0';
+    boolean firstTime = true;
+
+    switch (initial) {
+      case "left":
+        drivebase.resetPose(AutoConstants.leftPose2d);
+        break;
+      case "middle":
+        drivebase.resetPose(AutoConstants.middlePose2d);
+        break;
+      case "right":
+        drivebase.resetPose(AutoConstants.rightPose2d);
+        break;
+    }
+
+    return Commands.none();
+  }
   
   // public static Command Example(Drivebase drivebase){
   // return drivebase.followPathCommand(AutoConstants.pathGoToSpeaker);

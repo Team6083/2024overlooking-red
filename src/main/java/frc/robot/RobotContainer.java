@@ -34,21 +34,22 @@ import frc.robot.subsystems.RiseShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
 import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
+import frc.robot.subsystems.NoteTracking.NoteTrackingPhotovision;
 import frc.robot.subsystems.drive.Drivebase;
 
 public class RobotContainer {
   private final CommandXboxController mainController;
   private final CommandGenericHID controlPanel;
-  //private final ShooterSubsystem shooter;
+  private final ShooterSubsystem shooter;
   private final TransportSubsystem transport;
   private final HookSubsystem hook;
   private final IntakeSubsystem intake;
   private final RiseShooterSubsystem riseShooter;
-  // private final Drivebase drivebase;
+  private final Drivebase drivebase;
   // private final HookSubsystem hook;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
   private final TagTrackingLimelight aprilTagTracking;
-
+  private final NoteTrackingPhotovision noteTracking;
 
   private SendableChooser<Command> autoChooser;
   private SendableChooser<String> initialChooser;
@@ -56,15 +57,17 @@ public class RobotContainer {
   public RobotContainer() {
     powerDistributionSubsystem = new PowerDistributionSubsystem();
     aprilTagTracking = new TagTrackingLimelight();
+    noteTracking = new NoteTrackingPhotovision();
 
     mainController = new CommandXboxController(DriveControllerConstants.kMainController);
     controlPanel = new CommandGenericHID(DriveControllerConstants.kControlPanel);
-    // shooter = new ShooterSubsystem(powerDistribution);
+    shooter = new ShooterSubsystem(powerDistributionSubsystem);
     transport = new TransportSubsystem(powerDistributionSubsystem);
     intake = new IntakeSubsystem(powerDistributionSubsystem);
     riseShooter = new RiseShooterSubsystem(powerDistributionSubsystem, aprilTagTracking);
-    // drivebase = new Drivebase();
+    drivebase = new Drivebase(noteTracking, aprilTagTracking);
     hook = new HookSubsystem(powerDistributionSubsystem);
+
     // AprilTagTracking.init();
     configureBindings();
 
@@ -125,6 +128,7 @@ public class RobotContainer {
     mainController.rightTrigger().whileTrue(new HookUpRightManualCmd(hook));
     mainController.pov(90).whileTrue(new LineUpManualCmd(hook));
     mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
+   
 
     // mainController.a().toggleOnTrue(new RiseShooterManualCmd(riseShooter));
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
@@ -156,8 +160,8 @@ public class RobotContainer {
       initial = (initial == "left" ? "right" : (initial == "right" ? "left" : "middle"));
     }
     // return Autos.auto(drivebase, riseShooter, shooter, transport, intake, autoNumber, initial);
-    // return Autos.autoOptimize(drivebase, riseShooter, shooter, transport, intake, autoNumber, initial);
-    return Commands.none();
+    return Autos.autoOptimize(drivebase, riseShooter, shooter, transport, intake, autoNumber, initial);
+    // return Commands.none();
   }
 
 }

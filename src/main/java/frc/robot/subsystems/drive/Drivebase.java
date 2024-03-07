@@ -90,15 +90,15 @@ public class Drivebase extends SubsystemBase {
 
   private final NoteTrackingPhotovision note;
   private final TagTrackingLimelight aprilTagTracking;
-  private final TagTrackingPhotonvision photonTracking;
+  // private final TagTrackingPhotonvision photonTracking;
 
   private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
 
   public Drivebase(NoteTrackingPhotovision note,
-      TagTrackingLimelight aprilTagTracking, TagTrackingPhotonvision photonTracking) {
+      TagTrackingLimelight aprilTagTracking) {
     this.note = note;
     this.aprilTagTracking = aprilTagTracking;
-    this.photonTracking = photonTracking;
+    // this.photonTracking = photonTracking;
     frontLeftLocation = new Translation2d(0.3, 0.3);
     frontRightLocation = new Translation2d(0.3, -0.3);
     backLeftLocation = new Translation2d(-0.3, 0.3);
@@ -410,17 +410,17 @@ public class Drivebase extends SubsystemBase {
   /**
    * Photonvision version of face target.
    */
-  public void facePhoton() {
-    Rotation2d offset = photonTracking.getYawToPoseRotation2d(getPose2d(), photonTracking.getTagPose2d());
-    double angle = offset.getDegrees();
+  // public void facePhoton() {
+  //   Rotation2d offset = photonTracking.getYawToPoseRotation2d(getPose2d(), photonTracking.getTagPose2d());
+  //   double angle = offset.getDegrees();
 
-    boolean hasTarget = photonTracking.hasTarget();
-    double rot = 0;
-    if (hasTarget) {
-      rot = facingTagPID.calculate(angle, 0);
-    }
-    drive(0, 0, -rot, true);
-  }
+  //   boolean hasTarget = photonTracking.hasTarget();
+  //   double rot = 0;
+  //   if (hasTarget) {
+  //     rot = facingTagPID.calculate(angle, 0);
+  //   }
+  //   drive(0, 0, -rot, true);
+  // }
 
   public void resetRobotPose2d() {
     frontLeft.resetAllEncoder();
@@ -433,7 +433,7 @@ public class Drivebase extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     updateOdometry();
-    photonTracking.putDashboard();
+    // photonTracking.putDashboard();
     field2d.setRobotPose(getPose2d());
     putDashboard();
   }
