@@ -49,7 +49,7 @@ public class RobotContainer {
   private final CommandXboxController mainController;
   private final CommandGenericHID controlPanel;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
-  // private final Drivebase drivebase;
+  private final Drivebase drivebase;
   // private final DrivebaseAccelerateCmd drivebaseAccelerate;
   // private final DrivebaseDefaultSpeedCmd drivebaseDefaultSpeed;
   private final IntakeSubsystem intake;
@@ -72,7 +72,7 @@ public class RobotContainer {
 
     mainController = new CommandXboxController(DriveControllerConstants.kMainController);
     controlPanel = new CommandGenericHID(DriveControllerConstants.kControlPanel);
-    // drivebase = new Drivebase();
+    drivebase = new Drivebase(noteTracking, aprilTagTracking, photonTracking);
     // drivebaseAccelerate = new DrivebaseAccelerateCmd(drivebase);
     // drivebaseDefaultSpeed = new DrivebaseDefaultSpeedCmd(drivebase);
     intake = new IntakeSubsystem(powerDistributionSubsystem);

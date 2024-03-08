@@ -97,9 +97,9 @@ public class Drivebase extends SubsystemBase {
 
   private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
 
-  public Drivebase(NoteTrackingPhotovision note,
+  public Drivebase(NoteTrackingPhotovision noteTracking,
       TagTrackingLimelight aprilTagTracking, TagTrackingPhotonvision photonTracking) {
-    this.note = note;
+    this.note = noteTracking;
     this.aprilTagTracking = aprilTagTracking;
     this.photonTracking = photonTracking;
     frontLeftLocation = new Translation2d(0.3, 0.3);
