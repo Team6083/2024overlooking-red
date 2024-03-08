@@ -189,11 +189,11 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         double yaw = target.getYaw();
         double pitch = target.getPitch();
         double area = target.getArea();              
-        double range = getPosePose().getX()*Math.cos(cameraPitch + pitch);
+        double range = getBestTagTransform3d().getX()*Math.cos(Math.toRadians(cameraPitch + pitch));
         // Transform3d pose = target.getBestCameraToTarget();
         // List<TargetCorner> corners = target.getDetectedCorners();
         tagInfo[0] = ID;
-        tagInfo[1] = distance;
+        tagInfo[1] = range;
         tagInfo[2] = yaw;
         tagInfo[3] = pitch;
         tagInfo[4] = area;
@@ -220,7 +220,7 @@ public class TagTrackingPhotonvision extends SubsystemBase {
      * @return {@link Transform3d} best cam to tag
      */
     public Transform3d getBestTagTransform3d() {
-        Transform3d pose = getBestTarget().getBestCameraToTarget();
+        Transform3d pose = results.getBestTarget().getBestCameraToTarget();
         return pose;
     }
 
@@ -387,13 +387,6 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         }
     }
 
-    // get the pose3d value from photonvision
-    public Transform3d getPosePose() {
-        PhotonTrackedTarget target = results.getBestTarget();
-        Transform3d bestCameraToTarget = target.getBestCameraToTarget();
-        return bestCameraToTarget;
-    }
-
     public void putDashboard() {
         SmartDashboard.putNumber("ID", getTagInfo2()[0]);
         SmartDashboard.putNumber("range", getTagInfo2()[1]);
@@ -408,8 +401,8 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         List<Pose2d> tags = getTags();
         SmartDashboard.putNumber("tagVision/nFound", tags.size());
         if (tags.size() > 0) {
-            SmartDashboard.putNumber("tagVision/x", getPosePose().getX());
-            SmartDashboard.putNumber("tagVision/y", getPosePose().getY());
+            SmartDashboard.putNumber("tagVision/x", getBestTagTransform3d().getX());
+            SmartDashboard.putNumber("tagVision/y", getBestTagTransform3d().getY());
         }
     }
 }
