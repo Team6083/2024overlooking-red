@@ -33,10 +33,10 @@ import frc.robot.subsystems.PowerDistributionSubsystem;
 import frc.robot.subsystems.RotateShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
-import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
-import frc.robot.subsystems.ApriltagTracking.TagTrackingPhotonvision;
-import frc.robot.subsystems.NoteTracking.NoteTrackingPhotovision;
+import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
+import frc.robot.subsystems.apriltagTracking.TagTrackingPhotonvision;
 import frc.robot.subsystems.drive.Drivebase;
+import frc.robot.subsystems.noteTracking.NoteTrackingPhotovision;
 
 public class RobotContainer {
   private final CommandXboxController mainController;
