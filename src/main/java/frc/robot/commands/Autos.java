@@ -15,6 +15,7 @@ import frc.robot.commands.autoCmds.AutoIntakeCmd;
 import frc.robot.commands.autoCmds.AutoRotateShooterCmd;
 import frc.robot.commands.autoCmds.AutoShootCmd;
 import frc.robot.commands.autoCmds.PoseRotateShooterCmd;
+import frc.robot.commands.autoCmds.PoseShootCmd;
 // import frc.robot.commands.autoTimerCmds.GoBackCmd;
 // import frc.robot.commands.autoTimerCmds.GoForwardCmd;
 // import frc.robot.commands.autoTimerCmds.GoLeftCmd;
@@ -420,8 +421,7 @@ public final class Autos {
 
     int length = autoNumber.length();
     Command runPeriodicCommand = new PoseRotateShooterCmd(rotateShooterSubsystem, drivebase);
-    Command runAutoCommand = new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem,
-        transportSubsystem);
+    Command runAutoCommand = new PoseShootCmd(drivebase, shooterSubsystem, transportSubsystem);
     char pre = '0';
     boolean firstTime = true;
 
@@ -549,7 +549,50 @@ public final class Autos {
       runAutoCommand.andThen(new AutoIntakeCmd(drivebase, transportSubsystem, intakeSubsystem));
 
       // move to shoot point and shoot
-
+      switch (cur) {
+        case '1':
+          runAutoCommand
+              .andThen(new PoseShootCmd(drivebase, shooterSubsystem, transportSubsystem));
+          break;
+        case '2':
+          runAutoCommand
+              .andThen(new PoseShootCmd(drivebase, shooterSubsystem, transportSubsystem));
+          break;
+        case '3':
+          runAutoCommand
+              .andThen(new PoseShootCmd(drivebase, shooterSubsystem, transportSubsystem));
+          break;
+        case '4':
+          runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.topRelayToRTS,
+              AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+              AutoConstants.kMaxAngularAcceleration, 0.0))
+              .andThen(new PoseShootCmd(drivebase, shooterSubsystem, transportSubsystem));
+          break;
+        case '5':
+          runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.topRelayToRTS,
+              AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+              AutoConstants.kMaxAngularAcceleration, 0.0))
+              .andThen(new PoseShootCmd(drivebase, shooterSubsystem, transportSubsystem));
+          break;
+        case '6':
+          runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.topRelayToRTS,
+              AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+              AutoConstants.kMaxAngularAcceleration, 0.0))
+              .andThen(new PoseShootCmd(drivebase, shooterSubsystem, transportSubsystem));
+          break;
+        case '7':
+          runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.bottomRelayToRBS,
+              AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+              AutoConstants.kMaxAngularAcceleration, 0.0))
+              .andThen(new PoseShootCmd(drivebase, shooterSubsystem, transportSubsystem));
+          break;
+        case '8':
+          runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.bottomRelayToRBS,
+              AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+              AutoConstants.kMaxAngularAcceleration, 0.0))
+              .andThen(new PoseShootCmd(drivebase, shooterSubsystem, transportSubsystem));
+          break;
+      }
     }
 
     return new ParallelCommandGroup(runPeriodicCommand, runAutoCommand);
