@@ -347,22 +347,6 @@ public class Drivebase extends SubsystemBase {
     drive(xSpeed, 0, 0, true);
   }
 
-  public void fixDistanceCT() {
-    double[] ct = aprilTagTracking.getCT();
-    double x_dis = ct[0];
-    double y_dis = ct[1];
-    double hasTarget = aprilTagTracking.getTv();
-    double xSpeed = 0;
-    double ySpeed = 0;
-    if (hasTarget == 1) {
-      xSpeed = followingTagPID.calculate(x_dis, 0);
-      ySpeed = followingTagPID.calculate(y_dis, 1);
-    }
-    SmartDashboard.putNumber("x_dis_speed", xSpeed);
-    SmartDashboard.putNumber("y_dis_speed", ySpeed);
-    drive(xSpeed, 0, 0, true);
-  }
-
   public void setRedSpeakerPipeline() {
     aprilTagTracking.setCamMode(1);
     aprilTagTracking.setLedMode(1);
@@ -418,7 +402,7 @@ public class Drivebase extends SubsystemBase {
   }
 
   // remember to fine the constants value
-  public void driveToSpeaker(){
+  public void driveToSpeaker() {
     Pose2d tagpose = photonTracking.getTagPose2d();
     Pose2d desiredPose = tagpose.plus(VisionConstants.speakeroffset);
     driveToSpecificPose2d(desiredPose);
@@ -427,19 +411,20 @@ public class Drivebase extends SubsystemBase {
   /**
    * Photonvision version of face target.
    */
-  // public void facePhoton() {
-  // boolean hasTarget = photonTracking.hasTarget();
-  // if (hasTarget!=null) {
-  // Rotation2d offset = photonTracking.getYawToPoseRotation2d(getPose2d(),
-  // photonTracking.getTagPose2d());
-  // double angle = offset.getDegrees();
+  public void facePhoton() {
+    boolean hasTarget = photonTracking.hasTarget();
+    if (hasTarget) {
+      Rotation2d offset = photonTracking.getYawToPoseRotation2d(getPose2d(),
+          photonTracking.getTagPose2d());
+      double angle = offset.getDegrees();
 
-  // double rot = 0;
+      double rot = 0;
 
-  // rot = facingTagPID.calculate(angle, 0);
-  // }
-  // drive(0, 0, -rot, true);
-  // }
+      rot = facingTagPID.calculate(angle, 0);
+      drive(0, 0, -rot, true);
+    }
+
+  }
 
   public void resetRobotPose2d() {
     frontLeft.resetAllEncoder();
