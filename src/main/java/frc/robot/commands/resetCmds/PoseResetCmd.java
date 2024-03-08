@@ -16,7 +16,6 @@ public class PoseResetCmd extends InstantCommand {
   public PoseResetCmd(Drivebase drivebase) {
     this.drivebase = drivebase;
     addRequirements(this.drivebase);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
