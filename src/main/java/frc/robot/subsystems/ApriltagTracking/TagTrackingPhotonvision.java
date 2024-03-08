@@ -57,6 +57,8 @@ public class TagTrackingPhotonvision extends SubsystemBase {
     public final double cameraWeight = 0.0; // I'm still quite confused abt the meaning of having this
     public final double pitchDegree = 15; // 90 - cam_offset
     public final double yawDegree = 0;
+    public final double cameraPitch = 15;
+    public final double targetHeight = 1.3;
 
     public PhotonPipelineResult results;
     public Transform3d robotToCam = VisionConstants.krobottocam;
@@ -141,7 +143,7 @@ public class TagTrackingPhotonvision extends SubsystemBase {
     public List<Pose2d> getTags() {
         List<Pose2d> poses = new ArrayList<Pose2d>();
 
-        double tagHeight = 0;
+        double tagHeight = getTagPose3d().getY();
         List<PhotonTrackedTarget> targets = results.getTargets();
 
         // for(type var : arr) basically put each value of array arr into var, one by a
@@ -179,21 +181,22 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         double[] tagInfo = new double[5];
         PhotonTrackedTarget target = getBestTarget();
         ID = target.getFiducialId();
-        distance = PhotonUtils.calculateDistanceToTargetMeters(
-                cameraHeight, // height
-                cameraHeight * (1 / Math.tan(Math.toRadians(target.getPitch() + pitchDegree))),
-                Math.toRadians(target.getPitch()),
-                Units.degreesToRadians(results.getBestTarget().getPitch()));
+        // distance = PhotonUtils.calculateDistanceToTargetMeters(
+        //         cameraHeight, // height
+        //         cameraHeight * (1 / Math.tan(Math.toRadians(target.getPitch() + pitchDegree))),
+        //         Math.toRadians(target.getPitch()),
+        //         Units.degreesToRadians(results.getBestTarget().getPitch()));
         double yaw = target.getYaw();
         double pitch = target.getPitch();
-        double area = target.getArea();
+        double area = target.getArea();              
+        double range = getPosePose().getX()*Math.cos(cameraPitch + pitch);
         // Transform3d pose = target.getBestCameraToTarget();
         // List<TargetCorner> corners = target.getDetectedCorners();
-        tagInfo[0] = hasTarget() ? ID : 0;
-        tagInfo[1] = hasTarget() ? distance : 0;
-        tagInfo[2] = hasTarget() ? yaw : 0;
-        tagInfo[3] = hasTarget() ? pitch : 0;
-        tagInfo[4] = hasTarget() ? area : 0;
+        tagInfo[0] = ID;
+        tagInfo[1] = distance;
+        tagInfo[2] = yaw;
+        tagInfo[3] = pitch;
+        tagInfo[4] = area;
         return tagInfo;
     }
 
@@ -357,6 +360,16 @@ public class TagTrackingPhotonvision extends SubsystemBase {
             return new Pose2d();
         }
     }
+    
+    public Pose3d getTagPose3d() {
+        if (hasTarget()) {
+            Optional<Pose3d> tag_Pose3d = m_layout.getTagPose(getTagID());
+            Pose3d tagPose3d = tag_Pose3d.isPresent() ? tag_Pose3d.get() : new Pose3d();
+            return tagPose3d;
+        } else {
+            return new Pose3d();
+        }
+    }
 
     /**
      * Get the pose of the desired tag in 2 dimension
@@ -374,9 +387,16 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         }
     }
 
+    // get the pose3d value from photonvision
+    public Transform3d getPosePose() {
+        PhotonTrackedTarget target = results.getBestTarget();
+        Transform3d bestCameraToTarget = target.getBestCameraToTarget();
+        return bestCameraToTarget;
+    }
+
     public void putDashboard() {
-        SmartDashboard.putNumber("range", getTagInfo2()[1]);
         SmartDashboard.putNumber("ID", getTagInfo2()[0]);
+        SmartDashboard.putNumber("range", getTagInfo2()[1]);
         SmartDashboard.putNumber("yaw", getTagInfo2()[2]);
         SmartDashboard.putNumber("pitch", getTagInfo2()[3]);
         SmartDashboard.putNumber("area", getTagInfo2()[4]);
@@ -388,9 +408,8 @@ public class TagTrackingPhotonvision extends SubsystemBase {
         List<Pose2d> tags = getTags();
         SmartDashboard.putNumber("tagVision/nFound", tags.size());
         if (tags.size() > 0) {
-            Pose2d p = tags.get(0);
-            SmartDashboard.putNumber("tagVision/x", p.getX());
-            SmartDashboard.putNumber("tagVision/y", p.getY());
+            SmartDashboard.putNumber("tagVision/x", getPosePose().getX());
+            SmartDashboard.putNumber("tagVision/y", getPosePose().getY());
         }
     }
 }
