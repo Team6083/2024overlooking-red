@@ -544,6 +544,15 @@ public final class Autos {
       }
 
       // whether rerun path or not
+      // if (!drivebase.checkPose2d(null)) {
+      //   if (firstTime) {
+      //     firstTime = false;
+      //     i--;
+      //     continue;
+      //   }
+      //   pre = cur;
+      //   firstTime = true;
+      // }
 
       // get note
       runAutoCommand.andThen(new AutoIntakeCmd(drivebase, transportSubsystem, intakeSubsystem));

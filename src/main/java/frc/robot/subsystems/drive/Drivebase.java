@@ -462,6 +462,16 @@ public class Drivebase extends SubsystemBase {
     return new InstantCommand(() -> resetPose2dAndEncoder(), this);
   }
 
+  public Boolean checkPose2d(Pose2d targetPose2d) {
+    Pose2d currentPose2d = getPose2d();
+    if (Math.abs(currentPose2d.getX() - targetPose2d.getX()) < 30
+        && Math.abs(currentPose2d.getY() - targetPose2d.getY()) < 15
+        && Math.abs(targetPose2d.getRotation().getDegrees() - currentPose2d.getRotation().getDegrees()) < 5) {
+      return true;
+    }
+    return false;
+  }
+
   public void resetPose2dAndEncoder() {
     frontLeft.resetAllEncoder();
     frontRight.resetAllEncoder();
