@@ -26,20 +26,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
-public class Cam2 extends SubsystemBase{
-/** Creates a new VisionTrackingPhotovision. */
+public class Cam2 extends SubsystemBase {
+    /** Creates a new VisionTrackingPhotovision. */
 
     private double m_latestLatency;
     public AprilTagFieldLayout aprilTagFieldLayout;
 
     private final boolean tag = true;
-    private final String cameraName = "Microsoft_LifeCam_HD-3000";
+    private final String cameraName = "TagCamera";
     private final PhotonCamera tagCamera;
-    // private final Transform3d tagCamPosition = new Transform3d(
-    // new Translation3d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0),
-    // Units.inchesToMeters(0.0)),
-    // new Rotation3d(Math.toRadians(0.0), Math.toRadians(0.0),
-    // Math.toRadians(0.0)));
 
     public final double cameraHeight = 0.36;
     public final double cameraWeight = 0.0; // I'm still quite confused abt the meaning of having this
@@ -60,21 +55,20 @@ public class Cam2 extends SubsystemBase{
     public double ID;
     public boolean hasTarget;
 
-public Cam2 (){
-            tagCamera = new PhotonCamera(cameraName);
+    public Cam2() {
+        tagCamera = new PhotonCamera(cameraName);
         tagCamera.setPipelineIndex(0);
         tagCamera.setDriverMode(false);
-        // Construct PhotonPoseEstimator
         photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
                 PoseStrategy.CLOSEST_TO_REFERENCE_POSE, tagCamera, robotToCam);
-
         try {
             m_layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
         } catch (IOException err) {
             throw new RuntimeException();
         }
-    
-}
+
+    }
+
     /**
      * Returns pipeline result
      * 
@@ -103,10 +97,7 @@ public Cam2 (){
     public PhotonTrackedTarget getBestTarget() {
         results = getPipelineResult();
         m_latestLatency = results.getLatencyMillis() / 1000.;
-        PhotonTrackedTarget target = null;
-        if (results.hasTargets()) {
-            target = results.getBestTarget();
-        }
+        PhotonTrackedTarget target = hasTarget()?results.getBestTarget():null;
         return target;
     }
 
@@ -122,30 +113,6 @@ public Cam2 (){
     }
 
     /**
-     * Returns a list of 2 demesional tag poses
-     * 
-     * @return {@link List}<{@link Pose2d}> poses
-     */
-    public List<Pose2d> getTags() {
-        List<Pose2d> poses = new ArrayList<Pose2d>();
-
-        double tagHeight = 0;
-        List<PhotonTrackedTarget> targets = results.getTargets();
-
-        // for(type var : arr) basically put each value of array arr into var, one by a
-        // time
-        for (PhotonTrackedTarget trackedTarget : targets) {
-            // this calc assumes pitch angle is positive UP, so flip the camera's pitch
-            pitch = trackedTarget.getPitch();
-            yaw = trackedTarget.getYaw();
-            y = tagHeight * (1 / Math.tan(Math.toRadians(pitch + pitchDegree)));
-            x = y * Math.tan(Math.toRadians(yaw - yawDegree)) + cameraWeight;
-            poses.add(new Pose2d(x, y, new Rotation2d(0)));
-        }
-        return poses;
-    }
-
-    /**
      * Return the last tag of the getTargets() list
      * 
      * @return {@link PhotontrackedTarget} last tag
@@ -155,14 +122,9 @@ public Cam2 (){
     }
 
     /**
-     * Return the last tag of the getTargets() list
-     * 
-     * @return {@link Pose2d} last tag pose
+     * Returns an array of tag information. Returns zero if nothing detected. 
+     * @return [0]: ID; [1]: range; [2]: yaw; [3]: pitch; [4] area; 
      */
-    public Pose2d getLastPose() {
-        return getTags().get(0);
-    }
-
     public double[] getTagInfo2() {
         double[] tagInfo = new double[5];
         PhotonTrackedTarget target = getBestTarget();
@@ -215,8 +177,9 @@ public Cam2 (){
     }
 
     public int getTagID() {
-        int ID = getBestTarget().getFiducialId();
-        return ID;
+        Optional<Integer> ID = Optional.of(Integer.valueOf(getBestTarget().getFiducialId()));
+        int id = ID.isPresent() ? ID.get() : -1;
+        return id;
     }
 
     // public double getTagTx(){
@@ -228,6 +191,7 @@ public Cam2 (){
         if (getBestTarget() != null) {
             Transform3d camToTag = getBestTarget().getBestCameraToTarget();
             Optional<Pose3d> tag_Pose3d = m_layout.getTagPose(getTagID());
+            // Optional<Integer> num = getNum();
             if (tag_Pose3d.isPresent()) {
                 Pose3d robotPose3d = PhotonUtils.estimateFieldToRobotAprilTag(camToTag, tag_Pose3d.get(), robotToCam);
                 return robotPose3d;
@@ -254,9 +218,9 @@ public Cam2 (){
         return targetYaw;
     }
 
-    // 
+    //
     public Pose2d getLatestEstimatedRobotPose() {
-        
+
         if (hasTarget()) {
             Transform3d cameraToTarget = getBestTarget().getBestCameraToTarget();
 
@@ -373,12 +337,5 @@ public Cam2 (){
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        List<Pose2d> tags = getTags();
-        SmartDashboard.putNumber("tagVision/nFound", tags.size());
-        if (tags.size() > 0) {
-            Pose2d p = tags.get(0);
-            SmartDashboard.putNumber("tagVision/x", p.getX());
-            SmartDashboard.putNumber("tagVision/y", p.getY());
-        }
     }
 }
