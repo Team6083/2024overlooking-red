@@ -411,19 +411,21 @@ public final class Autos {
       }
     }
 
-    return new ParallelCommandGroup(runAutoCommand, runPeriodicCommand) ;
+    return new ParallelCommandGroup(runAutoCommand, runPeriodicCommand);
   }
 
   public static Command autoWithOnlyPose(Drivebase drivebase, RotateShooterSubsystem rotateShooterSubsystem,
       ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem,
       String autoNumber, String initial) {
+
     int length = autoNumber.length();
-    Command runAutoCommand = new PoseRotateShooterCmd(rotateShooterSubsystem, drivebase);
-    runAutoCommand.andThen(new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem,
-        transportSubsystem));
+    Command runPeriodicCommand = new PoseRotateShooterCmd(rotateShooterSubsystem, drivebase);
+    Command runAutoCommand = new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem,
+        transportSubsystem);
     char pre = '0';
     boolean firstTime = true;
 
+    // initial setting
     switch (initial) {
       case "left":
         drivebase.resetPose(AutoConstants.leftPose2d);
@@ -436,12 +438,14 @@ public final class Autos {
         break;
     }
 
+    // execute auto
     for (int i = 0; i < length; i++) {
 
     }
-    return Commands.none();
+
+    return new ParallelCommandGroup(runPeriodicCommand, runAutoCommand);
   }
-  
+
   // public static Command Example(Drivebase drivebase){
   // return drivebase.followPathCommand(AutoConstants.pathGoToSpeaker);
   // }
