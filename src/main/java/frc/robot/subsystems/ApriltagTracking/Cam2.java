@@ -102,26 +102,6 @@ public class Cam2 extends SubsystemBase {
     }
 
     /**
-     * Get a list of tracked tags according to the pipeline.
-     * 
-     * @return a list of tracked {@link PhotonTrackedTarget} tags
-     */
-    public List<PhotonTrackedTarget> getTargets() {
-        // results = getPipelineResult();
-        List<PhotonTrackedTarget> tags = getPipelineResult().getTargets();
-        return tags;
-    }
-
-    /**
-     * Return the last tag of the getTargets() list
-     * 
-     * @return {@link PhotontrackedTarget} last tag
-     */
-    public PhotonTrackedTarget getLastTag() {
-        return getTargets().get(0);
-    }
-
-    /**
      * Returns an array of tag information. Returns zero if nothing detected. 
      * @return [0]: ID; [1]: range; [2]: yaw; [3]: pitch; [4] area; 
      */
@@ -203,42 +183,6 @@ public class Cam2 extends SubsystemBase {
         return new Pose2d();
     }
 
-    /**
-     * Gets the pose of a target.
-     * 
-     * @param robotPose The current robot pose.
-     * @param offset    The offset of the desired pose from the target. Positive is
-     *                  backwards (X) and right (Y).
-     * @return The pose of the specified offset from the target.
-     */
-    public Pose2d getTargetPose(Pose2d robotPose, Transform3d offset) {
-        PhotonTrackedTarget target = getBestTarget();
-
-        if (target != null) {
-            Transform3d cameraToTarget = target.getBestCameraToTarget();
-
-            Transform3d targetOffset = cameraToTarget.plus(offset);
-
-            Pose3d pose = new Pose3d(robotPose);
-            // Constructs a 3D pose from a 2D pose in the X-Y plane
-
-            Pose3d scoringPose = pose.plus(targetOffset);
-
-            // WARNING: The following code is scuffed. Please proceed with caution.
-            Pose2d newPose = scoringPose.toPose2d();
-
-            Rotation2d newRotation = Rotation2d.fromDegrees(newPose.getRotation().getDegrees() - 180.);
-
-            Pose2d finalPose = new Pose2d(newPose.getTranslation(), newRotation).plus(
-                    new Transform2d(
-                            VisionConstants.krobottocam.getTranslation().toTranslation2d(),
-                            VisionConstants.krobottocam.getRotation().toRotation2d()));
-            return finalPose;
-        }
-
-        return robotPose;
-    }
-
     public double getLatestLatency() {
         return m_latestLatency;
     }
@@ -280,6 +224,15 @@ public class Cam2 extends SubsystemBase {
         SmartDashboard.putNumber("yaw", getTagInfo2()[2]);
         SmartDashboard.putNumber("pitch", getTagInfo2()[3]);
         SmartDashboard.putNumber("area", getTagInfo2()[4]);
+
+        SmartDashboard.putNumber("latency", getLatestLatency());
+        SmartDashboard.putNumber("TagPoseX", getTagPose2d().getX());
+        SmartDashboard.putNumber("TagPoseY", getTagPose2d().getY());
+        SmartDashboard.putNumber("TagPoseR", getTagPose2d().getRotation().getDegrees());
+        double[] well = {getLatestEstimatedRobotPose().getX(), getLatestEstimatedRobotPose().getY(), getLatestEstimatedRobotPose().getRotation().getDegrees()};
+        SmartDashboard.putNumberArray("latestEstimatedBotPoseX", well);
+        SmartDashboard.putNumber("TagID", getTagID());
+        
     }
 
     @Override
