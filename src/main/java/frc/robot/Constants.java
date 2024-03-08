@@ -288,30 +288,30 @@ public final class Constants {
     }
 
     public static final class VisionConstants {
-    public static final String kCameraName = "Microsoft_LifeCam_HD-3000";
-    // Cam mounted facing forward, half a meter forward of center, half a meter up
-    // from center.
-    public static final Pose3d kRobotToCam = new Pose3d(new Translation3d(0.5, 0.0, 0.5),
-        new Rotation3d(0, 0, 0));
-    public static final Transform3d krobottocam = new Transform3d(new Translation3d(0.5, 0.0, 0.5),
-        new Rotation3d(0, 0, 0));
-
+        public static final String kCameraName = "Microsoft_LifeCam_HD-3000";
+        public static final String kCamera2Name = "TagCamera";
+        // Cam mounted facing forward, half a meter forward of center, half a meter up
+        // from center.
+        public static final Pose3d kRobotToCam = new Pose3d(new Translation3d(0.5, 0.0, 0.5),
+                new Rotation3d(0, 0, 0));
+        public static final Transform3d krobottocam = new Transform3d(new Translation3d(0.5, 0.0, 0.5),
+                new Rotation3d(0, 0, 0));
 
         public static final Rotation2d sroffset = new Rotation2d(0);
-        public static final Transform2d speakeroffset= new Transform2d(0, 0, sroffset);
+        public static final Transform2d speakeroffset = new Transform2d(0, 0, sroffset);
 
-    // The layout of the AprilTags on the field
-    public static final AprilTagFieldLayout kTagLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+        // The layout of the AprilTags on the field
+        public static final AprilTagFieldLayout kTagLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
-    public static final double cam_offset = 0;
-    /**
-     * The vertical distance from the desired subsystem to the ground in metres.
-     */
-    public static final double camHeight = 0;
-    // The standard deviations of our vision estimated poses, which affect
-    // correction rate
-    // (Fake values. Experiment and determine estimation noise on an actual robot.)
-    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
-  }
+        public static final double cam_offset = 0;
+        /**
+         * The vertical distance from the desired subsystem to the ground in metres.
+         */
+        public static final double camHeight = 0;
+        // The standard deviations of our vision estimated poses, which affect
+        // correction rate
+        // (Fake values. Experiment and determine estimation noise on an actual robot.)
+        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+        public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+    }
 }
