@@ -146,18 +146,13 @@ public class Cam2 extends SubsystemBase {
         tagInfo[4] = hasTarget() ? area : 0;
         return tagInfo;
     }
-
-    /**
-     * Get the transform that maps camera space (X = forward, Y = left, Z = up) to
-     * object/fiducial tag space (X forward, Y left, Z up) with the lowest
-     * reprojection error
-     * 
-     * @return {@link Transform3d} best cam to tag
-     */
-    public Transform3d getTagTransform3d() {
-        Transform3d pose = getLastTag().getBestCameraToTarget();
-        return pose;
+    
+    public int getTagID() {
+        Optional<Integer> ID = Optional.of(Integer.valueOf(getBestTarget().getFiducialId()));
+        int id = ID.isPresent() ? ID.get() : -1;
+        return id;
     }
+
 
     /**
      * Get best transform that maps camera space (X = forward, Y = left, Z = up) to
@@ -170,22 +165,6 @@ public class Cam2 extends SubsystemBase {
         Transform3d pose = getBestTarget().getBestCameraToTarget();
         return pose;
     }
-
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose3d prevEstimatedRobotPose) {
-        photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-        return photonPoseEstimator.update();
-    }
-
-    public int getTagID() {
-        Optional<Integer> ID = Optional.of(Integer.valueOf(getBestTarget().getFiducialId()));
-        int id = ID.isPresent() ? ID.get() : -1;
-        return id;
-    }
-
-    // public double getTagTx(){
-    // double tx = getBestTarget().getTargetPixelsX();
-    // return tx;
-    // }
 
     public Pose3d getBotPose() {
         if (getBestTarget() != null) {
@@ -200,25 +179,12 @@ public class Cam2 extends SubsystemBase {
         return new Pose3d();
     }
 
-    // well any way let's just leave it like that ^^
-    // repeat. same as getTagInfo()[1]
-    public double getDistance() {
-        // List<Double> distances = new ArrayList<Double>();
-        distance = PhotonUtils.calculateDistanceToTargetMeters(
-                cameraHeight,
-                y,
-                Math.toRadians(pitch),
-                Units.degreesToRadians(results.getBestTarget().getPitch()));
-        return distance;
-    }
-
     // used in facePhoton() method in drivebase
     public Rotation2d getYawToPoseRotation2d(Pose2d robotPose, Pose2d targetPose) {
         Rotation2d targetYaw = PhotonUtils.getYawToPose(robotPose, targetPose);
         return targetYaw;
     }
 
-    //
     public Pose2d getLatestEstimatedRobotPose() {
 
         if (hasTarget()) {
@@ -275,24 +241,6 @@ public class Cam2 extends SubsystemBase {
 
     public double getLatestLatency() {
         return m_latestLatency;
-    }
-
-    public void clearTagSolutions(Field2d field) {
-        if (field == null)
-            return;
-        field.getObject("tagSolutions").setPoses();
-        field.getObject("visionPose").setPoses();
-        field.getObject("visionAltPose").setPoses();
-        field.getObject("visibleTagPoses").setPoses();
-    }
-
-    public void plotPose(Field2d field, String label, Pose2d pose) {
-        if (field == null)
-            return;
-        if (pose == null)
-            field.getObject(label).setPoses();
-        else
-            field.getObject(label).setPose(pose);
     }
 
     /**
