@@ -37,6 +37,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.NoteTrackingConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 import frc.robot.subsystems.ApriltagTracking.TagTrackingPhotonvision;
 import frc.robot.subsystems.NoteTracking.NoteTrackingPhotovision;
@@ -425,9 +426,11 @@ public class Drivebase extends SubsystemBase {
     drive(xSpeed, ySpeed, rot, true);
   }
 
-  // should do further calculate
+  // remember to fine the constants value
   public void driveToSpeaker(){
-    driveToSpecificPose2d(photonTracking.getTagPose2d());
+    Pose2d tagpose = photonTracking.getTagPose2d();
+    Pose2d desiredPose = tagpose.plus(VisionConstants.speakeroffset);
+    driveToSpecificPose2d(desiredPose);
   }
 
   /**
