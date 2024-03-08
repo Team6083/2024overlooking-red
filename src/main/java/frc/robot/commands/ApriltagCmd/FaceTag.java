@@ -10,6 +10,7 @@ import frc.robot.subsystems.drive.Drivebase;
 public class FaceTag extends Command {
   /** Creates a new FaceTag. */
   private final Drivebase drivebase;
+
   public FaceTag(Drivebase drivebase) {
     this.drivebase = drivebase;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,7 +25,7 @@ public class FaceTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-  drivebase.faceTarget();
+    drivebase.faceTarget();
   }
 
   // Called once the command ends or is interrupted.

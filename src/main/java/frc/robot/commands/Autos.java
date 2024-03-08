@@ -6,13 +6,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 // import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.AutoConstants;
 // import frc.robot.commands.ApriltagCmd.FaceTag;
 import frc.robot.commands.autoCmds.AutoAimAndShootCmd;
 import frc.robot.commands.autoCmds.AutoIntakeCmd;
-import frc.robot.commands.autoCmds.AutoRiseShooterCmd;
+import frc.robot.commands.autoCmds.AutoRotateShooterCmd;
 import frc.robot.commands.autoCmds.AutoShootCmd;
+import frc.robot.commands.autoCmds.PoseRotateShooterCmd;
 // import frc.robot.commands.autoTimerCmds.GoBackCmd;
 // import frc.robot.commands.autoTimerCmds.GoForwardCmd;
 // import frc.robot.commands.autoTimerCmds.GoLeftCmd;
@@ -35,12 +37,12 @@ public final class Autos {
     return Commands.sequence();
   }
 
-  public static Command auto(Drivebase drivebase, RotateShooterSubsystem riseShooterSubsystem,
+  public static Command auto(Drivebase drivebase, RotateShooterSubsystem rotateShooterSubsystem,
       ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem,
       String autoNumber, String initial) {
     int length = autoNumber.length();
     // Command runAutoCommand = new InstantCommand();
-    Command runAutoCommand = new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem,
+    Command runAutoCommand = new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem,
         transportSubsystem);
     char pre = '0';
     boolean firstTime = true;
@@ -173,45 +175,45 @@ public final class Autos {
       switch (cur) {
         case '1':
           runAutoCommand
-              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
+              .andThen(new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '2':
           runAutoCommand
-              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
+              .andThen(new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '3':
           runAutoCommand
-              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
+              .andThen(new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '4':
           runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.topRelayToRTS,
               AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
               AutoConstants.kMaxAngularAcceleration, 0.0))
-              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
+              .andThen(new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '5':
           runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.topRelayToRTS,
               AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
               AutoConstants.kMaxAngularAcceleration, 0.0))
-              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
+              .andThen(new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '6':
           runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.topRelayToRTS,
               AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
               AutoConstants.kMaxAngularAcceleration, 0.0))
-              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
+              .andThen(new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '7':
           runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.bottomRelayToRBS,
               AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
               AutoConstants.kMaxAngularAcceleration, 0.0))
-              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
+              .andThen(new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
         case '8':
           runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.bottomRelayToRBS,
               AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
               AutoConstants.kMaxAngularAcceleration, 0.0))
-              .andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem, transportSubsystem));
+              .andThen(new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem, transportSubsystem));
           break;
       }
     }
@@ -219,18 +221,18 @@ public final class Autos {
     return runAutoCommand;
   }
 
-  public static Command autoOptimize(Drivebase drivebase, RotateShooterSubsystem riseShooterSubsystem,
+  public static Command autoOptimize(Drivebase drivebase, RotateShooterSubsystem rotateShooterSubsystem,
       ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem,
       String autoNumber, String initial) {
 
     int length = autoNumber.length();
-    // Command runAutoCommand = new InstantCommand();
-    Command runAutoCommand = new AutoRiseShooterCmd(riseShooterSubsystem);
-    runAutoCommand.andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem,
-        transportSubsystem));
+    Command runPeriodicCommand = new AutoRotateShooterCmd(rotateShooterSubsystem);
+    Command runAutoCommand = new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem,
+        transportSubsystem);
     char pre = '0';
     boolean firstTime = true;
 
+    // initial setting
     switch (initial) {
       case "left":
         drivebase.resetPose(AutoConstants.leftPose2d);
@@ -243,8 +245,11 @@ public final class Autos {
         break;
     }
 
+    // execute auto
     for (int i = 0; i < length; i++) {
       char cur = autoNumber.charAt(i);
+
+      // move to note
       if (pre == '0' || pre == '1' || pre == '2' || pre == '3') {
         switch (cur) {
           case '1':
@@ -345,6 +350,7 @@ public final class Autos {
         }
       }
 
+      // whether rerun path or not
       if (!drivebase.hasTargets()) {
         if (firstTime) {
           firstTime = false;
@@ -354,8 +360,11 @@ public final class Autos {
         pre = cur;
         firstTime = true;
       }
+
+      // get note
       runAutoCommand.andThen(new AutoIntakeCmd(drivebase, transportSubsystem, intakeSubsystem));
 
+      // move to shoot point and shoot
       switch (cur) {
         case '1':
           runAutoCommand
@@ -402,17 +411,15 @@ public final class Autos {
       }
     }
 
-    return runAutoCommand;
-
+    return new ParallelCommandGroup(runAutoCommand, runPeriodicCommand) ;
   }
 
-  public static Command autoWithOnlyPose(Drivebase drivebase, RotateShooterSubsystem riseShooterSubsystem,
+  public static Command autoWithOnlyPose(Drivebase drivebase, RotateShooterSubsystem rotateShooterSubsystem,
       ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem,
       String autoNumber, String initial) {
     int length = autoNumber.length();
-    // Command runAutoCommand = new InstantCommand();
-    Command runAutoCommand = new AutoRiseShooterCmd(riseShooterSubsystem);
-    runAutoCommand.andThen(new AutoAimAndShootCmd(drivebase, riseShooterSubsystem, shooterSubsystem,
+    Command runAutoCommand = new PoseRotateShooterCmd(rotateShooterSubsystem, drivebase);
+    runAutoCommand.andThen(new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem,
         transportSubsystem));
     char pre = '0';
     boolean firstTime = true;
@@ -429,6 +436,9 @@ public final class Autos {
         break;
     }
 
+    for (int i = 0; i < length; i++) {
+
+    }
     return Commands.none();
   }
   

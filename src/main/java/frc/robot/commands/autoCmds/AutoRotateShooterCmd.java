@@ -7,33 +7,33 @@ package frc.robot.commands.autoCmds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.RotateShooterSubsystem;
 
-public class AutoRiseShooterCmd extends Command {
-  RotateShooterSubsystem riseShooterSubsystem;
+public class AutoRotateShooterCmd extends Command {
+  private final RotateShooterSubsystem rotateShooterSubsystem;
 
   /** Creates a new AutoAimCmd. */
-  public AutoRiseShooterCmd(RotateShooterSubsystem riseShooterSubsystem) {
-    this.riseShooterSubsystem = riseShooterSubsystem;
-    addRequirements(this.riseShooterSubsystem);
+  public AutoRotateShooterCmd(RotateShooterSubsystem rotateShooterSubsystem) {
+    this.rotateShooterSubsystem = rotateShooterSubsystem;
+    addRequirements(this.rotateShooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    riseShooterSubsystem.setSetpoint(riseShooterSubsystem.getAprilTagDegree(riseShooterSubsystem.getSetpoint()));
+    rotateShooterSubsystem.setSetpoint(rotateShooterSubsystem.getAprilTagDegree(rotateShooterSubsystem.getSetpoint()));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    riseShooterSubsystem.setSetpoint(riseShooterSubsystem.getAprilTagDegree(riseShooterSubsystem.getSetpoint()));
-    riseShooterSubsystem.pidControl();
+    rotateShooterSubsystem.setSetpoint(rotateShooterSubsystem.getAprilTagDegree(rotateShooterSubsystem.getSetpoint()));
+    rotateShooterSubsystem.pidControl();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    riseShooterSubsystem.pidControl();
+    rotateShooterSubsystem.pidControl();
   }
 
   // Returns true when the command should end.
