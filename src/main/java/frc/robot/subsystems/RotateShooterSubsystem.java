@@ -12,6 +12,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RotateShooterConstants;
 import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
@@ -23,6 +25,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
   private final DutyCycleEncoder rotateEncoder;
   private final double angleDegreeOffset;
   private final PIDController rotatePID;
+  private double rotateDegreeError = 0.0;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
   private final TagTrackingLimelight tagTrackingLimelight;
   // private final SparkMaxRelativeEncoder riseEncoderSPX;
@@ -31,7 +34,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
     rotateMotor = new CANSparkMax(RotateShooterConstants.kRotateShooterChannel, MotorType.kBrushless);
     
     rotateEncoder = new DutyCycleEncoder(RotateShooterConstants.kEncoderChannel);
-    angleDegreeOffset = RotateShooterConstants.kRotateAngleOffset;
+    angleDegreeOffset = RotateShooterConstants.kRiseAngleOffset;
 
     rotatePID = new PIDController(RotateShooterConstants.kP, RotateShooterConstants.kI, RotateShooterConstants.kD);
 
@@ -57,9 +60,9 @@ public class RotateShooterSubsystem extends SubsystemBase {
       return;
     }
     if (hasExceedPhysicalLimit(setpoint) == -1) {
-      setpoint = RotateShooterConstants.kRotateAngleMin;
+      setpoint = RotateShooterConstants.kRiseAngleMin;
     } else if (hasExceedPhysicalLimit(setpoint) == 1) {
-      setpoint = RotateShooterConstants.kRotateAngleMax;
+      setpoint = RotateShooterConstants.kRiseAngleMax;
     }
     rotatePID.setSetpoint(setpoint);
   }
@@ -67,8 +70,8 @@ public class RotateShooterSubsystem extends SubsystemBase {
   public void pidControl() {
     double rotateVoltage = rotatePID.calculate(getAngleDegree());
     double modifiedRotateVoltage = rotateVoltage;
-    if (Math.abs(modifiedRotateVoltage) > RotateShooterConstants.kRotateVoltLimit) {
-      modifiedRotateVoltage = RotateShooterConstants.kRotateVoltLimit * (rotateVoltage > 0 ? 1 : -1);
+    if (Math.abs(modifiedRotateVoltage) > RotateShooterConstants.kRiseVoltLimit) {
+      modifiedRotateVoltage = RotateShooterConstants.kRiseVoltLimit * (rotateVoltage > 0 ? 1 : -1);
     }
     setMotor(rotateVoltage);
     SmartDashboard.putNumber("rise_volt", modifiedRotateVoltage);
@@ -107,8 +110,13 @@ public class RotateShooterSubsystem extends SubsystemBase {
     return degree;
   }
 
-  public void addError(double error) {
 
+  public Command addErrorCommand(double error) {
+    return Commands.run(() -> addError(error), this);
+  }
+  
+  public void addError(double error) {
+    rotateDegreeError = error*RotateShooterConstants.kRiseDegreeErrorPoint;
   }
 
   public void resetEncoder() {
@@ -132,7 +140,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
   }
 
   private int hasExceedPhysicalLimit(double angle) {
-    return (angle < RotateShooterConstants.kRotateAngleMin ? -1 : (angle > RotateShooterConstants.kRotateAngleMax ? 1 : 0));
+    return (angle < RotateShooterConstants.kRiseAngleMin ? -1 : (angle > RotateShooterConstants.kRiseAngleMax ? 1 : 0));
   }
 
   @Override

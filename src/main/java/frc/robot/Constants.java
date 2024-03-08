@@ -75,11 +75,12 @@ public final class Constants {
         public static final Boolean kEncoderInverted = true;
         public static final int kEncoderChannel = 2;
         public static final double kInitDegree = 60.0;
-        public static final double kRotateVoltLimit = 5.0;
-        public static final double kRotateAngleMin = -5.0;
-        public static final double kRotateAngleMax = 65.0;
-        public static final double kRotateAngleOffset = 0.52;
-        public static final double kRotateTriggerValue = 0.15;
+        public static final double kRiseVoltLimit = 5.0;
+        public static final double kRiseAngleMin = -5.0;
+        public static final double kRiseAngleMax = 65.0;
+        public static final double kRiseDegreeErrorPoint = 3;
+        public static final double kRiseAngleOffset = 0.52;
+        public static final double kRiseTriggerValue = 0.15;
         public static final double kSpeakerHeight = 2.0;
         public static final double kP = 0.5;
         public static final double kI = 0;

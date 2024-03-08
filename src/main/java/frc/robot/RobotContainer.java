@@ -16,6 +16,18 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriveControllerConstants;
 import frc.robot.commands.Autos;
+import frc.robot.subsystems.drive.Drivebase;
+import frc.robot.subsystems.noteTracking.NoteTrackingPhotovision;
+import frc.robot.commands.controllerCmds.DrivebaseAccelerateCmd;
+import frc.robot.commands.controllerCmds.DrivebaseDefaultSpeedCmd;
+import frc.robot.subsystems.PowerDistributionSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.TransportSubsystem;
+import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
+import frc.robot.subsystems.apriltagTracking.TagTrackingPhotonvision;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.commands.rotateShooterCmds.RotateShooterPIDCmd;
+import frc.robot.subsystems.HookSubsystem;
 import frc.robot.commands.hookCmds.ManualControl.HookUpLeftManualCmd;
 import frc.robot.commands.hookCmds.ManualControl.HookUpRightManualCmd;
 import frc.robot.commands.hookCmds.ManualControl.LineUpManualCmd;
@@ -33,22 +45,20 @@ import frc.robot.subsystems.PowerDistributionSubsystem;
 import frc.robot.subsystems.RotateShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
-import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
-import frc.robot.subsystems.apriltagTracking.TagTrackingPhotonvision;
 import frc.robot.subsystems.drive.Drivebase;
-import frc.robot.subsystems.noteTracking.NoteTrackingPhotovision;
 
 public class RobotContainer {
   private final CommandXboxController mainController;
   private final CommandGenericHID controlPanel;
-  private final ShooterSubsystem shooter;
-  private final TransportSubsystem transport;
-  private final HookSubsystem hook;
-  private final IntakeSubsystem intake;
-  private final RotateShooterSubsystem riseShooter;
-  private final Drivebase drivebase;
-  // private final HookSubsystem hook;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
+  // private final Drivebase drivebase;
+  // private final DrivebaseAccelerateCmd drivebaseAccelerate;
+  // private final DrivebaseDefaultSpeedCmd drivebaseDefaultSpeed;
+  private final IntakeSubsystem intake;
+  private final TransportSubsystem transport;
+  private final ShooterSubsystem shooter;
+  private final RotateShooterSubsystem riseShooter;
+  private final HookSubsystem hook;
   private final TagTrackingLimelight aprilTagTracking;
   private final NoteTrackingPhotovision noteTracking;
   private final TagTrackingPhotonvision photonTracking;
@@ -64,11 +74,13 @@ public class RobotContainer {
 
     mainController = new CommandXboxController(DriveControllerConstants.kMainController);
     controlPanel = new CommandGenericHID(DriveControllerConstants.kControlPanel);
-    shooter = new ShooterSubsystem(powerDistributionSubsystem);
-    transport = new TransportSubsystem(powerDistributionSubsystem);
+    // drivebase = new Drivebase();
+    // drivebaseAccelerate = new DrivebaseAccelerateCmd(drivebase);
+    // drivebaseDefaultSpeed = new DrivebaseDefaultSpeedCmd(drivebase);
     intake = new IntakeSubsystem(powerDistributionSubsystem);
+    transport = new TransportSubsystem(powerDistributionSubsystem);
+    shooter = new ShooterSubsystem(powerDistributionSubsystem);
     riseShooter = new RotateShooterSubsystem(powerDistributionSubsystem, aprilTagTracking);
-    drivebase = new Drivebase(noteTracking, aprilTagTracking, photonTracking);
     hook = new HookSubsystem(powerDistributionSubsystem);
 
     // AprilTagTracking.init();
@@ -114,46 +126,38 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // mainController.y().toggleOnTrue(new TeleopIntakeCmd(intake,
-    // trans.isGetNote()).alongWith(new
-    // IntakeTransCmd(trans)));
+    //drivetrain
+    //drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
+    //mainController.pov(0).toggleOnTrue(DrivebaseAccelerateCmd(drivebase));
+    //mainController.pov(180).toggleOnTrue(DrivebaseDefaultSpeedCmd(drivebase));
+
+    //riseshooter
     riseShooter.setDefaultCommand(
-        new RotateShooterPIDCmd(riseShooter, mainController.getLeftTriggerAxis(),
-            mainController.getRightTriggerAxis()));
-    mainController.leftBumper().whileTrue(new HookLeftMotorUpPIDCmd(hook));
-    mainController.leftTrigger().whileTrue(new HookLeftMotorDownPIDCmd(hook));
-    mainController.rightBumper().whileTrue(new HookRightMotorUpPIDCmd(hook));
-    mainController.rightTrigger().whileTrue(new HookRightMotorDownPIDCmd(hook));
+        new RotateShooterPIDCmd(riseShooter, mainController.getLeftTriggerAxis(), mainController.getRightTriggerAxis()));
+    riseShooter.addErrorCommand(controlPanel.getRawAxis(0));
+    //hook
+    mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
     mainController.pov(90).whileTrue(new LineUpPIDCmd(hook));
-    mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
-    mainController.leftBumper().whileTrue(new HookLeftMotorDownPIDCmd(hook));
-    mainController.leftTrigger().whileTrue(new HookUpLeftManualCmd(hook));
-    mainController.rightBumper().whileTrue(new HookRightMotorDownPIDCmd(hook));
-    mainController.rightTrigger().whileTrue(new HookUpRightManualCmd(hook));
-    mainController.pov(90).whileTrue(new LineUpManualCmd(hook));
-    mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
-
-    // mainController.a().toggleOnTrue(new RiseShooterManualCmd(riseShooter));
-    // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
-    // mainController.back().onTrue(new GyroResetCmd(drivebase));
-    // mainController.a().toggleOnTrue(new ShootPIDCmd(shooter));
-    // mainController.x().toggleOnTrue(new TransCmd(trans));
-    // mainController.back().toggleOnTrue(new ReTransCmd(trans));
-    // mainController.a().toggleOnTrue(new ShootTransportCmd(transport,
-    // shooter.getRate()));
-    // main.y().whileTrue(new HookManualCmd(hook));
-    // mainController.pov(0).onTrue(new LinePIDCmd(hook));
-    // mainController.pov(180).onTrue(new LinePIDCmd(hook));
-
+    mainController.leftTrigger().whileTrue(new HookLeftMotorDownPIDCmd(hook));
+    mainController.leftBumper().whileTrue(new HookLeftMotorUpPIDCmd(hook));
+    mainController.rightTrigger().whileTrue(new HookRightMotorDownPIDCmd(hook));
+    mainController.rightBumper().whileTrue(new HookRightMotorUpPIDCmd(hook));
+  
     // intake and transport
     // mainController.y().toggleOnTrue(new IntakeWithTransportCmd(transport,
     // intake)); // onTrue could be okay, too
     // mainController.x().whileTrue(new ReIntakeWithTransportCmd(transport,
     // intake));
 
-    // mainController.pov(0).toggleOnTrue(new DrivebaseAccelerateCmd(drivebase));
-    // mainController.pov(180).toggleOnTrue(new
-    // DrivebaseDefaultSpeedCmd(drivebase));
+    //shooter
+    //mainController.b().toggleOnTrue(new ShootPIDCmd(shooter));
+    //mainController.a().toggleOnTrue(new ShootTransportCmd(transport, shooter.getRate()));
+    
+    //semi-automatic
+
+
+    //reset
+    //mainController.back().onTrue(new GyroResetCmd(drivebase));
   }
 
   public Command getAutonomousCommand() {
