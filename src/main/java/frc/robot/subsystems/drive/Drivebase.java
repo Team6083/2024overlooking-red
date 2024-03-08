@@ -91,15 +91,15 @@ public class Drivebase extends SubsystemBase {
 
   private final NoteTrackingPhotovision note;
   private final TagTrackingLimelight aprilTagTracking;
-  // private final TagTrackingPhotonvision photonTracking;
+  private final TagTrackingPhotonvision photonTracking;
 
   private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
 
   public Drivebase(NoteTrackingPhotovision note,
-      TagTrackingLimelight aprilTagTracking) {
+      TagTrackingLimelight aprilTagTracking, TagTrackingPhotonvision photonTracking) {
     this.note = note;
     this.aprilTagTracking = aprilTagTracking;
-    // this.photonTracking = photonTracking;
+    this.photonTracking = photonTracking;
     frontLeftLocation = new Translation2d(0.3, 0.3);
     frontRightLocation = new Translation2d(0.3, -0.3);
     backLeftLocation = new Translation2d(-0.3, 0.3);
@@ -423,6 +423,11 @@ public class Drivebase extends SubsystemBase {
     double ySpeed = drivePID.calculate(yoffset);
     double rot = drivePID.calculate(aoffset);
     drive(xSpeed, ySpeed, rot, true);
+  }
+
+  // should do further calculate
+  public void driveToSpeaker(){
+    driveToSpecificPose2d(photonTracking.getTagPose2d());
   }
 
   /**
