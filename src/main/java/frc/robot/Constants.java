@@ -54,11 +54,11 @@ public final class Constants {
     }
 
     public static class TransportConstants {
-        public static final int kTrantsportChannel = 22;
+        public static final int kTransportChannel = 22;
         public static final boolean kTransportInverted = true;
         public static final double kTransVoltage = 5;
         public static final double kReTransVoltage = -5;
-        public static final double kDistRange = 8.0;
+        public static final double kDistanceRange = 8.0;
     }
 
     public static class IntakeConstants {
@@ -69,16 +69,16 @@ public final class Constants {
     }
 
     public static class RotateShooterConstants {
-        public static final int kRiseShooterChannel = 21;
-        public static final Boolean kRiseShooterInverted = true;
+        public static final int kRotateShooterChannel = 21;
+        public static final Boolean kRotateShooterInverted = true;
         public static final Boolean kEncoderInverted = true;
         public static final int kEncoderChannel = 2;
         public static final double kInitDegree = 60.0;
         public static final double kRotateVoltLimit = 5.0;
-        public static final double kRiseAngleMin = -5.0;
-        public static final double kRiseAngleMax = 65.0;
-        public static final double kRiseAngleOffset = 0.52;
-        public static final double kRiseTriggerValue = 0.15;
+        public static final double kRotateAngleMin = -5.0;
+        public static final double kRotateAngleMax = 65.0;
+        public static final double kRotateAngleOffset = 0.52;
+        public static final double kRotateTriggerValue = 0.15;
         public static final double kSpeakerHeight = 2.0;
         public static final double kP = 0.5;
         public static final double kI = 0;
@@ -86,7 +86,7 @@ public final class Constants {
     }
 
     public static class HookConstants {
-        public static final int kHookLineChannel = 23;
+        public static final int kHookLineMotorChannel = 23;
         public static final int kHookLeftMotorCnannel = 28;
         public static final int kHookRightMotorCnannel = 27;
         public static final int kHookLeftEncoderChannelA = 0;
@@ -110,8 +110,8 @@ public final class Constants {
         public static final double kManualControlLeftHookMotorPower = 0.25;
         public static final double kManualControlRightHookMotorPower = 0.25;
         public static final boolean kLineMotorInverted = true;
-        public static final boolean kHookMotorLeftInverted = false;
-        public static final boolean kHookMotorRightInverted = true;
+        public static final boolean kHookLeftMotorInverted = false;
+        public static final boolean kHookRightMotorInverted = true;
         public static final double kInitSetpoint = 0.0;
         public static final double kLeftMotorModify = 0.0; // TO DO
         public static final double kRightMotorModify = 0.0; // TO DO
@@ -180,14 +180,14 @@ public final class Constants {
 
         public static final double kMaxSpeedTurningDegree = 180.0;
 
-        public static final double kPRotController = kMaxModuleTuringVoltage / kMaxSpeedTurningDegree;
-        public static final double kIRotController = 0.0;
+        public static final double kPRotationController = kMaxModuleTuringVoltage / kMaxSpeedTurningDegree;
+        public static final double kIRotationController = 0.0;
         public static final double kDRotController = 0.0004;
 
         public static final boolean kTurningMotorInverted = true;
     }
 
-    public static final class PdConstants {
+    public static final class PowerDistributionConstants {
         public static final int kIntakeMotorCurrrentchannel = 0;
         public static final int kShooterDownMotorCurrentchannel = 1;
         public static final int kShooterUpMotorCurrentchannel = 2;
@@ -204,7 +204,7 @@ public final class Constants {
         public static final double kHookMotor1MaxCurrent = 0;
         public static final double kHookMotor2MaxCurrent = 0;
         public static final double kTransportMaxCurrent = 0;
-        public static final double kRiseShooterMaxCurrent = 40.0;
+        public static final double kRotateShooterMaxCurrent = 40.0;
     }
 
     public static final class AutoConstants {

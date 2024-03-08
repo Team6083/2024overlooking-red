@@ -26,7 +26,7 @@ public class Transport extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    transportSubsystem.setTrans();
+    transportSubsystem.setTransport();
   }
 
   // Called once the command ends or is interrupted.

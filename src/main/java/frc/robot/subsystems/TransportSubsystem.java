@@ -15,24 +15,24 @@ import frc.robot.Constants.TransportConstants;
 
 public class TransportSubsystem extends SubsystemBase {
   /** Creates a new TransportSubsystem. */
-  private final CANSparkMax trans;
+  private final CANSparkMax transportMotor;
   private final Rev2mDistanceSensor distanceSensor;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
 
   public TransportSubsystem(PowerDistributionSubsystem powerDistribution) {
 
-    trans = new CANSparkMax(TransportConstants.kTrantsportChannel, MotorType.kBrushless);
-    trans.setInverted(TransportConstants.kTransportInverted);
+    transportMotor = new CANSparkMax(TransportConstants.kTransportChannel, MotorType.kBrushless);
+    transportMotor.setInverted(TransportConstants.kTransportInverted);
     distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
 
     this.powerDistributionSubsystem = powerDistribution;
   }
 
-  public void setTrans() {
+  public void setTransport() {
     setMotor(TransportConstants.kTransVoltage);
   }
 
-  public void setReTrans() {
+  public void setReTransport() {
     setMotor(TransportConstants.kReTransVoltage);
   }
 
@@ -40,15 +40,13 @@ public class TransportSubsystem extends SubsystemBase {
     if (distanceSensor.isRangeValid()) {
       SmartDashboard.putNumber("Range dist", distanceSensor.getRange());
       SmartDashboard.putNumber("Timestamp dist", distanceSensor.getTimestamp());
-      return distanceSensor.getRange() <= TransportConstants.kDistRange;
-    } else {
-      return false;
+      return distanceSensor.getRange() <= TransportConstants.kDistanceRange;
     }
-
+    return false;
   }
 
   public void stopMotor() {
-    trans.set(0);
+    transportMotor.set(0);
   }
 
   public void setMotor(double voltage) {
@@ -56,7 +54,7 @@ public class TransportSubsystem extends SubsystemBase {
       stopMotor();
       return;
     }
-    trans.setVoltage(voltage);
+    transportMotor.setVoltage(voltage);
   }
 
   @Override

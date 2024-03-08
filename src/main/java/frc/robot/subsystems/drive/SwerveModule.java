@@ -32,7 +32,7 @@ public class SwerveModule extends SubsystemBase {
 
   private final RelativeEncoder driveEncoder;
 
-  private final PIDController rotController;
+  private final PIDController rotationController;
 
   public SwerveModule(int driveMotorChannel,
       int turningMotorChannel,
@@ -52,9 +52,9 @@ public class SwerveModule extends SubsystemBase {
 
     driveEncoder = driveMotor.getEncoder();
 
-    rotController = new PIDController(ModuleConstants.kPRotController, ModuleConstants.kIRotController,
+    rotationController = new PIDController(ModuleConstants.kPRotationController, ModuleConstants.kIRotationController,
         ModuleConstants.kDRotController);
-    rotController.enableContinuousInput(-180.0, 180.0);
+    rotationController.enableContinuousInput(-180.0, 180.0);
   }
 
   public void init() {
@@ -134,7 +134,7 @@ public class SwerveModule extends SubsystemBase {
   public double[] optimizeOutputVoltage(SwerveModuleState goalState, double currentTurningDegree) {
     goalState = SwerveModuleState.optimize(goalState, Rotation2d.fromDegrees(currentTurningDegree));
     double driveMotorVoltage = ModuleConstants.kDesireSpeedtoMotorVoltage * goalState.speedMetersPerSecond;
-    double turningMotorVoltage = rotController.calculate(currentTurningDegree, goalState.angle.getDegrees());
+    double turningMotorVoltage = rotationController.calculate(currentTurningDegree, goalState.angle.getDegrees());
     double[] moduleState = { driveMotorVoltage, turningMotorVoltage };
     return moduleState;
   }

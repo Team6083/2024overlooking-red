@@ -20,8 +20,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private final Encoder upEncoder;
   private final Encoder downEncoder;
   private final PIDController ratePidController;
-  private final SimpleMotorFeedforward upMotorFeedForwardControl;
-  private final SimpleMotorFeedforward downMotorFeedForwardControl;
+  private final SimpleMotorFeedforward upMotorFeedForwardController;
+  private final SimpleMotorFeedforward downMotorFeedForwardController;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
 
   public ShooterSubsystem(PowerDistributionSubsystem powerDistribution) {
@@ -39,9 +39,9 @@ public class ShooterSubsystem extends SubsystemBase {
     upMotor.setInverted(ShooterConstants.kUpMotorInverted);
     downMotor.setInverted(ShooterConstants.kDownMotorInverted);
 
-    upMotorFeedForwardControl = new SimpleMotorFeedforward(ShooterConstants.kUpMotorS, ShooterConstants.kUpMotorV,
+    upMotorFeedForwardController = new SimpleMotorFeedforward(ShooterConstants.kUpMotorS, ShooterConstants.kUpMotorV,
         ShooterConstants.kUpMotorA);
-    downMotorFeedForwardControl = new SimpleMotorFeedforward(ShooterConstants.kDownMotorS, ShooterConstants.kDownMotorV,
+    downMotorFeedForwardController = new SimpleMotorFeedforward(ShooterConstants.kDownMotorS, ShooterConstants.kDownMotorV,
         ShooterConstants.kDownMotorA);
 
     resetEncoder();
@@ -56,9 +56,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setRateControl() {
     double rate = ShooterConstants.kShooterRate;
-    final double upMotorVoltage = upMotorFeedForwardControl.calculate(rate)
+    final double upMotorVoltage = upMotorFeedForwardController.calculate(rate)
         + ratePidController.calculate(getUpEncoderRate(), rate);
-    final double downMotorVoltage = downMotorFeedForwardControl.calculate(rate)
+    final double downMotorVoltage = downMotorFeedForwardController.calculate(rate)
         + ratePidController.calculate(getDownEncoderRate(), rate);
     setUpMotorVoltage(upMotorVoltage);
     setDownMotorVoltage(downMotorVoltage);

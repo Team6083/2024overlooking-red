@@ -27,7 +27,7 @@ public class HookLeftMotorDownPIDCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.setLeftHookMotorSetpoint(hookSubsystem.getLeftHookMotorSetpoint() - HookConstants.kLeftMotorModify);
+    hookSubsystem.setLeftHookMotorSetpoint(hookSubsystem.getLeftHookSetpoint() - HookConstants.kLeftMotorModify);
     hookSubsystem.hookLeftMotorPIDControl();
   }
 
