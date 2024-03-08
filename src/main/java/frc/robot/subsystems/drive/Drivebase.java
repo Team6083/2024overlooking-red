@@ -37,6 +37,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.NoteTrackingConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 import frc.robot.subsystems.ApriltagTracking.TagTrackingPhotonvision;
 import frc.robot.subsystems.NoteTracking.NoteTrackingPhotovision;
@@ -91,15 +92,15 @@ public class Drivebase extends SubsystemBase {
 
   private final NoteTrackingPhotovision note;
   private final TagTrackingLimelight aprilTagTracking;
-  // private final TagTrackingPhotonvision photonTracking;
+  private final TagTrackingPhotonvision photonTracking;
 
   private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
 
   public Drivebase(NoteTrackingPhotovision note,
-      TagTrackingLimelight aprilTagTracking) {
+      TagTrackingLimelight aprilTagTracking, TagTrackingPhotonvision photonTracking) {
     this.note = note;
     this.aprilTagTracking = aprilTagTracking;
-    // this.photonTracking = photonTracking;
+    this.photonTracking = photonTracking;
     frontLeftLocation = new Translation2d(0.3, 0.3);
     frontRightLocation = new Translation2d(0.3, -0.3);
     backLeftLocation = new Translation2d(-0.3, 0.3);
@@ -423,6 +424,13 @@ public class Drivebase extends SubsystemBase {
     double ySpeed = drivePID.calculate(yoffset);
     double rot = drivePID.calculate(aoffset);
     drive(xSpeed, ySpeed, rot, true);
+  }
+
+  // remember to fine the constants value
+  public void driveToSpeaker(){
+    Pose2d tagpose = photonTracking.getTagPose2d();
+    Pose2d desiredPose = tagpose.plus(VisionConstants.speakeroffset);
+    driveToSpecificPose2d(desiredPose);
   }
 
   /**
