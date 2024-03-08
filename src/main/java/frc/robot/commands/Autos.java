@@ -440,6 +440,115 @@ public final class Autos {
 
     // execute auto
     for (int i = 0; i < length; i++) {
+      char cur = autoNumber.charAt(i);
+
+      // move to note
+      if (pre == '0' || pre == '1' || pre == '2' || pre == '3') {
+        switch (cur) {
+          case '1':
+            runAutoCommand.andThen(drivebase.pathFindingToPose(2.13, 6.68, 25.53, AutoConstants.kMaxVelocity,
+                AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+                AutoConstants.kMaxAngularAcceleration, 0, 0));
+            break;
+          case '2':
+            runAutoCommand.andThen(drivebase.pathFindingToPose(2.13, 5.5, 0, AutoConstants.kMaxVelocity,
+                AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+                AutoConstants.kMaxAngularAcceleration, 0, 0));
+            break;
+          case '3':
+            runAutoCommand.andThen(drivebase.pathFindingToPose(2.13, 4.4, -29.16, AutoConstants.kMaxVelocity,
+                AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+                AutoConstants.kMaxAngularAcceleration, 0, 0));
+            break;
+          case '4':
+            runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.RTSToNote4,
+                AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+                AutoConstants.kMaxAngularAcceleration, 0.0));
+            break;
+          case '5':
+            runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.RTSToNote5,
+                AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+                AutoConstants.kMaxAngularAcceleration, 0.0));
+            break;
+          case '6':
+            runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.RBSToNote6,
+                AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+                AutoConstants.kMaxAngularAcceleration, 0.0));
+            break;
+          case '7':
+            runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.RBSToNote7,
+                AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+                AutoConstants.kMaxAngularAcceleration, 0.0));
+            break;
+          case '8':
+            runAutoCommand.andThen(drivebase.pathFindingThenFollowPath(AutoConstants.RBSToNote8,
+                AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration, AutoConstants.kMaxAngularVelocity,
+                AutoConstants.kMaxAngularAcceleration, 0.0));
+            break;
+        }
+
+      } else if (pre == '4' || pre == '5' || pre == '6') {
+        switch (cur) {
+          case '1':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RTSToNote1));
+            break;
+          case '2':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RTSToNote2));
+            break;
+          case '3':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RTSToNote3));
+            break;
+          case '4':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RTSToNote4));
+            break;
+          case '5':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RTSToNote5));
+            break;
+          case '6':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RTSToNote6));
+            break;
+          case '7':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RTSToNote7));
+            break;
+          case '8':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RTSToNote8));
+            break;
+        }
+      } else if (pre == '7' || pre == '8') {
+        switch (cur) {
+          case '1':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RBSToNote1));
+            break;
+          case '2':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RBSToNote2));
+            break;
+          case '3':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RBSToNote3));
+            break;
+          case '4':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RBSToNote4));
+            break;
+          case '5':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RBSToNote5));
+            break;
+          case '6':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RBSToNote6));
+            break;
+          case '7':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RBSToNote7));
+            break;
+          case '8':
+            runAutoCommand.andThen(drivebase.followPathCommand(AutoConstants.RBSToNote8));
+            break;
+        }
+      }
+
+      // whether rerun path or not
+
+      // get note
+      runAutoCommand.andThen(new AutoIntakeCmd(drivebase, transportSubsystem, intakeSubsystem));
+
+      // move to shoot point and shoot
 
     }
 
