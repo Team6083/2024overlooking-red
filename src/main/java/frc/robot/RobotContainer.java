@@ -26,7 +26,6 @@ import frc.robot.subsystems.TransportSubsystem;
 import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
 import frc.robot.subsystems.apriltagTracking.TagTrackingPhotonvision;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.commands.rotateShooterCmds.RotateShooterPIDCmd;
 import frc.robot.subsystems.HookSubsystem;
 import frc.robot.commands.hookCmds.ManualControl.HookUpLeftManualCmd;
 import frc.robot.commands.hookCmds.ManualControl.HookUpRightManualCmd;
@@ -37,7 +36,6 @@ import frc.robot.commands.hookCmds.PIDControl.HookRightMotorDownPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.HookRightMotorUpPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.LineDownPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.LineUpPIDCmd;
-import frc.robot.commands.rotateShooterCmds.RotateShooterPIDCmd;
 // import frc.robot.subsystems.AprilTagTracking;
 import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -132,8 +130,6 @@ public class RobotContainer {
     //mainController.pov(180).toggleOnTrue(DrivebaseDefaultSpeedCmd(drivebase));
 
     //riseshooter
-    riseShooter.setDefaultCommand(
-        new RotateShooterPIDCmd(riseShooter, mainController.getLeftTriggerAxis(), mainController.getRightTriggerAxis()));
     riseShooter.addErrorCommand(controlPanel.getRawAxis(0));
     //hook
     mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
