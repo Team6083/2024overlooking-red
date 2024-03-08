@@ -18,6 +18,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -59,7 +60,6 @@ public class Drivebase extends SubsystemBase {
   private final Pigeon2 gyro;
   // private final ADXRS450_Gyro gyro;
 
-
   private final Field2d field2d;
 
   private double magnification;
@@ -68,6 +68,7 @@ public class Drivebase extends SubsystemBase {
   private final PIDController facingTagPID;
   private final PIDController followingTagPID;
   private final PIDController faceToSpecificAnglePID;
+  private final PIDController drivePID;
 
   // face method value maybe correct
   private final double kP = 0.08;
@@ -154,6 +155,7 @@ public class Drivebase extends SubsystemBase {
     followingTagPID = new PIDController(kfP, kfI, kfD);
     facingTagPID = new PIDController(kP, kI, kD);
     faceToSpecificAnglePID = new PIDController(kPP, kII, kDD);
+    drivePID = new PIDController(0, 0, 0);
 
     AutoBuilder.configureHolonomic(
         this::getPose2d, // Robot pose suppier
@@ -169,7 +171,7 @@ public class Drivebase extends SubsystemBase {
                                                                                                             // constants
             DrivebaseConstants.kMaxSpeed, // Max module speed, in m/s
             AutoConstants.kDrivebaseRadius, // Drive base radius in meters. Distance from robot center to furthest
-                                           // module.
+                                            // module.
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         () -> {
@@ -407,19 +409,37 @@ public class Drivebase extends SubsystemBase {
     return odometry.getPoseMeters();
   }
 
+  public void driveToSpecificPose2d(Pose2d desiredPose) {
+    Pose2d botpose = getPose2d();
+    Transform2d offset = desiredPose.minus(botpose);
+    double xoffset = offset.getX();
+    double yoffset = offset.getY();
+    Rotation2d roffset = offset.getRotation();
+    double aoffset = roffset.getDegrees();
+    SmartDashboard.putNumber("xoffset", xoffset);
+    SmartDashboard.putNumber("yoffset", yoffset);
+    SmartDashboard.putNumber("aoffset", aoffset);
+    double xSpeed = drivePID.calculate(xoffset);
+    double ySpeed = drivePID.calculate(yoffset);
+    double rot = drivePID.calculate(aoffset);
+    drive(xSpeed, ySpeed, rot, true);
+  }
+
   /**
    * Photonvision version of face target.
    */
   // public void facePhoton() {
-  //   Rotation2d offset = photonTracking.getYawToPoseRotation2d(getPose2d(), photonTracking.getTagPose2d());
-  //   double angle = offset.getDegrees();
+  // boolean hasTarget = photonTracking.hasTarget();
+  // if (hasTarget!=null) {
+  // Rotation2d offset = photonTracking.getYawToPoseRotation2d(getPose2d(),
+  // photonTracking.getTagPose2d());
+  // double angle = offset.getDegrees();
 
-  //   boolean hasTarget = photonTracking.hasTarget();
-  //   double rot = 0;
-  //   if (hasTarget) {
-  //     rot = facingTagPID.calculate(angle, 0);
-  //   }
-  //   drive(0, 0, -rot, true);
+  // double rot = 0;
+
+  // rot = facingTagPID.calculate(angle, 0);
+  // }
+  // drive(0, 0, -rot, true);
   // }
 
   public void resetRobotPose2d() {
@@ -484,7 +504,7 @@ public class Drivebase extends SubsystemBase {
                                                                                                             // constants
             DrivebaseConstants.kMaxSpeed, // Max module speed, in m/s
             AutoConstants.kDrivebaseRadius, // Drive base radius in meters. Distance from robot center to furthest
-                                           // module.
+                                            // module.
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         () -> {
