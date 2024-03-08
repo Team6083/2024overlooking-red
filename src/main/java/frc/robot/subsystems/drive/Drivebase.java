@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivebaseConstants;
@@ -396,16 +397,6 @@ public class Drivebase extends SubsystemBase {
         });
   }
 
-  public void putDashboard() {
-    SmartDashboard.putNumber("frontLeft_speed", swerveModuleStates[0].speedMetersPerSecond);
-    SmartDashboard.putNumber("frontRight_speed", swerveModuleStates[1].speedMetersPerSecond);
-    SmartDashboard.putNumber("backLeft_speed", swerveModuleStates[2].speedMetersPerSecond);
-    SmartDashboard.putNumber("backRight_speed", swerveModuleStates[3].speedMetersPerSecond);
-    SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
-    SmartDashboard.putBoolean("trackingCondition", trackingCondition);
-    aprilTagTracking.putDashboard();
-  }
-
   public Pose2d getPose2d() {
     return odometry.getPoseMeters();
   }
@@ -464,6 +455,26 @@ public class Drivebase extends SubsystemBase {
     // photonTracking.putDashboard();
     field2d.setRobotPose(getPose2d());
     putDashboard();
+  }
+
+  public void putDashboard() {
+    SmartDashboard.putNumber("frontLeft_speed", swerveModuleStates[0].speedMetersPerSecond);
+    SmartDashboard.putNumber("frontRight_speed", swerveModuleStates[1].speedMetersPerSecond);
+    SmartDashboard.putNumber("backLeft_speed", swerveModuleStates[2].speedMetersPerSecond);
+    SmartDashboard.putNumber("backRight_speed", swerveModuleStates[3].speedMetersPerSecond);
+    SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
+    SmartDashboard.putBoolean("trackingCondition", trackingCondition);
+    aprilTagTracking.putDashboard();
+    SmartDashboard.putData(GyroResetCmd());
+    SmartDashboard.putData(PoseResetCmd());
+  }
+
+  public Command GyroResetCmd() {
+    return new InstantCommand(() -> resetGyro(), this);
+  }
+
+  public Command PoseResetCmd() {
+    return new InstantCommand(() -> resetPose2dAndEncoder(), this);
   }
 
   public void resetPose2dAndEncoder() {
