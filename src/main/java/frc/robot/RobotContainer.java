@@ -53,7 +53,7 @@ public class RobotContainer {
   private final NoteTrackingPhotovision noteTracking;
   private final TagTrackingPhotonvision photonTracking;
 
-  // private SendableChooser<Command> autoChooser;
+  private SendableChooser<Command> autoChooser;
   private SendableChooser<String> initialChooser;
 
   public RobotContainer() {
@@ -74,24 +74,24 @@ public class RobotContainer {
     // AprilTagTracking.init();
     configureBindings();
 
-    // autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser = AutoBuilder.buildAutoChooser();
     // autoChooser = new SendableChooser<Command>();
 
-    // autoChooser.setDefaultOption("Do Nothing", Commands.none());
+    autoChooser.setDefaultOption("Do Nothing", Commands.none());
     // autoChooser.addOption("Forward", Autos.goStraightFroward(drivebase));
     // autoChooser.addOption("TurnRight", Autos.turnRight(drivebase));
     // autoChooser.addOption("Combine",
     // Autos.goStraightFrowardAndTurnRight(drivebase));
     // autoChooser.addOption(("Choreo Forward"),
     // Autos.choreoGoStraightForward(drivebase));
-    // SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     initialChooser = new SendableChooser<String>();
-    initialChooser.setDefaultOption("none", "");
+    initialChooser.setDefaultOption("none", null);
     initialChooser.addOption("left", "left");
     initialChooser.addOption("middle", "middle");
     initialChooser.addOption("right", "right");
-    SmartDashboard.putString("auto", "");
+    SmartDashboard.putString("auto", null);
     SmartDashboard.putData(initialChooser);
 
     // autoChooser.setDefaultOption("DoNothing", new StopCmd(drivebase));
@@ -157,7 +157,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    String autoNumber = SmartDashboard.getString("auto", "");
+    String autoNumber = SmartDashboard.getString("auto", null);
     String initial = initialChooser.getSelected();
     var alliance = DriverStation.getAlliance();
     if (initial == null && alliance.isPresent())
