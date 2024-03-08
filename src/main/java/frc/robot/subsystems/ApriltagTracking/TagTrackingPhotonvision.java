@@ -53,9 +53,9 @@ public class TagTrackingPhotonvision extends SubsystemBase {
     // new Rotation3d(Math.toRadians(0.0), Math.toRadians(0.0),
     // Math.toRadians(0.0)));
 
-    public final double cameraHeight = 0.36;
+    public final double cameraHeight = 0.14;
     public final double cameraWeight = 0.0; // I'm still quite confused abt the meaning of having this
-    public final double pitchDegree = 15; // 90 - cam_offset
+    public final double pitchDegree = 10; // 90 - cam_offset
     public final double yawDegree = 0;
     public final double cameraPitch = 15;
     public final double targetHeight = 1.3;
