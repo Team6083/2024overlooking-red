@@ -21,7 +21,7 @@ import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
 public class RotateShooterSubsystem extends SubsystemBase {
 
   /** Creates a new RiseShooterSubsytem. */
-  private final CANSparkMax rotateMotor ;
+  private final CANSparkMax rotateMotor;
   private final DutyCycleEncoder rotateEncoder;
   private final double angleDegreeOffset;
   private final PIDController rotatePID;
@@ -30,9 +30,10 @@ public class RotateShooterSubsystem extends SubsystemBase {
   private final TagTrackingLimelight tagTrackingLimelight;
   // private final SparkMaxRelativeEncoder riseEncoderSPX;
 
-  public RotateShooterSubsystem(PowerDistributionSubsystem powerDistributionSubsystem, TagTrackingLimelight aprilTagTracking) {
+  public RotateShooterSubsystem(PowerDistributionSubsystem powerDistributionSubsystem,
+      TagTrackingLimelight aprilTagTracking) {
     rotateMotor = new CANSparkMax(RotateShooterConstants.kRotateShooterChannel, MotorType.kBrushless);
-    
+
     rotateEncoder = new DutyCycleEncoder(RotateShooterConstants.kEncoderChannel);
     angleDegreeOffset = RotateShooterConstants.kRiseAngleOffset;
 
@@ -77,18 +78,20 @@ public class RotateShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("rise_volt", modifiedRotateVoltage);
   }
 
-  public void fineTurnUpShooter(){
+  public void fineTurnUpShooter() {
     rotateEncoder.setPositionOffset(angleDegreeOffset);
   }
 
-  public void fineTurnDownShooter(){
-     rotateEncoder.setPositionOffset(-angleDegreeOffset);
+  public void fineTurnDownShooter() {
+    rotateEncoder.setPositionOffset(-angleDegreeOffset);
   }
 
   public double getAprilTagDegree(double currentSetpoint) {
     if (tagTrackingLimelight.getTv() == 1) {
-      double horizontalDistance = Math.abs(tagTrackingLimelight.getBT()[2]) - 0.21*Math.cos(Math.toRadians(getAngleDegree()));
-      double degree = Math.toDegrees(Math.atan((1.6+Math.sin(Math.toRadians(getAngleDegree())) / horizontalDistance)));
+      double horizontalDistance = getShooterToTagHoriDis();
+      double degree = Math.toDegrees(Math.atan(
+          (1.6 + Math.sin(Math.toRadians(getAngleDegree()))
+              / horizontalDistance)));
       return degree;
     } else {
       return currentSetpoint;
@@ -96,39 +99,66 @@ public class RotateShooterSubsystem extends SubsystemBase {
 
   }
 
+  public double getAprilTagDegree2(double currentSetpoint) {
+    if (tagTrackingLimelight.getTv() == 1) {
+      double horizontalDistance = getShooterToTagHoriDis();
+      // constants shooter hegiht
+      double degree = Math.toDegrees(Math.atan(
+          (1.6 + Math.sin(Math.toRadians(getAngleDegree()))
+              / horizontalDistance)));
+      return degree;
+    } else {
+      return currentSetpoint;
+    }
+  }
+
   public double getAngleDegree() {
     double degree = (RotateShooterConstants.kEncoderInverted ? -1.0 : 1.0)
         * ((rotateEncoder.getAbsolutePosition() * 360.0) - 251.0);
-    // double degreeSPX = ((RiseShooterSubsystem) riseEncoderSPX).getAngleDegree();
-    // double degreeFin = degree-degreeSPX;
-    // if(degree-degreeSPX>1){
-    //   degreeFin=degree;
-    // }else{
-    //   degreeFin = degree-degreeSPX;
-    // }
     SmartDashboard.putNumber("rotateShooterDegree", degree);
     return degree;
   }
 
-public double getShooterToTagHoriDis(){
-  // shooter to cam z dis, remember to move this to constant later on
-  double offset = 0.11;
-  double z_dis = offset + tagTrackingLimelight.getBT()[2];
-  double x_dis = tagTrackingLimelight.getBT()[0];
-  double horDis = Math.sqrt(Math.pow(x_dis, 2)+Math.pow(z_dis, 2));
-  return horDis;
-}
-  
-  public void detectAngle(){
-    
+  public double getShooterToTagHoriDis() {
+    // shooter to cam z dis, remember to move this to constant later on
+    double offset = 0.11;
+    double z_dis = offset + tagTrackingLimelight.getCT()[2];
+    double x_dis = tagTrackingLimelight.getCT()[0];
+    double horDis = Math.sqrt(Math.pow(x_dis, 2) + Math.pow(z_dis, 2));
+    return horDis;
+  }
+
+  public double getGoalHeight() {
+    double tagHeight = tagTrackingLimelight.getTagPose3d().getY();
+    double goalTagOffset = 1; // 1 should be a constant of speaker opening to tag in metres.
+    double offset = tagTrackingLimelight.getCT()[1] - 0; // the zero here should be a constant: cam to shooter height
+                                                         // offset
+    double height = tagHeight + goalTagOffset - offset;
+    return height;
+  }
+
+  public double getDistance() {
+    double dis = Math.sqrt(Math.pow(getGoalHeight(), 2) + Math.pow(getShooterToTagHoriDis(), 2));
+    return dis;
+  }
+
+  /**
+   * Get the angle between the shooter anthor and the speaker opening. Can be used
+   * for rotate shooter's setpoint
+   * 
+   * @return angle (degree)
+   */
+  public double getDesiredAngle() {
+    double angle = Math.toDegrees(Math.acos(getShooterToTagHoriDis() / getDistance()));
+    return angle;
   }
 
   public Command addErrorCommand(double error) {
     return Commands.run(() -> addError(error), this);
   }
-  
+
   public void addError(double error) {
-    rotateDegreeError = error*RotateShooterConstants.kRiseDegreeErrorPoint;
+    rotateDegreeError = error * RotateShooterConstants.kRiseDegreeErrorPoint;
   }
 
   public void resetEncoder() {

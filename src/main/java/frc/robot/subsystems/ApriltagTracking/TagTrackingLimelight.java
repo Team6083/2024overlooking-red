@@ -1,5 +1,12 @@
 package frc.robot.subsystems.apriltagTracking;
 
+import java.io.IOException;
+import java.util.Optional;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTable;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -9,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class TagTrackingLimelight extends SubsystemBase {
     public NetworkTable table;
+    public AprilTagFieldLayout m_layout;
 
     public double v;
     public double a;
@@ -32,6 +40,13 @@ public class TagTrackingLimelight extends SubsystemBase {
 
     public TagTrackingLimelight() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
+        setCamMode(0);
+        setLedMode(0);
+        try {
+            m_layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+        } catch (IOException err) {
+            throw new RuntimeException();
+        }
     }
 
     public void setCamMode(int camMode) {
@@ -145,6 +160,36 @@ public class TagTrackingLimelight extends SubsystemBase {
             return degree;
         } else {
             return nowDegree;
+        }
+    }
+
+    /**
+     * Gets the tag's pose in 2 dimension
+     * 
+     * @return tagPose
+     */
+    public Pose2d getTagPose2d() {
+        if (getTv() != 0) {
+            Optional<Pose3d> tag_Pose3d = m_layout.getTagPose((int) getTID());
+            Pose2d tagPose2d = tag_Pose3d.isPresent() ? tag_Pose3d.get().toPose2d() : new Pose2d();
+            return tagPose2d;
+        } else {
+            return new Pose2d();
+        }
+    }
+
+    /**
+     * Gets the tag's pose in 2 dimension
+     * 
+     * @return tagPose
+     */
+    public Pose3d getTagPose3d() {
+        if (getTv() != 0) {
+            Optional<Pose3d> tag_Pose3d = m_layout.getTagPose((int) getTID());
+            Pose3d tagPose = tag_Pose3d.isPresent() ? tag_Pose3d.get() : new Pose3d();
+            return tagPose;
+        } else {
+            return new Pose3d();
         }
     }
 
