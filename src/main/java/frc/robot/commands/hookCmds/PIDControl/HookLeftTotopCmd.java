@@ -26,7 +26,7 @@ public class HookLeftTotopCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookSubsystem.setRightMotorSetpoint(HookConstants.kHookleftToTopPositionMax);
+    hookSubsystem.setRightHookMotorSetpoint(HookConstants.kHookleftToTopPositionMax);
     hookSubsystem.hookLeftMotorPIDControl();
 
   }

@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.HookConstants;
 import frc.robot.subsystems.HookSubsystem;
 
-public class HookLineTotop extends Command {
+public class HookLineTotopCmd extends Command {
   /** Creates a new HookTotop. */
   private final HookSubsystem hookSubsystem;
-  public HookLineTotop(HookSubsystem hookSubsystem) {
+  public HookLineTotopCmd(HookSubsystem hookSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.\
     this.hookSubsystem=hookSubsystem;
     addRequirements(hookSubsystem);
