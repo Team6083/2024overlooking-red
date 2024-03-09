@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,7 +26,7 @@ public class HookSubsystem extends SubsystemBase {
   public final VictorSPX hookLeftMotor;
   public final VictorSPX hookRightMotor;
   private final RelativeEncoder lineEncoder;
-  private final DutyCycleEncoder  hookEncoder;
+  private final DutyCycleEncoder hookEncoder;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
   private double linePositionOffset = 0.0;
   private double hookLeftPositionOffset = 0.0;
@@ -39,7 +40,7 @@ public class HookSubsystem extends SubsystemBase {
     hookLeftPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     hookRightMotorPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     lineEncoder = lineMotor.getEncoder();
-    hookEncoder = new DutyCycleEncoder (HookConstants.kHookLeftEncoderChannel);
+    hookEncoder = new DutyCycleEncoder(HookConstants.kHookLeftEncoderChannel);
     lineEncoder.setPositionConversionFactor(HookConstants.kHookPositionConversionfactor);
     lineMotor.setInverted(HookConstants.kLineMotorInverted);
     hookLeftMotor.setInverted(HookConstants.kHookMotorLeftInverted);
@@ -47,20 +48,24 @@ public class HookSubsystem extends SubsystemBase {
     this.powerDistributionSubsystem = powerDistributionSubsystem;
   }
 
-  public Command runHookDouwnLeftManual(){
-    return this.startEnd(()->this.manualControlLeftHookMotor(-HookConstants.kManualControlLeftHookMotorPower),()->this.stopHookLeftMotor());
+  public Command runHookDouwnLeftManual() {
+    return this.startEnd(() -> this.manualControlLeftHookMotor(-HookConstants.kManualControlLeftHookMotorPower),
+        () -> this.stopHookLeftMotor());
   }
 
-  public Command runHookDownRightMaual(){
-   return this.startEnd(()->this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),()->this.stopHookRightMotor());
+  public Command runHookDownRightMaual() {
+    return this.startEnd(() -> this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),
+        () -> this.stopHookRightMotor());
   }
 
-  public Command runHookUpLeftManual(){
-    return this.startEnd(()->this.manualControlLeftHookMotor(-HookConstants.kManualControlRightHookMotorPower),()->this.stopHookLeftMotor());
+  public Command runHookUpLeftManual() {
+    return this.startEnd(() -> this.manualControlLeftHookMotor(-HookConstants.kManualControlRightHookMotorPower),
+        () -> this.stopHookLeftMotor());
   }
 
-  public Command runHookupRightMaual(){
-   return this.startEnd(()->this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),()->this.stopHookRightMotor());
+  public Command runHookupRightMaual() {
+    return this.startEnd(() -> this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),
+        () -> this.stopHookRightMotor());
   }
 
   public void manualControlLine(double hookControlSpeed) {
@@ -95,7 +100,8 @@ public class HookSubsystem extends SubsystemBase {
 
     if (isExceedPhysicalLine(currentSetpoint) != 0) {
       linePID.setSetpoint(
-          (isExceedPhysicalLine(currentSetpoint)) >= 1 ? HookConstants.kLinePositionMax : HookConstants.kLinePositionMin);
+          (isExceedPhysicalLine(currentSetpoint)) >= 1 ? HookConstants.kLinePositionMax
+              : HookConstants.kLinePositionMin);
       return;
     }
 
@@ -125,7 +131,7 @@ public class HookSubsystem extends SubsystemBase {
       linePower = HookConstants.kLinePower * (linePower > 0 ? 1 : -1);
     }
     lineMotor.setVoltage(linePower);
-    SmartDashboard.putNumber("linepower", linePower);
+    // SmartDashboard.putNumber("linepower", linePower);
 
   }
 
@@ -135,7 +141,7 @@ public class HookSubsystem extends SubsystemBase {
       hookMotorLeftVoltage = HookConstants.kHookMotorLeftVoltage * (hookMotorLeftVoltage > 0 ? 1 : -1);
     }
     setLeftHookMotorVoltage(hookMotorLeftVoltage);
-    SmartDashboard.putNumber("hookmotor1power", hookMotorLeftVoltage);
+    // SmartDashboard.putNumber("hookmotor1power", hookMotorLeftVoltage);
 
   }
 
@@ -145,21 +151,21 @@ public class HookSubsystem extends SubsystemBase {
       hookMotorRightVoltage = HookConstants.kHookMotorRightVoltage * (hookMotorRightVoltage > 0 ? 1 : -1);
     }
     setRightHookMotorVoltage(hookMotorRightVoltage);
-    SmartDashboard.putNumber("hookmotor2power", hookMotorRightVoltage);
+    // SmartDashboard.putNumber("hookmotor2power", hookMotorRightVoltage);
   }
 
   public double getLinePosition() {
-    SmartDashboard.putNumber("LinePosition", lineEncoder.getPosition());
+    // SmartDashboard.putNumber("LinePosition", lineEncoder.getPosition());
     return (lineEncoder.getPosition()) + linePositionOffset;
   }
 
   public double getLeftMotorPosition() {
-    SmartDashboard.putNumber("LeftPosition", hookEncoder.get());
+    // SmartDashboard.putNumber("LeftPosition", hookEncoder.get());
     return (hookEncoder.get()) + hookLeftPositionOffset;
   }
 
   public double getRightMotorPosition() {
-    SmartDashboard.putNumber("RightPosition", hookEncoder.get());
+    // SmartDashboard.putNumber("RightPosition", hookEncoder.get());
     return (hookEncoder.get()) + hookRightPositionOffset;
   }
 
@@ -225,11 +231,11 @@ public class HookSubsystem extends SubsystemBase {
 
   }
 
-  public double getAbsolutePosition(){
-    return hookEncoder.getAbsolutePosition()-hookEncoder.getPositionOffset();
+  public double getAbsolutePosition() {
+    return hookEncoder.getAbsolutePosition() - hookEncoder.getPositionOffset();
   }
 
-  public double getDistance(){
+  public double getDistance() {
     return hookEncoder.getDistance();
   }
 
@@ -239,5 +245,16 @@ public class HookSubsystem extends SubsystemBase {
     SmartDashboard.putData("LINEPID", linePID);
     SmartDashboard.putData("left hook motor", hookLeftPID);
     SmartDashboard.putData("Right hook PID", hookRightMotorPID);
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("HookSubsystem");
+    builder.addDoubleProperty("linepower", () -> lineMotor.get() * lineMotor.getBusVoltage(), null);
+    builder.addDoubleProperty("hookmotor1power", () -> hookLeftMotor.getMotorOutputVoltage(), null);
+    builder.addDoubleProperty("hookmotor2power", () -> hookRightMotor.getMotorOutputVoltage(), null);
+    builder.addDoubleProperty("LinePosition", () -> lineEncoder.getPosition(), null);
+    builder.addDoubleProperty("LeftPosition", () -> hookEncoder.get(), null);
+    builder.addDoubleProperty("RightPosition", () -> hookEncoder.get(), null);
   }
 }
