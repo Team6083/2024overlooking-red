@@ -293,7 +293,6 @@ public final class Constants {
 
     public static final class VisionConstants {
         public static final String kCameraName = "Microsoft_LifeCam_HD-3000";
-        public static final String kCamera2Name = "TagCamera";
         // Cam mounted facing forward, half a meter forward of center, half a meter up
         // from center.
         public static final Pose3d kRobotToCam = new Pose3d(new Translation3d(0.5, 0.0, 0.5),
@@ -308,6 +307,10 @@ public final class Constants {
         public static final AprilTagFieldLayout kTagLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
         public static final double cam_offset = 0;
+
+        public static final double CamShooterHeight = 0;
+        public static final double SpeakerOpeningToTagHeight = 0;
+        public static final double CamToShooterOffset = 0.11;
         /**
          * The vertical distance from the desired subsystem to the ground in metres.
          */
