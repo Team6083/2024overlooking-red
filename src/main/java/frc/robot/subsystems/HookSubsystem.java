@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HookConstants;
 
@@ -46,6 +47,22 @@ public class HookSubsystem extends SubsystemBase {
     hookLeftMotor.setInverted(HookConstants.kHookMotorLeftInverted);
     hookRightMotor.setInverted(HookConstants.kHookMotorRightInverted);
     this.powerDistributionSubsystem = powerDistributionSubsystem;
+  }
+
+  public Command runHookDouwnLeftManual(){
+    return this.startEnd(()->this.manualControlLeftHookMotor(-HookConstants.kManualControlLeftHookMotorPower),()->this.stopHookLeftMotor());
+  }
+
+  public Command runHookDownRightMaual(){
+   return this.startEnd(()->this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),()->this.stopHookRightMotor());
+  }
+
+  public Command runHookUpLeftManual(){
+    return this.startEnd(()->this.manualControlLeftHookMotor(-HookConstants.kManualControlRightHookMotorPower),()->this.stopHookLeftMotor());
+  }
+
+  public Command runHookupRightMaual(){
+   return this.startEnd(()->this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),()->this.stopHookRightMotor());
   }
 
   public void manualControlLine(double hookControlSpeed) {
