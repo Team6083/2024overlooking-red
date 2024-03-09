@@ -4,10 +4,12 @@
 
 package frc.robot.subsystems.drive;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -16,24 +18,32 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivebaseConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.NoteTrackingConstants;
-// import frc.robot.subsystems.AprilTagTracking;
-import frc.robot.subsystems.PowerDistributionSubsystem;
-import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
-import frc.robot.subsystems.NoteTracking.NoteTrackingPhotovision;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
+import frc.robot.subsystems.apriltagTracking.TagTrackingPhotonvision;
+import frc.robot.subsystems.noteTracking.NoteTrackingPhotovision;
 
 public class Drivebase extends SubsystemBase {
   /** Creates a new Drivetain. */
@@ -50,12 +60,19 @@ public class Drivebase extends SubsystemBase {
   private final SwerveDriveKinematics kinematics;
   private final SwerveDriveOdometry odometry;
 
-  private final AHRS gyro;
+  // private final AHRS gyro2;
+  private final Pigeon2 gyro;
+  // private final ADXRS450_Gyro gyro;
+
+  private final Field2d field2d;
+
+  private double magnification;
 
   private final PIDController facingNotePID;
   private final PIDController facingTagPID;
   private final PIDController followingTagPID;
   private final PIDController faceToSpecificAnglePID;
+  private final PIDController drivePID;
 
   // face method value maybe correct
   private final double kP = 0.08;
@@ -74,35 +91,43 @@ public class Drivebase extends SubsystemBase {
 
   private double noteTrackTargetError = 0.0;
 
-  private Boolean trackingCondition = false;
+  private boolean trackingCondition = false;
 
-  private final PowerDistributionSubsystem powerDistributionSubsystem;
   private final NoteTrackingPhotovision note;
   private final TagTrackingLimelight aprilTagTracking;
 
   private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
 
-  public Drivebase(PowerDistributionSubsystem powerDistributionSubsystem, NoteTrackingPhotovision note,
-      TagTrackingLimelight aprilTagTracking) {
-    this.powerDistributionSubsystem = powerDistributionSubsystem;
-    this.note = note;
+  public Drivebase(NoteTrackingPhotovision noteTracking,
+      TagTrackingLimelight aprilTagTracking, TagTrackingPhotonvision photonTracking) {
+    this.note = noteTracking;
     this.aprilTagTracking = aprilTagTracking;
     frontLeftLocation = new Translation2d(0.3, 0.3);
     frontRightLocation = new Translation2d(0.3, -0.3);
     backLeftLocation = new Translation2d(-0.3, 0.3);
     backRightLocation = new Translation2d(-0.3, -0.3);
 
-    frontLeft = new SwerveModule(10, 11, 5, DrivebaseConstants.kFrontLeftDriveMotorInverted);
-    frontRight = new SwerveModule(12, 13, 4, DrivebaseConstants.kFrontRightDriveMotorInverted);
-    backLeft = new SwerveModule(14, 15, 2, DrivebaseConstants.kBackLeftDriveMotorInverted);
-    backRight = new SwerveModule(16, 17, 3, DrivebaseConstants.kBackRightDriveMotorInverted);
+    frontLeft = new SwerveModule(DrivebaseConstants.kFrontLeftDriveMotorChannel,
+        DrivebaseConstants.kFrontLeftTurningMotorChannel, DrivebaseConstants.kFrontLeftTurningEncoderChannel,
+        DrivebaseConstants.kFrontLeftDriveMotorInverted, DrivebaseConstants.kFrontLeftCanCoderMagOffset, "frontLeft");
+    frontRight = new SwerveModule(DrivebaseConstants.kFrontRightDriveMotorChannel,
+        DrivebaseConstants.kFrontRightTurningMotorChannel, DrivebaseConstants.kFrontRightTurningEncoderChannel,
+        DrivebaseConstants.kFrontRightDriveMotorInverted, DrivebaseConstants.kFrontRightCanCoderMagOffset, "frontRight");
+    backLeft = new SwerveModule(DrivebaseConstants.kBackLeftDriveMotorChannel,
+        DrivebaseConstants.kBackLeftTurningMotorChannel, DrivebaseConstants.kBackLeftTurningEncoderChannel,
+        DrivebaseConstants.kBackLeftDriveMotorInverted, DrivebaseConstants.kBackLeftCanCoderMagOffset, "backLeft");
+    backRight = new SwerveModule(DrivebaseConstants.kBackRightDriveMotorChannel,
+        DrivebaseConstants.kBackRightTurningMotorChannel, DrivebaseConstants.kBackRightTurningEncoderChannel,
+        DrivebaseConstants.kBackRightDriveMotorInverted, DrivebaseConstants.kBackRightCanCoderMagOffset, "backRight");
 
     SmartDashboard.putData("frontLeft", frontLeft);
     SmartDashboard.putData("frontRight", frontRight);
     SmartDashboard.putData("backLeft", backLeft);
     SmartDashboard.putData("backRight", backRight);
 
-    gyro = new AHRS(Port.kMXP);
+    // gyro = new AHRS(Port.kMXP);
+    // gyro = new ADXRS450_Gyro();
+    gyro = new Pigeon2(30);
 
     kinematics = new SwerveDriveKinematics(
         frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
@@ -117,9 +142,13 @@ public class Drivebase extends SubsystemBase {
             backLeft.getPosition(),
             backRight.getPosition()
         });
+    field2d = new Field2d();
+
+    // initialize magnification value
+    magnification = 1.0;
 
     // reset the gyro
-    resetgyro();
+    resetGyro();
 
     // set the swerve speed equal 0
     drive(0, 0, 0, false);
@@ -128,6 +157,7 @@ public class Drivebase extends SubsystemBase {
     followingTagPID = new PIDController(kfP, kfI, kfD);
     facingTagPID = new PIDController(kP, kI, kD);
     faceToSpecificAnglePID = new PIDController(kPP, kII, kDD);
+    drivePID = new PIDController(0, 0, 0);
 
     AutoBuilder.configureHolonomic(
         this::getPose2d, // Robot pose suppier
@@ -142,8 +172,8 @@ public class Drivebase extends SubsystemBase {
                                                                                                             // PID
                                                                                                             // constants
             DrivebaseConstants.kMaxSpeed, // Max module speed, in m/s
-            AutoConstants.drivebaseRadius, // Drive base radius in meters. Distance from robot center to furthest
-                                           // module.
+            AutoConstants.kDrivebaseRadius, // Drive base radius in meters. Distance from robot center to furthest
+                                            // module.
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         () -> {
@@ -161,7 +191,7 @@ public class Drivebase extends SubsystemBase {
     );
   }
 
-  public void resetgyro() {
+  public void resetGyro() {
     gyro.reset();
   }
 
@@ -186,8 +216,8 @@ public class Drivebase extends SubsystemBase {
   /**
    * Method to drive the robot using joystick info.
    *
-   * @param xSpeed        Speed of the robot in the x direction (forward).
-   * @param ySpeed        Speed of the robot in the y direction (sideways).
+   * @param ySpeed        Speed of the robot in the y direction (forward).
+   * @param xSpeed        Speed of the robot in the x direction (sideways).
    * @param rot           Angular rate of the robot.
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
@@ -204,6 +234,18 @@ public class Drivebase extends SubsystemBase {
     frontRight.setDesiredState(swerveModuleStates[1]);
     backLeft.setDesiredState(swerveModuleStates[2]);
     backRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  public void setMagnification(double magnification) {
+    this.magnification = magnification;
+  }
+
+  public double getMagnification() {
+    return magnification;
+  }
+
+  public boolean hasTargets() {
+    return note.hasTargets();
   }
 
   public double facingNoteRot(double currentRot) {
@@ -235,14 +277,13 @@ public class Drivebase extends SubsystemBase {
     return speed;
   }
 
-  public void faceTarget() {
+  public boolean hasFaceTarget() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
-    double rot = 0;
-    if (hasTarget == 1) {
-      rot = facingTagPID.calculate(offset, 0);
+    if (hasTarget == 0) {
+      return false;
     }
-    drive(0, 0, -rot, false);
+    return Math.abs(offset) < 4;
   }
 
   public double faceTargetMethod2() {
@@ -256,60 +297,22 @@ public class Drivebase extends SubsystemBase {
     return rot;
   }
 
-  public void follow() {
+  public double[] follow() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
+    double[] speed = new double[3];
+    double xSpeed = 0;
+    double ySpeed = 0;
     double rot = 0;
+    double x_dis = aprilTagTracking.getBT()[2];
     if (hasTarget == 1) {
       rot = facingTagPID.calculate(offset, 0);
-    }
-    double[] bt = aprilTagTracking.getBT();
-    double x_dis = bt[2];
-    // double y_dis = bt[2];
-    // double hasTarget = tag.getTv();
-    double xSpeed = 0;
-    // double ySpeed = 0;
-    if (hasTarget == 1) {
       xSpeed = -followingTagPID.calculate(x_dis, 0.5);
-      // ySpeed = follow_pid.calculate(y_dis, 1);
     }
-    SmartDashboard.putNumber("x_dis_speed", xSpeed);
-    // SmartDashboard.putNumber("y_dis_speed", ySpeed);
-    drive(xSpeed, 0, -rot, false);
-    SmartDashboard.putNumber("distance", aprilTagTracking.getMyDistance());
-    // drive(0, 0, -rot, false);
-  }
-
-  public void fixDistanceBT() {
-    double[] bt = aprilTagTracking.getBT();
-    double x_dis = bt[0];
-    double y_dis = bt[1];
-    double hasTarget = aprilTagTracking.getTv();
-    double xSpeed = 0;
-    double ySpeed = 0;
-    if (hasTarget == 1) {
-      xSpeed = followingTagPID.calculate(x_dis, 0);
-      ySpeed = followingTagPID.calculate(y_dis, 1);
-    }
-    SmartDashboard.putNumber("x_dis_speed", xSpeed);
-    SmartDashboard.putNumber("y_dis_speed", ySpeed);
-    drive(xSpeed, 0, 0, true);
-  }
-
-  public void fixDistanceCT() {
-    double[] ct = aprilTagTracking.getCT();
-    double x_dis = ct[0];
-    double y_dis = ct[1];
-    double hasTarget = aprilTagTracking.getTv();
-    double xSpeed = 0;
-    double ySpeed = 0;
-    if (hasTarget == 1) {
-      xSpeed = followingTagPID.calculate(x_dis, 0);
-      ySpeed = followingTagPID.calculate(y_dis, 1);
-    }
-    SmartDashboard.putNumber("x_dis_speed", xSpeed);
-    SmartDashboard.putNumber("y_dis_speed", ySpeed);
-    drive(xSpeed, 0, 0, true);
+    speed[0] = xSpeed;
+    speed[1] = ySpeed;
+    speed[2] =rot;
+    return speed;
   }
 
   public void switchTrackCondition() {
@@ -340,20 +343,26 @@ public class Drivebase extends SubsystemBase {
         });
   }
 
-  public void putDashboard() {
-    SmartDashboard.putNumber("frontLeft_speed", swerveModuleStates[0].speedMetersPerSecond);
-    SmartDashboard.putNumber("frontRight_speed", swerveModuleStates[1].speedMetersPerSecond);
-    SmartDashboard.putNumber("backLeft_speed", swerveModuleStates[2].speedMetersPerSecond);
-    SmartDashboard.putNumber("backRight_speed", swerveModuleStates[3].speedMetersPerSecond);
-    SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
-    SmartDashboard.putBoolean("trackingCondition", trackingCondition);
-    aprilTagTracking.putDashboard();
-  }
-
   public Pose2d getPose2d() {
     return odometry.getPoseMeters();
   }
 
+  public void driveToSpecificPose2d(Pose2d desiredPose) {
+    Pose2d botpose = getPose2d();
+    Transform2d offset = desiredPose.minus(botpose);
+    double xoffset = offset.getX();
+    double yoffset = offset.getY();
+    Rotation2d roffset = offset.getRotation();
+    double aoffset = roffset.getDegrees();
+    SmartDashboard.putNumber("xoffset", xoffset);
+    SmartDashboard.putNumber("yoffset", yoffset);
+    SmartDashboard.putNumber("aoffset", aoffset);
+    double xSpeed = drivePID.calculate(xoffset);
+    double ySpeed = drivePID.calculate(yoffset);
+    double rot = drivePID.calculate(aoffset);
+    drive(xSpeed, ySpeed, rot, true);
+  }
+  
   public void resetRobotPose2d() {
     frontLeft.resetAllEncoder();
     frontRight.resetAllEncoder();
@@ -365,7 +374,65 @@ public class Drivebase extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     updateOdometry();
-    putDashboard();
+    // photonTracking.putDashboard();
+    field2d.setRobotPose(getPose2d());
+    // putDashboard();
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder){
+    builder.setSmartDashboardType("driveBase");
+    builder.addDoubleProperty("frontLeft_speed",() -> swerveModuleStates[0].speedMetersPerSecond,null);
+    builder.addDoubleProperty("frontRight_speed",() -> swerveModuleStates[1].speedMetersPerSecond, null);
+    builder.addDoubleProperty("backLeft_speed",() -> swerveModuleStates[2].speedMetersPerSecond, null);
+    builder.addDoubleProperty("backRight_speed",() -> swerveModuleStates[3].speedMetersPerSecond, null);
+    builder.addDoubleProperty("gyro_heading",() -> gyro.getRotation2d().getDegrees(),null);
+    builder.addBooleanProperty("trackingCondition",() -> trackingCondition, null);
+    builder.addDoubleProperty("GyroResetCmd",null, null);
+    builder.addDoubleProperty("PoseResetCmd", null, null);
+    aprilTagTracking.putDashboard();
+  }
+
+  // public void putDashboard() {
+  //   SmartDashboard.putNumber("frontLeft_speed", swerveModuleStates[0].speedMetersPerSecond);
+  //   SmartDashboard.putNumber("frontRight_speed", swerveModuleStates[1].speedMetersPerSecond);
+  //   SmartDashboard.putNumber("backLeft_speed", swerveModuleStates[2].speedMetersPerSecond);
+  //   SmartDashboard.putNumber("backRight_speed", swerveModuleStates[3].speedMetersPerSecond);
+  //   SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
+  //   SmartDashboard.putBoolean("trackingCondition", trackingCondition);
+  //   aprilTagTracking.putDashboard();
+  //   SmartDashboard.putData(GyroResetCmd());
+  //   SmartDashboard.putData(PoseResetCmd());
+  // }
+
+  public Command GyroResetCmd() {
+    Command cmd = new InstantCommand(() -> resetGyro(), this);
+    cmd.setName("GyroResetCmd");
+    return cmd;
+  }
+
+  public Command PoseResetCmd() {
+    Command cmd = new InstantCommand(() -> resetPose2dAndEncoder(), this);
+    cmd.setName("PoseResetCmd");
+    return cmd;
+  }
+
+  public Boolean checkPose2d(Pose2d targetPose2d) {
+    Pose2d currentPose2d = getPose2d();
+    if (Math.abs(currentPose2d.getX() - targetPose2d.getX()) < 30
+        && Math.abs(currentPose2d.getY() - targetPose2d.getY()) < 15
+        && Math.abs(targetPose2d.getRotation().getDegrees() - currentPose2d.getRotation().getDegrees()) < 5) {
+      return true;
+    }
+    return false;
+  }
+
+  public void resetPose2dAndEncoder() {
+    frontLeft.resetAllEncoder();
+    frontRight.resetAllEncoder();
+    backLeft.resetAllEncoder();
+    backRight.resetAllEncoder();
+    resetPose(new Pose2d(0, 0, new Rotation2d(0)));
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds() {
@@ -373,6 +440,15 @@ public class Drivebase extends SubsystemBase {
         frontRight.getState(),
         backLeft.getState(),
         backRight.getState());
+  }
+
+  public double calShooterAngleByPose2d() {
+    double x = getPose2d().getX();
+    double y = getPose2d().getY();
+    double distance = Math.sqrt(x * x + y * y);
+    double backAngleDegree = Math.toDegrees(Math.atan((FieldConstants.speakerBackTall - 32.464) / distance));
+    double frontAngleDegree = Math.toDegrees(Math.atan((FieldConstants.speakerFrontTall - 32.464) / distance));
+    return (backAngleDegree + frontAngleDegree) / 2;
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
@@ -396,8 +472,8 @@ public class Drivebase extends SubsystemBase {
                                                                                                             // PID
                                                                                                             // constants
             DrivebaseConstants.kMaxSpeed, // Max module speed, in m/s
-            AutoConstants.drivebaseRadius, // Drive base radius in meters. Distance from robot center to furthest
-                                           // module.
+            AutoConstants.kDrivebaseRadius, // Drive base radius in meters. Distance from robot center to furthest
+                                            // module.
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         () -> {
@@ -416,7 +492,23 @@ public class Drivebase extends SubsystemBase {
     );
   }
 
-  public Command followAutoCommand(String autoName) {
-    return new PathPlannerAuto(autoName);
+  public Command pathFindingThenFollowPath(String pathName, double maxVelocity, double maxAcceleration,
+      double maxAngularVelocity, double maxAngularAcceleration, double rotationDelayDistance) {
+    PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+    PathConstraints constraints = new PathConstraints(
+        maxVelocity, maxAcceleration,
+        Units.degreesToRadians(maxAngularVelocity), Units.degreesToRadians(maxAngularAcceleration));
+    return AutoBuilder.pathfindThenFollowPath(path, constraints, rotationDelayDistance);
+  }
+
+  public Command pathFindingToPose(double x, double y, double degrees, double maxVelocity, double maxAcceleration,
+      double maxAngularVelocity, double maxAngularAcceleration, double goalEndVelocity,
+      double rotationDelayDistance) {
+
+    Pose2d targetPose = new Pose2d(x, y, Rotation2d.fromDegrees(degrees));
+    PathConstraints constraints = new PathConstraints(
+        maxVelocity, maxAcceleration,
+        Units.degreesToRadians(maxAngularVelocity), Units.degreesToRadians(maxAngularAcceleration));
+    return AutoBuilder.pathfindToPose(targetPose, constraints, goalEndVelocity, rotationDelayDistance);
   }
 }

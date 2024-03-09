@@ -1,63 +1,87 @@
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+
 public final class Constants {
+    public static class FieldConstants {
+        public static final double speakerFrontTall = Units.feetToMeters(6) + Units.inchesToMeters(11); // 210.82cm
+        public static final double speakerBackTall = Units.feetToMeters(6) + Units.inchesToMeters(6); // 198.12cm
+        public static final double speakerWidth = Units.feetToMeters(3) + Units.inchesToMeters(5.675); // 105.8545cm
+        public static final double speakerExtend = Units.inchesToMeters(18); // 45.72cm
+    }
+
     public static class DriveControllerConstants {
         public static final int kMainController = 0;
         public static final int kControlPanel = 2;
     }
 
     public static class ShooterConstants {
-        public static final int kUpMotorChannel = 3;
-        public static final int kDownMotorChannel = 5;
-        public static final int kUpEncoderChannelA = 2;
-        public static final int kUpEncoderChannelB = 3;
-        public static final int kDownEncoderChannelA = 5;
-        public static final int kDownEncoderChannelB = 6;
+        public static final int kUpMotorChannel = 26;
+        public static final int kDownMotorChannel = 25;
+        public static final int kUpEncoderChannelA = 0;
+        public static final int kUpEncoderChannelB = 1;
+        public static final int kDownEncoderChannelA = 8;
+        public static final int kDownEncoderChannelB = 9;
         public static final Boolean kUpMotorInverted = false;
         public static final Boolean kDownMotorInverted = false;
         public static final Boolean kUpEncoderInverted = true;
         public static final Boolean kDownEncoderInverted = true;
         public static final double kUpMotorManualVoltage = 10.0;
         public static final double kDownMotorManualVoltage = 10.0;
-        public static final double kShooterRate = 55.0;
+        public static final double kShooterRate = 60.0;
+        public static final double kDeadbandRate = 55.0;
         public static final double kP = 0.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
-        public static final double kUpMotorS = 0.756;
-        public static final double kUpMotorV = 0.149;
+        public static final double kUpMotorS = 1.65;
+        public static final double kUpMotorV = 0.123;
         public static final double kUpMotorA = 0.0;
-        public static final double kDownMotorS = 0.856;
-        public static final double kDownMotorV = 0.149;
+        public static final double kDownMotorS = 0.681;
+        public static final double kDownMotorV = 0.165;
         public static final double kDownMotorA = 0.0;
     }
 
     public static class TransportConstants {
-        public static final int kTrantsportChannel = 4;
+        public static final int kTransportChannel = 22;
         public static final boolean kTransportInverted = true;
-        public static final double kTransSpeed = 0.8;
-        public static final double kReTransSpeed = -0.5;
-        public static final double kDistRange = 8.0;
+        public static final double kTransVoltage = 5;
+        public static final double kReTransVoltage = -5;
+        public static final double kDistanceRange = 8.0;
     }
 
     public static class IntakeConstants {
-        public static final int kIntakeChannel = 2;
+        public static final int kIntakeChannel = 24;
         public static final Boolean kIntakeInverted = true;
-        public static final double kIntakePrecentage = 0.65;
-        public static final double kThrowPrecentage = -0.4;
+        public static final double kIntakeVoltage = 7.0;
+        public static final double kThrowPrecentage = -4.0;
     }
 
-    public static class RiseShooterConstants {
-        public static final int kRiseShooterChannel = 21;
-        public static final Boolean kRiseShooterInverted = true;
-        public static final int kEncoderChannelA = 0;
-        public static final int kEncoderChannelB = 1;
-        public static final double kRiseVoltLimit = 5;
-        public static final double kRiseAngleMin = -5;
-        public static final double kRiseAngleMax = 65;
-        public static final double kRiseEncoderPulse = 2048;
-        public static final double kRiseInitAngleDegree = 60;
+    public static class RotateShooterConstants {
+        public static final int kRotateShooterChannel = 21;
+        public static final Boolean kRotateShooterInverted = true;
+        public static final Boolean kEncoderInverted = true;
+        public static final int kEncoderChannel = 2;
+        public static final double kInitDegree = 60.0;
+        public static final double kRiseVoltLimit = 5.0;
+        public static final double kRiseAngleMin = -5.0;
+        public static final double kRiseAngleMax = 65.0;
+        public static final double kRiseDegreeErrorPoint = 3;
+        public static final double kRiseAngleOffset = 0.52;
         public static final double kRiseTriggerValue = 0.15;
-        public static final double kSpeakerHeight = 5.0;
+        public static final double kSpeakerHeight = 2.0;
         public static final double kP = 0.5;
         public static final double kI = 0;
         public static final double kD = 0;
@@ -87,16 +111,26 @@ public final class Constants {
         public static final double kLinePower = 0;
         public static final double kHookMotorLeftVoltage = 0.0;
         public static final double kHookMotorRightVoltage = 0.0;
+<<<<<<< HEAD
         public static final double kmanualControlLineMotorPower = 0.25;
         public static final double kmanualControlLeftHookMotorPower = 0.25;
         public static final double kmanualControlRightHookMotorPower = 0.25;
+=======
+        public static final double kManualControlLineMotorPower = 0.25;
+        public static final double kManualControlLeftHookMotorPower = 0.25;
+        public static final double kManualControlRightHookMotorPower = 0.25;
+        public static final boolean kLineMotorInverted = true;
+        public static final boolean kHookLeftMotorInverted = false;
+        public static final boolean kHookRightMotorInverted = true;
+>>>>>>> 21f710a905fe1d941a8c9423568d62c4ba60453f
         public static final double kInitSetpoint = 0.0;
-        public static final double kLeftMotorModify = 0.0;// 以下皆未定值需更改
-        public static final double kRightMotorModify = 0.0;
-        public static final double kLineMotorModify = 0.0;
+        public static final double kLeftMotorModify = 0.0; // TO DO
+        public static final double kRightMotorModify = 0.0; // TO DO
+        public static final double kLineMotorModify = 0.0; // TO DO
     }
 
     public static class DrivebaseConstants {
+        // drive motor channel
         public static final int kFrontLeftDriveMotorChannel = 11;
         public static final int kFrontRightDriveMotorChannel = 15;
         public static final int kBackLeftDriveMotorChannel = 13;
@@ -115,12 +149,12 @@ public final class Constants {
         public static final int kBackRightTurningEncoderChannel = 34;
 
         // can coder magnet offset value
-        public static final double kFrontLeftCanCoderMagOffset = -0.060303;
-        public static final double kFrontRightCanCoderMagOffset = -0.442871;
-        public static final double kBackLeftCanCoderMagOffset = 0.351562;
-        public static final double kBackRightCanCoderMagOffset = -0.333740;
+        public static final double kFrontLeftCanCoderMagOffset = -0.079590;
+        public static final double kFrontRightCanCoderMagOffset = -0.458984;
+        public static final double kBackLeftCanCoderMagOffset = 0.355225;
+        public static final double kBackRightCanCoderMagOffset = -0.333984;
 
-        public static final double kMaxSpeed = 3;
+        public static final double kMaxSpeed = 5;
         public static final double kMinSpeed = 0.25;
         public static final double kMinJoyStickValue = 0.3;
         public static final double kMaxAngularSpeed = 2.5 * Math.PI; // 1/2 rotation per second
@@ -134,24 +168,37 @@ public final class Constants {
         public static final boolean kBackLeftDriveMotorInverted = true;
         public static final boolean kBackRightDriveMotorInverted = false;
 
-        public static final double kPNoteTrackingValue = 1.0;
         public static final boolean kGyroInverted = false; // wheather gyro is under the robot
         public static final double kGyroOffSet = 0;
+
+        public static final double kLowMagnification = 1.0;
+        public static final double kHighMagnification = 1.2;
     }
 
     public static final class ModuleConstants {
         public static final double kWheelRadius = 0.046;
+
         public static final double kWheelDiameterMeters = 0.15;
-        public static final double kMaxModuleDriveVoltage = 12.0;
-        public static final double kClosedLoopRampRate = 0.25;// 1 second 1 unit
+
+        public static final double kMaxModuleDriveVoltage = 8.0;
+
+        public static final double kDriveClosedLoopRampRate = 0.8;// 1 second 1 unit
+        public static final double kTurningClosedLoopRampRate = 0.25;
+
         public static final double kDesireSpeedtoMotorVoltage = kMaxModuleDriveVoltage / DrivebaseConstants.kMaxSpeed;
-        public static final double kMaxModuleTuringVoltage = 7.0;
+
+        public static final double kMaxModuleTuringVoltage = 5.0;
+
         public static final double kMaxSpeedTurningDegree = 180.0;
-        public static final double kPRotController = kMaxModuleTuringVoltage / kMaxSpeedTurningDegree;
+
+        public static final double kPRotationController = kMaxModuleTuringVoltage / kMaxSpeedTurningDegree;
+        public static final double kIRotationController = 0.0;
         public static final double kDRotController = 0.0004;
+
+        public static final boolean kTurningMotorInverted = true;
     }
 
-    public static final class PdConstants {
+    public static final class PowerDistributionConstants {
         public static final int kIntakeMotorCurrrentchannel = 0;
         public static final int kShooterDownMotorCurrentchannel = 1;
         public static final int kShooterUpMotorCurrentchannel = 2;
@@ -168,24 +215,70 @@ public final class Constants {
         public static final double kHookMotor1MaxCurrent = 0;
         public static final double kHookMotor2MaxCurrent = 0;
         public static final double kTransportMaxCurrent = 0;
-        public static final double kRiseShooterMaxCurrent = 40.0;
+        public static final double kRotateShooterMaxCurrent = 40.0;
     }
 
     public static final class AutoConstants {
-        // chooser path name
-        public static final String leftTrans = "LeftTrans";
-        public static final String left = "Left";
-        public static final String middle = "Middle";
-        public static final String rightTrans = "RightTrans";
 
-        // constants
+        public static final String LBSToNote1 = "LBSToNote1";
+        public static final String LBSToNote2 = "LBSToNote2";
+        public static final String LBSToNote3 = "LBSToNote3";
+        public static final String LBSToNote4 = "LBSToNote4";
+        public static final String LBSToNote5 = "LBSToNote5";
+        public static final String LBSToNote6 = "LBSToNote6";
+        public static final String LBSToNote7 = "LBSToNote7";
+        public static final String LBSToNote8 = "LBSToNote8";
+
+        public static final String LTSToNote1 = "LTSToNote1";
+        public static final String LTSToNote2 = "LTSToNote2";
+        public static final String LTSToNote3 = "LTSToNote3";
+        public static final String LTSToNote4 = "LTSToNote4";
+        public static final String LTSToNote5 = "LTSToNote5";
+        public static final String LTSToNote6 = "LTSToNote6";
+        public static final String LTSToNote7 = "LTSToNote7";
+        public static final String LTSToNote8 = "LTSToNote8";
+
+        public static final String RBSToNote1 = "RBSToNote1";
+        public static final String RBSToNote2 = "RBSToNote2";
+        public static final String RBSToNote3 = "RBSToNote3";
+        public static final String RBSToNote4 = "RBSToNote4";
+        public static final String RBSToNote5 = "RBSToNote5";
+        public static final String RBSToNote6 = "RBSToNote6";
+        public static final String RBSToNote7 = "RBSToNote7";
+        public static final String RBSToNote8 = "RBSToNote8";
+
+        public static final String RTSToNote1 = "RTSToNote1";
+        public static final String RTSToNote2 = "RTSToNote2";
+        public static final String RTSToNote3 = "RTSToNote3";
+        public static final String RTSToNote4 = "RTSToNote4";
+        public static final String RTSToNote5 = "RTSToNote5";
+        public static final String RTSToNote6 = "RTSToNote6";
+        public static final String RTSToNote7 = "RTSToNote7";
+        public static final String RTSToNote8 = "RTSToNote8";
+
+        public static final String bottomRelayToLBS = "bottomRelayToLBS";
+        public static final String bottomRelayToRBS = "bottomRelayToRBS";
+        public static final String topRelayToLTS = "topRelayToLTS";
+        public static final String topRelayToRTS = "topRelayToRTS";
+
         public static final double kPTranslation = 2.0;
-        public static final double kITranslation = 0.0;
-        public static final double kDTranslation = 0.0;
+        public static final double kITranslation = 0.001;
+        public static final double kDTranslation = 0.01;
         public static final double kPRotation = 2.0;
-        public static final double kIRotation = 0.0;
-        public static final double kDRotation = 0.0;
-        public static final double drivebaseRadius = 0.34;
+        public static final double kIRotation = 0.001;
+        public static final double kDRotation = 0.01;
+        public static final double kMaxModuleSpeed = 3.36;
+        public static final double kDrivebaseRadius = 2.17;
+
+        public static final double kMaxVelocity = 3.36;
+        public static final double kMaxAcceleration = 3.36;
+        public static final double kMaxAngularVelocity = 453.38;
+        public static final double kMaxAngularAcceleration = 453.38;
+        public static final double kRotationDelayDistance = 0.0;
+
+        public static final Pose2d leftPose2d = new Pose2d(0.76, 6.53, Rotation2d.fromDegrees(60));
+        public static final Pose2d middlePose2d = new Pose2d(1.24, 5.5, Rotation2d.fromDegrees(0));
+        public static final Pose2d rightPose2d = new Pose2d(0.76, 4.56, Rotation2d.fromDegrees(-60));
     }
 
     public static final class NoteTrackingConstants {
@@ -202,5 +295,33 @@ public final class Constants {
         public static final int A_pipeline = 0;
         public static final double klimelightLensHeightInches = 0;
         public static final double klimelightMountAngleDegrees = 0;
+    }
+
+    public static final class VisionConstants {
+        public static final String kCameraName = "Microsoft_LifeCam_HD-3000";
+        public static final String kCamera2Name = "TagCamera";
+        // Cam mounted facing forward, half a meter forward of center, half a meter up
+        // from center.
+        public static final Pose3d kRobotToCam = new Pose3d(new Translation3d(0.5, 0.0, 0.5),
+                new Rotation3d(0, 0, 0));
+        public static final Transform3d krobottocam = new Transform3d(new Translation3d(0.5, 0.0, 0.5),
+                new Rotation3d(0, 0, 0));
+
+        public static final Rotation2d sroffset = new Rotation2d(0);
+        public static final Transform2d speakeroffset = new Transform2d(0, 0, sroffset);
+
+        // The layout of the AprilTags on the field
+        public static final AprilTagFieldLayout kTagLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+
+        public static final double cam_offset = 0;
+        /**
+         * The vertical distance from the desired subsystem to the ground in metres.
+         */
+        public static final double camHeight = 0;
+        // The standard deviations of our vision estimated poses, which affect
+        // correction rate
+        // (Fake values. Experiment and determine estimation noise on an actual robot.)
+        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+        public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
     }
 }

@@ -27,7 +27,7 @@ public class LineUpManualCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-     hookSubsystem.manualControlLine(HookConstants.kmanualControlLineMotorPower);
+     hookSubsystem.manualControlLine(HookConstants.kManualControlLineMotorPower);
   }
 
   // Called once the command ends or is interrupted.

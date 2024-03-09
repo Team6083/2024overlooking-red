@@ -2,11 +2,20 @@
   "robotWidth": 0.68,
   "robotLength": 0.68,
   "holonomicMode": true,
-  "pathFolders": [],
-  "autoFolders": [],
+  "pathFolders": [
+    "LBSToNote",
+    "LTSToNote",
+    "Test",
+    "RBSToNote",
+    "RTSToNote",
+    "Relay To Shoot Point"
+  ],
+  "autoFolders": [
+    "Test"
+  ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
-  "maxModuleSpeed": 4.5
+  "maxModuleSpeed": 3.0
 }

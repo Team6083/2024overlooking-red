@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.NoteTracking;
+package frc.robot.subsystems.noteTracking;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +28,16 @@ public class NoteTrackingPhotovision {
         noteCamera.setDriverMode(driveMode);
     }
 
+    public boolean hasTargets() {
+        return noteCamera.getLatestResult().hasTargets();
+    }
+
+    /**
+     * Return a list of 2 dimensional note pose. X axis by bot's front, Y axis by
+     * bot's sideways. Pitch is up and down angle. Yaw is right and left.
+     * 
+     * @return {@link Pose2d} note pose
+     */
     public List<Pose2d> getNotes() {
         List<Pose2d> poses = new ArrayList<Pose2d>();
 

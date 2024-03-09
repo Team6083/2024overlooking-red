@@ -15,46 +15,46 @@ import frc.robot.Constants.TransportConstants;
 
 public class TransportSubsystem extends SubsystemBase {
   /** Creates a new TransportSubsystem. */
-  private final CANSparkMax trans;
-  private final Rev2mDistanceSensor dist;
-  private final PowerDistributionSubsystem powerDistribution;
+  private final CANSparkMax transportMotor;
+  private final Rev2mDistanceSensor distanceSensor;
+  private final PowerDistributionSubsystem powerDistributionSubsystem;
 
   public TransportSubsystem(PowerDistributionSubsystem powerDistribution) {
 
-    trans = new CANSparkMax(TransportConstants.kTrantsportChannel, MotorType.kBrushless);
-    trans.setInverted(TransportConstants.kTransportInverted);
+    transportMotor = new CANSparkMax(TransportConstants.kTransportChannel, MotorType.kBrushless);
+    transportMotor.setInverted(TransportConstants.kTransportInverted);
+    distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
 
-    dist = new Rev2mDistanceSensor(Port.kOnboard);
-
-    this.powerDistribution = powerDistribution;
+    this.powerDistributionSubsystem = powerDistribution;
   }
 
-  public void setTrans() {
-    setMotor(TransportConstants.kTransSpeed);
+  public void setTransport() {
+    setMotor(TransportConstants.kTransVoltage);
   }
 
-  public void setReTrans() {
-    setMotor(TransportConstants.kReTransSpeed);
+  public void setReTransport() {
+    setMotor(TransportConstants.kReTransVoltage);
   }
 
   public boolean isGetNote() {
-    if (dist.isRangeValid()) {
-      SmartDashboard.putNumber("Range dist", dist.getRange());
-      SmartDashboard.putNumber("Timestamp dist", dist.getTimestamp());
+    if (distanceSensor.isRangeValid()) {
+      SmartDashboard.putNumber("Range dist", distanceSensor.getRange());
+      SmartDashboard.putNumber("Timestamp dist", distanceSensor.getTimestamp());
+      return distanceSensor.getRange() <= TransportConstants.kDistanceRange;
     }
-    return dist.getRange() <= TransportConstants.kDistRange;
+    return false;
   }
 
   public void stopMotor() {
-    setMotor(0);
+    transportMotor.set(0);
   }
 
-  public void setMotor(double power) {
-    if (powerDistribution.isTransportOverCurrent()) {
+  public void setMotor(double voltage) {
+    if (powerDistributionSubsystem.isTransportOverCurrent()) {
       stopMotor();
       return;
     }
-    trans.set(power);
+    transportMotor.setVoltage(voltage);
   }
 
   @Override

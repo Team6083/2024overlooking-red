@@ -8,13 +8,14 @@ import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
 
 public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new Shooter. */
@@ -23,12 +24,9 @@ public class ShooterSubsystem extends SubsystemBase {
   private final Encoder upEncoder;
   private final Encoder downEncoder;
   private final PIDController ratePidController;
-  private final SimpleMotorFeedforward upMotorFeedForwardControl;
-  private final SimpleMotorFeedforward downMotorFeedForwardControl;
-  private final PowerDistributionSubsystem powerDistribution;
-  private final TransportSubsystem transportSubsystem;
-  private final RiseShooterSubsystem riseShooterSubsystem;
-  private final TagTrackingLimelight aprilTagTracking;
+  private final SimpleMotorFeedforward upMotorFeedForwardController;
+  private final SimpleMotorFeedforward downMotorFeedForwardController;
+  private final PowerDistributionSubsystem powerDistributionSubsystem;
 
   public ShooterSubsystem(PowerDistributionSubsystem powerDistribution) {
     upMotor = new VictorSPX(ShooterConstants.kUpMotorChannel);
@@ -45,18 +43,24 @@ public class ShooterSubsystem extends SubsystemBase {
     upMotor.setInverted(ShooterConstants.kUpMotorInverted);
     downMotor.setInverted(ShooterConstants.kDownMotorInverted);
 
-    upMotorFeedForwardControl = new SimpleMotorFeedforward(ShooterConstants.kUpMotorS, ShooterConstants.kUpMotorV,
+    upMotorFeedForwardController = new SimpleMotorFeedforward(ShooterConstants.kUpMotorS, ShooterConstants.kUpMotorV,
         ShooterConstants.kUpMotorA);
-    downMotorFeedForwardControl = new SimpleMotorFeedforward(ShooterConstants.kDownMotorS, ShooterConstants.kDownMotorV,
+    downMotorFeedForwardController = new SimpleMotorFeedforward(ShooterConstants.kDownMotorS, ShooterConstants.kDownMotorV,
         ShooterConstants.kDownMotorA);
 
     resetEncoder();
-    transportSubsystem = new TransportSubsystem(powerDistribution);
-    aprilTagTracking = new TagTrackingLimelight();
-    riseShooterSubsystem = new RiseShooterSubsystem(powerDistribution, aprilTagTracking);
 
-    this.powerDistribution = powerDistribution;
+    this.powerDistributionSubsystem = powerDistribution;
   }
+
+      public Command shooterPIDCommand() {
+        // implicitly requires `this`
+        return Commands.runEnd(()->this.setRateControl(),()->this.stopAllMotor());
+      }
+      public void stopAllMotor(){
+        stopDownMotor();
+        stopUpMotor();
+      }
 
   public void resetEncoder() {
     upEncoder.reset();
@@ -65,9 +69,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setRateControl() {
     double rate = ShooterConstants.kShooterRate;
-    final double upMotorVoltage = upMotorFeedForwardControl.calculate(rate)
+    final double upMotorVoltage = upMotorFeedForwardController.calculate(rate)
         + ratePidController.calculate(getUpEncoderRate(), rate);
-    final double downMotorVoltage = downMotorFeedForwardControl.calculate(rate)
+    final double downMotorVoltage = downMotorFeedForwardController.calculate(rate)
         + ratePidController.calculate(getDownEncoderRate(), rate);
     setUpMotorVoltage(upMotorVoltage);
     setDownMotorVoltage(downMotorVoltage);
@@ -76,11 +80,11 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void stopUpMotor() {
-    setUpMotor(0);
+    upMotor.set(VictorSPXControlMode.PercentOutput, 0.0);
   }
 
   public void stopDownMotor() {
-    setDownMotor(0);
+    downMotor.set(VictorSPXControlMode.PercentOutput, 0.0);
   }
 
   public double getUpEncoderRate() {
@@ -107,17 +111,8 @@ public class ShooterSubsystem extends SubsystemBase {
     return downMotor.getBusVoltage();
   }
 
-  public Boolean haveNoteAndSpeed() {
-    if (transportSubsystem.isGetNote() && Math.abs(getUpEncoderRate() - ShooterConstants.kShooterRate) < 1
-        && Math.abs(getDownEncoderRate() - ShooterConstants.kShooterRate) < 1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   public void setUpMotor(double power) {
-    if (powerDistribution.isShooterUpOverCurrent()) {
+    if (powerDistributionSubsystem.isShooterUpOverCurrent()) {
       stopUpMotor();
       return;
     }
@@ -125,11 +120,15 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setDownMotor(double power) {
-    if (powerDistribution.isShooterDownOverCurrent()) {
+    if (powerDistributionSubsystem.isShooterDownOverCurrent()) {
       stopDownMotor();
       return;
     }
     downMotor.set(VictorSPXControlMode.PercentOutput, power);
+  }
+
+    public Boolean isEnoughRate(){
+    return getUpEncoderRate() >= ShooterConstants.kDeadbandRate && getDownEncoderRate() >= ShooterConstants.kDeadbandRate;
   }
 
   @Override
