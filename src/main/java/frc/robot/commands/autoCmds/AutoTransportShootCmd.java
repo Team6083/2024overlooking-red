@@ -7,6 +7,7 @@ package frc.robot.commands.autoCmds;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.transportCmds.TransportShootCmd;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
 import frc.robot.subsystems.drive.Drivebase;
@@ -16,8 +17,10 @@ import frc.robot.subsystems.drive.Drivebase;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoTransportShootCmd extends ParallelDeadlineGroup {
   /** Creates a new autoAimAndShootCmd. */
-  public AutoTransportShootCmd(Drivebase drivebase, ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem) {
+  public AutoTransportShootCmd(Drivebase drivebase, ShooterSubsystem shooterSubsystem,
+      TransportSubsystem transportSubsystem) {
     super(new WaitCommand(1));
-    addCommands(shooterSubsystem.speakerShootPID());需要改
+    addCommands(new TransportShootCmd(transportSubsystem, shooterSubsystem.isEnoughRate(1))
+        .onlyWhile(() -> shooterSubsystem.isEnoughRate(1)));
   }
 }
