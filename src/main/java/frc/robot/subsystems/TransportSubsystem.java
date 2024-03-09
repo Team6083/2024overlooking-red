@@ -37,7 +37,7 @@ public class TransportSubsystem extends SubsystemBase {
     return this.startEnd(() -> this.setTransport(), () -> this.stopMotor());
   }
 
-  public Command trasportShooter() {
+  public Command transportShooterCmd() {
     return this.startEnd(() -> this.setTransport(), () -> this.stopMotor());
   }
 

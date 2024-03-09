@@ -288,7 +288,6 @@ public final class Constants {
     }
 
     public static final class VisionConstants {
-        public static final String kCameraName = "Microsoft_LifeCam_HD-3000";
 
         public static final Rotation2d sroffset = new Rotation2d(0);
         public static final Transform2d speakeroffset = new Transform2d(0, 0, sroffset);
