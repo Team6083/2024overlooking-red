@@ -48,12 +48,12 @@ public class HookSubsystem extends SubsystemBase {
     this.powerDistributionSubsystem = powerDistributionSubsystem;
   }
 
-  public Command runHookDouwnLeftManual() {
+  public Command runHookDownLeftManual() {
     return this.startEnd(() -> this.manualControlLeftHookMotor(-HookConstants.kManualControlLeftHookMotorPower),
         () -> this.stopHookLeftMotor());
   }
 
-  public Command runHookDownRightMaual() {
+  public Command runHookDownRightManual() {
     return this.startEnd(() -> this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),
         () -> this.stopHookRightMotor());
   }
