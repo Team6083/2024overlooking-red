@@ -69,8 +69,6 @@ public class RobotContainer {
     shooter = new ShooterSubsystem(powerDistributionSubsystem);
     rotateShooter = new RotateShooterSubsystem(powerDistributionSubsystem, aprilTagTracking);
     hook = new HookSubsystem(powerDistributionSubsystem);
-
-    // AprilTagTracking.init();
     configureBindings();
 
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -113,7 +111,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("AutoShootRate", shooter.speakerShootPID());
     NamedCommands.registerCommand("AutoTransport", new AutoTransportShootCmd(drivebase, shooter, transport));
     NamedCommands.registerCommand("AutoIntakeWithTransport", new IntakeWithTransportCmd(transport, intake));
-    NamedCommands.registerCommand("AutoFaceAndShoot", new AutoAimAndShootCmd(drivebase, rotateShooter, shooter, transport));
+    NamedCommands.registerCommand("AutoFaceAndShoot",
+        new AutoAimAndShootCmd(drivebase, rotateShooter, shooter, transport));
   }
 
   private void configureBindings() {
@@ -123,28 +122,27 @@ public class RobotContainer {
     // mainController.pov(180).toggleOnTrue(DrivebaseDefaultSpeedCmd(drivebase));
 
     // riseshooter
-    rotateShooter.addErrorCommand(controlPanel.getRawAxis(0));
+    // rotateShooter.addErrorCommand(controlPanel.getRawAxis(0));
     // hook
-    mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
-    mainController.pov(90).whileTrue(new LineUpPIDCmd(hook));
-    mainController.leftTrigger().whileTrue(new HookLeftMotorDownPIDCmd(hook));
-    mainController.leftBumper().whileTrue(new HookLeftMotorUpPIDCmd(hook));
-    mainController.rightTrigger().whileTrue(new HookRightMotorDownPIDCmd(hook));
-    mainController.rightBumper().whileTrue(new HookRightMotorUpPIDCmd(hook));
+    // mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
+    // mainController.pov(90).whileTrue(new LineUpPIDCmd(hook));
+    // mainController.leftTrigger().whileTrue(new HookLeftMotorDownPIDCmd(hook));
+    // mainController.leftBumper().whileTrue(new HookLeftMotorUpPIDCmd(hook));
+    // mainController.rightTrigger().whileTrue(new HookRightMotorDownPIDCmd(hook));
+    // mainController.rightBumper().whileTrue(new HookRightMotorUpPIDCmd(hook));
 
     // intake and transport
-    // mainController.y().toggleOnTrue(new IntakeWithTransportCmd(transport,
-    // intake)); // onTrue could be okay, too
-    // mainController.x().whileTrue(new ReIntakeWithTransportCmd(transport,
-    // intake));
+    mainController.y().toggleOnTrue(new IntakeWithTransportCmd(transport,
+        intake)); // onTrue could be okay, too
+    mainController.x().whileTrue(intake.setReIntakingCmd());
 
     // shooter
-    // mainController.b().toggleOnTrue(new ShootPIDCmd(shooter));
+    mainController.b().toggleOnTrue(shooter.speakerShootPID());
     // mainController.a().toggleOnTrue(new ShootTransportCmd(transport,
     // shooter.getRate()));
 
     // semi-automatic
-    mainController.rightStick().onTrue(drivebase.tagTrackConditionCmd());
+    // mainController.rightStick().onTrue(drivebase.tagTrackConditionCmd());
 
     // reset
     // mainController.back().onTrue(new GyroResetCmd(drivebase));

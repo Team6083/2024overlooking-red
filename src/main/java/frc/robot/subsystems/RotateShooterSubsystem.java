@@ -40,7 +40,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
     rotateMotor.setInverted(RotateShooterConstants.kRotateShooterInverted);
     this.powerDistributionSubsystem = powerDistributionSubsystem;
     this.tagTrackingLimelight = aprilTagTracking;
-    setSetpoint(angleDegreeOffset);
+    setSetpoint(RotateShooterConstants.kInitDegree);
     rotatePID.enableContinuousInput(-180.0, 180.0);
   }
 
@@ -93,6 +93,12 @@ public class RotateShooterSubsystem extends SubsystemBase {
     return currentDegree;
   }
 
+  public Command setAutoAim(){
+    Command autoAimCmd = Commands.runOnce(()->setSetpoint(getAimDegree(getSetpoint())), this);
+    autoAimCmd.setName("autoAimCommand");
+    return autoAimCmd;
+  }
+
   public Command addErrorCommand(double error) {
     return Commands.run(() -> addError(error), this);
   }
@@ -127,12 +133,8 @@ public class RotateShooterSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void initSendable(SendableBuilder builder) {
-
-  }
-
-  @Override
   public void periodic() {
+    pidControl();
     SmartDashboard.putData("rotate_PID", rotatePID);
     SmartDashboard.putNumber("rotate_motor", rotateMotor.getOutputCurrent());
   }

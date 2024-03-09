@@ -66,14 +66,14 @@ public final class Constants {
         public static final int kEncoderChannel = 2;
         public static final double kInitDegree = 57.0;
         public static final double kRotateVoltLimit = 5.0;
-        public static final double kRotateAngleMin = -5.0;
+        public static final double kRotateAngleMin = 5.0;
         public static final double kRotateAngleMax = 65.0;
         public static final double kRotateDegreeErrorPoint = 3;
         public static final double kRotateAngleOffset = 0.52;
         public static final double kRotateTriggerValue = 0.15;
         public static final double kSpeakerHeight = 2.0;
         public static final double kShooterHeight = 0.31;
-        public static final double kP = 0.09;
+        public static final double kP = 0.095;
         public static final double kI = 0.0004;
         public static final double kD = 0.0002;
     }

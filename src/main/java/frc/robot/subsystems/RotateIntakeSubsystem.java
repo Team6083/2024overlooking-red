@@ -45,7 +45,7 @@ public class RotateIntakeSubsystem extends SubsystemBase {
     pid.setSetpoint(initDegree);
   }
 
-  public void setPID() {
+  public void pidControl() {
     double rotateVoltage = pid.calculate(getAngleDegree());
     double modifiedRotateVoltage = rotateVoltage;
     if (Math.abs(modifiedRotateVoltage) > RotateIntakeConstants.kRotateVoltLimit) {
@@ -97,6 +97,6 @@ public class RotateIntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    setPID();
+    pidControl();
   }
 }
