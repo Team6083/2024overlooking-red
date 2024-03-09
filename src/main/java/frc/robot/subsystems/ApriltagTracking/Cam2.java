@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonUtils;
@@ -18,10 +17,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
@@ -36,10 +32,12 @@ public class Cam2 extends SubsystemBase {
     private final String cameraName = "TagCamera";
     private final PhotonCamera tagCamera;
 
-    public final double cameraHeight = 0.36;
+    public final double cameraHeight = 0.14;
     public final double cameraWeight = 0.0; // I'm still quite confused abt the meaning of having this
-    public final double pitchDegree = 15; // 90 - cam_offset
+    public final double pitchDegree = 10; // 90 - cam_offset
     public final double yawDegree = 0;
+    public final double cameraPitch = 15;
+    public final double targetHeight = 1.3;
 
     public PhotonPipelineResult results;
     public Transform3d robotToCam = VisionConstants.krobottocam;
@@ -66,7 +64,6 @@ public class Cam2 extends SubsystemBase {
         } catch (IOException err) {
             throw new RuntimeException();
         }
-
     }
 
     /**
@@ -101,6 +98,30 @@ public class Cam2 extends SubsystemBase {
         return target;
     }
 
+     /**
+     * Returns a list of 2 demesional tag poses
+     * 
+     * @return {@link List}<{@link Pose2d}> poses
+     */
+    public List<Pose2d> getTags() {
+        List<Pose2d> poses = new ArrayList<Pose2d>();
+
+        double tagHeight = getTagPose3d().getY();
+        List<PhotonTrackedTarget> targets = results.getTargets();
+
+        // for(type var : arr) basically put each value of array arr into var, one by a
+        // time
+        for (PhotonTrackedTarget trackedTarget : targets) {
+            // this calc assumes pitch angle is positive UP, so flip the camera's pitch
+            pitch = trackedTarget.getPitch();
+            yaw = trackedTarget.getYaw();
+            y = tagHeight * (1 / Math.tan(Math.toRadians(pitch + pitchDegree)));
+            x = y * Math.tan(Math.toRadians(yaw - yawDegree)) + cameraWeight;
+            poses.add(new Pose2d(x, y, new Rotation2d(0)));
+        }
+        return poses;
+    }
+
     /**
      * Returns an array of tag information. Returns zero if nothing detected. 
      * @return [0]: ID; [1]: range; [2]: yaw; [3]: pitch; [4] area; 
@@ -109,23 +130,25 @@ public class Cam2 extends SubsystemBase {
         double[] tagInfo = new double[5];
         PhotonTrackedTarget target = getBestTarget();
         ID = target.getFiducialId();
-        distance = PhotonUtils.calculateDistanceToTargetMeters(
-                cameraHeight, // height
-                cameraHeight * (1 / Math.tan(Math.toRadians(target.getPitch() + pitchDegree))),
-                Math.toRadians(target.getPitch()),
-                Units.degreesToRadians(results.getBestTarget().getPitch()));
+        // distance = PhotonUtils.calculateDistanceToTargetMeters(
+        //         cameraHeight, // height
+        //         cameraHeight * (1 / Math.tan(Math.toRadians(target.getPitch() + pitchDegree))),
+        //         Math.toRadians(target.getPitch()),
+        //         Units.degreesToRadians(results.getBestTarget().getPitch()));
         double yaw = target.getYaw();
         double pitch = target.getPitch();
-        double area = target.getArea();
+        double area = target.getArea();              
+        double range = getBestTagTransform3d().getX()*Math.cos(Math.toRadians(cameraPitch + pitch));
         // Transform3d pose = target.getBestCameraToTarget();
         // List<TargetCorner> corners = target.getDetectedCorners();
-        tagInfo[0] = hasTarget() ? ID : 0;
-        tagInfo[1] = hasTarget() ? distance : 0;
-        tagInfo[2] = hasTarget() ? yaw : 0;
-        tagInfo[3] = hasTarget() ? pitch : 0;
-        tagInfo[4] = hasTarget() ? area : 0;
+        tagInfo[0] = ID;
+        tagInfo[1] = range;
+        tagInfo[2] = yaw;
+        tagInfo[3] = pitch;
+        tagInfo[4] = area;
         return tagInfo;
     }
+
     
     public int getTagID() {
         Optional<Integer> ID = Optional.of(Integer.valueOf(getBestTarget().getFiducialId()));
@@ -142,7 +165,7 @@ public class Cam2 extends SubsystemBase {
      * @return {@link Transform3d} best cam to tag
      */
     public Transform3d getBestTagTransform3d() {
-        Transform3d pose = getBestTarget().getBestCameraToTarget();
+        Transform3d pose = results.getBestTarget().getBestCameraToTarget();
         return pose;
     }
 
@@ -202,6 +225,16 @@ public class Cam2 extends SubsystemBase {
         }
     }
 
+    public Pose3d getTagPose3d() {
+        if (hasTarget()) {
+            Optional<Pose3d> tag_Pose3d = m_layout.getTagPose(getTagID());
+            Pose3d tagPose3d = tag_Pose3d.isPresent() ? tag_Pose3d.get() : new Pose3d();
+            return tagPose3d;
+        } else {
+            return new Pose3d();
+        }
+    }
+
     /**
      * Get the pose of the desired tag in 2 dimension
      * 
@@ -238,5 +271,11 @@ public class Cam2 extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+        List<Pose2d> tags = getTags();
+        SmartDashboard.putNumber("tagVision/nFound", tags.size());
+        if (tags.size() > 0) {
+            SmartDashboard.putNumber("tagVision/x", getBestTagTransform3d().getX());
+            SmartDashboard.putNumber("tagVision/y", getBestTagTransform3d().getY());
+        }
     }
 }
