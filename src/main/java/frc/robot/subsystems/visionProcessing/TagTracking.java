@@ -159,7 +159,7 @@ public class TagTracking extends SubsystemBase {
         return bt;
     }
 
-        /**
+    /**
      * Returns a double array of campose in target space. The former 3 refers to
      * translation, while the latter 3 refers to rotation (in the sequence of roll,
      * pitch, yaw) In target space, (0,0,0) is the centre of the tag, x+ points to
@@ -212,10 +212,12 @@ public class TagTracking extends SubsystemBase {
     }
 
     /**
-     * Not yet experiented. 
-     * @return
+     * Not yet experimented. Return shooter to goal angle degree by calculating with
+     * tx and ty.
+     * 
+     * @return shooter to goal angle (degree)
      */
-    public double getTestSpeakerDegree() {
+    public double getSpeakerDegreeByCal() {
         double pitch = getTy();
         double yaw = getTx();
         double y = 0.615 * (1 / Math.tan(Math.toRadians(pitch + 10.0)));
@@ -226,7 +228,14 @@ public class TagTracking extends SubsystemBase {
         return degree;
     }
 
-    public double getTestTwoDegree(double nowDegree) {
+    /**
+     * Not yet experimented. Rerurn shooter to goal angle degree by botpose
+     * targetspace when tag detected
+     * 
+     * @param nowDegree shooter degree calculated by encoder
+     * @return shooter to goal angle (degree)
+     */
+    public double getSpeakerDegreeByBT(double nowDegree) {
         if (getTv() == 1) {
             double horDis = Math.abs(getBT()[2]) - 0.21;
             double degree = Math.toDegrees(Math.atan(1.6 / horDis));
