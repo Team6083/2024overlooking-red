@@ -287,15 +287,9 @@ public final class Constants {
         public static final double minNoteDistance = 0.2;
     }
 
-    public static final class AprilTagConstants {
-        public static final int A_pipeline = 0;
-        public static final double klimelightLensHeightInches = 0;
-        public static final double klimelightMountAngleDegrees = 0;
-    }
-
     public static final class VisionConstants {
         public static final String kCameraName = "Microsoft_LifeCam_HD-3000";
-        
+
         public static final Rotation2d sroffset = new Rotation2d(0);
         public static final Transform2d speakeroffset = new Transform2d(0, 0, sroffset);
 
