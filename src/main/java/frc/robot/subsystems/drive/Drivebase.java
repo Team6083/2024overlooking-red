@@ -226,7 +226,7 @@ public class Drivebase extends SubsystemBase {
    *                      using the wpi function to set the speed of the swerve
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    if (noteTrackingCondition) {
+if (noteTrackingCondition) {
       rot = facingNoteRot(rot);
     }
     if (tagTrackingCondition) {
@@ -313,9 +313,9 @@ public class Drivebase extends SubsystemBase {
     double targetID = aprilTagTracking.getTID();
     if (hasTarget == 1 && targetID != 3.0 && targetID != 8.0) {
       double rot = -facingTagPID.calculate(offset, 0);
-      return rot;
-    }
-    return currentRot;
+    return rot;
+  }
+return currentRot;
   }
 
   /**
@@ -326,15 +326,15 @@ public class Drivebase extends SubsystemBase {
   public double[] followingTag() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
-    double[] speed = new double[3];
+double[] speed = new double[3];
     double xSpeed = 0;
     double ySpeed = 0;
     double rot = 0;
-    double x_dis = aprilTagTracking.getBT()[2];
+double x_dis = aprilTagTracking.getBT()[2];
     if (hasTarget == 1) {
       rot = facingTagPID.calculate(offset, 0);
-      xSpeed = -followingTagPID.calculate(x_dis, 0.5);
-    }
+          xSpeed = -followingTagPID.calculate(x_dis, 0.5);
+      }
     speed[0] = xSpeed;
     speed[1] = ySpeed;
     speed[2] = rot;
@@ -393,7 +393,7 @@ public class Drivebase extends SubsystemBase {
     builder.addDoubleProperty("GyroResetCmd", null, null);
     builder.addDoubleProperty("PoseResetCmd", null, null);
     aprilTagTracking.putDashboard();
-  }
+    }
 
   // public void putDashboard() {
   // SmartDashboard.putNumber("frontLeft_speed",
@@ -408,7 +408,7 @@ public class Drivebase extends SubsystemBase {
   // SmartDashboard.putBoolean("trackingCondition", trackingCondition);
   // aprilTagTracking.putDashboard();
   // SmartDashboard.putData(GyroResetCmd());
-  // SmartDashboard.putData(PoseResetCmd());
+    // SmartDashboard.putData(PoseResetCmd());
   // }
 
   public Command GyroResetCmd() {
