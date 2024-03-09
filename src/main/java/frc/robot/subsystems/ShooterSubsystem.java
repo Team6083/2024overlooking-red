@@ -52,10 +52,22 @@ public class ShooterSubsystem extends SubsystemBase {
     this.powerDistributionSubsystem = powerDistribution;
   }
 
-  public Command shootingPID() {
-    Command shooterPID = runEnd(() -> this.setRateControl(), () -> this.stopAllMotor());
-    shooterPID.setName("shooterPID");
-    return shooterPID;
+  public Command speakerShootPID() {
+    Command speakerShootPID = runEnd(() -> this.speakerRate(), () -> this.stopAllMotor());
+    speakerShootPID.setName("speakerShootPID");
+    return speakerShootPID;
+  }
+
+  public Command ampShootPID() {
+    Command ampShootPID = runEnd(() -> this.ampRate(), () -> this.stopAllMotor());
+    ampShootPID.setName("ampShootPID");
+    return ampShootPID;
+  }
+
+  public Command lowShootPID() {
+    Command lowShootPID = runEnd(() -> this.lowRate(), () -> this.stopAllMotor());
+    lowShootPID.setName("lowShootPID");
+    return lowShootPID;
   }
 
   public void stopAllMotor() {
@@ -68,12 +80,26 @@ public class ShooterSubsystem extends SubsystemBase {
     downEncoder.reset();
   }
 
-  public void setRateControl() {
-    double rate = ShooterConstants.kShooterRate;
-    final double upMotorVoltage = upMotorFeedForwardController.calculate(rate)
-        + ratePidController.calculate(getUpEncoderRate(), rate);
-    final double downMotorVoltage = downMotorFeedForwardController.calculate(rate)
-        + ratePidController.calculate(getDownEncoderRate(), rate);
+  public void speakerRate(){
+    double speakerRate = ShooterConstants.kSpeakerShootRate;
+    setRateControl(speakerRate, speakerRate);
+  }
+  
+  public void ampRate(){
+    double ampRate = ShooterConstants.kAmpShootRate;
+    setRateControl(ampRate, ampRate);
+  }
+  
+  public void lowRate(){
+    double lowRate = ShooterConstants.kLowShooterRate;
+    setRateControl(lowRate, lowRate);
+  }
+
+  public void setRateControl(double upRate, double downRate) {
+    final double upMotorVoltage = upMotorFeedForwardController.calculate(upRate)
+        + ratePidController.calculate(getUpEncoderRate(), upRate);
+    final double downMotorVoltage = downMotorFeedForwardController.calculate(downRate)
+        + ratePidController.calculate(getDownEncoderRate(), downRate);
     setUpMotorVoltage(upMotorVoltage);
     setDownMotorVoltage(downMotorVoltage);
     SmartDashboard.putNumber("upMotorVoltage", upMotorVoltage);

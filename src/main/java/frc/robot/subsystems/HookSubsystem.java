@@ -34,8 +34,8 @@ public class HookSubsystem extends SubsystemBase {
 
   public HookSubsystem(PowerDistributionSubsystem powerDistributionSubsystem) {
     lineMotor = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
-    hookLeftMotor = new VictorSPX(HookConstants.kHookLeftMotorCnannel);
-    hookRightMotor = new VictorSPX(HookConstants.kHookRightMotorCnannel);
+    hookLeftMotor = new VictorSPX(HookConstants.kHookLeftMotorChannel);
+    hookRightMotor = new VictorSPX(HookConstants.kHookRightMotorChannel);
     linePID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     hookLeftPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     hookRightMotorPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);

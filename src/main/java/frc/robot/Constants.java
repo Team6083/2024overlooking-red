@@ -41,7 +41,9 @@ public final class Constants {
         public static final Boolean kDownEncoderInverted = true;
         public static final double kUpMotorManualVoltage = 10.0;
         public static final double kDownMotorManualVoltage = 10.0;
-        public static final double kShooterRate = 60.0;
+        public static final double kSpeakerShootRate = 60.0;
+        public static final double kAmpShootRate = 45.0;
+        public static final double kLowShooterRate = 30.0;
         public static final double kDeadbandRate = 55.0;
         public static final double kP = 0.0;
         public static final double kI = 0.0;
@@ -89,8 +91,8 @@ public final class Constants {
 
     public static class HookConstants {
         public static final int kHookLineChannel = 23;
-        public static final int kHookLeftMotorCnannel = 28;
-        public static final int kHookRightMotorCnannel = 27;
+        public static final int kHookLeftMotorChannel = 28;
+        public static final int kHookRightMotorChannel = 27;
         public static final boolean kHookMotorLeftInverted = true;
         public static final boolean kHookMotorRightInverted = false;
         public static final boolean kLineMotorInverted = false;
