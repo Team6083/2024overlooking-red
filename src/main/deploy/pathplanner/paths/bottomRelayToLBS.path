@@ -32,10 +32,10 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.36,
-    "maxAcceleration": 3.36,
-    "maxAngularVelocity": 453.38,
-    "maxAngularAcceleration": 453.38
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "relay points to shoot position",
+  "folder": "Relay To Shoot Point",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

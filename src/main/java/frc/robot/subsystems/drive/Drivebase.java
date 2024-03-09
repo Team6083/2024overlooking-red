@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
@@ -455,11 +456,15 @@ public class Drivebase extends SubsystemBase {
   }
 
   public Command GyroResetCmd() {
-    return new InstantCommand(() -> resetGyro(), this);
+    Command cmd = new InstantCommand(() -> resetGyro(), this);
+    cmd.setName("GyroResetCmd");
+    return cmd;
   }
 
   public Command PoseResetCmd() {
-    return new InstantCommand(() -> resetPose2dAndEncoder(), this);
+    Command cmd = new InstantCommand(() -> resetPose2dAndEncoder(), this);
+    cmd.setName("PoseResetCmd");
+    return cmd;
   }
 
   public Boolean checkPose2d(Pose2d targetPose2d) {
