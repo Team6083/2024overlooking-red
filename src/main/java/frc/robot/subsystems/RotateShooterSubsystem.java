@@ -110,6 +110,18 @@ public class RotateShooterSubsystem extends SubsystemBase {
     return degree;
   }
 
+public double getShooterToTagHoriDis(){
+  // shooter to cam z dis, remember to move this to constant later on
+  double offset = 0.11;
+  double z_dis = offset + tagTrackingLimelight.getBT()[2];
+  double x_dis = tagTrackingLimelight.getBT()[0];
+  double horDis = Math.sqrt(Math.pow(x_dis, 2)+Math.pow(z_dis, 2));
+  return horDis;
+}
+  
+  public void detectAngle(){
+    
+  }
 
   public Command addErrorCommand(double error) {
     return Commands.run(() -> addError(error), this);
