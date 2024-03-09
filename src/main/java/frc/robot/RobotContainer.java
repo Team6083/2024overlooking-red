@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriveControllerConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.IntakeWithTransportCmd;
 import frc.robot.commands.autoCmds.AutoAimAndShootCmd;
 import frc.robot.commands.autoCmds.AutoRotateShooterCmd;
 import frc.robot.commands.autoCmds.AutoTransportShootCmd;
@@ -112,7 +113,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("AutoAim", new AutoRotateShooterCmd(rotateShooter));
     NamedCommands.registerCommand("AutoShootRate", shooter.speakerShootPID());
     NamedCommands.registerCommand("AutoTransport", new AutoTransportShootCmd(drivebase, shooter, transport));
-    NamedCommands.registerCommand("AutoIntakeWithTransport", null);
+    NamedCommands.registerCommand("AutoIntakeWithTransport", new IntakeWithTransportCmd(transport, intake));
     NamedCommands.registerCommand("AutoFaceAndShoot", new AutoAimAndShootCmd(drivebase, rotateShooter, shooter, transport));
   }
 
