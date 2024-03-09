@@ -28,7 +28,7 @@
         "y": 6.45267093672561
       },
       "isLocked": false,
-      "linkedName": "StartLeft"
+      "linkedName": "StartAmp"
     },
     {
       "anchor": {
@@ -44,7 +44,7 @@
         "y": 5.024624631817023
       },
       "isLocked": false,
-      "linkedName": "StartRight"
+      "linkedName": "StartSource"
     },
     {
       "anchor": {

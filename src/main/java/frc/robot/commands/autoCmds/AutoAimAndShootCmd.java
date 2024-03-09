@@ -19,6 +19,6 @@ public class AutoAimAndShootCmd extends ParallelCommandGroup {
       ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem) {
     addCommands(
         new AutoAimCmd(drivebase, rotateShooterSubsystem),
-        new AutoShootCmd(drivebase, shooterSubsystem, transportSubsystem));
+        new AutoTransportShootCmd(drivebase, shooterSubsystem, transportSubsystem));
   }
 }

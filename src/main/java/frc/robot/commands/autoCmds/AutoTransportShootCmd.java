@@ -16,12 +16,11 @@ import frc.robot.subsystems.drive.Drivebase;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoShootCmd extends ParallelDeadlineGroup {
+public class AutoTransportShootCmd extends ParallelDeadlineGroup {
   /** Creates a new autoAimAndShootCmd. */
-  public AutoShootCmd(Drivebase drivebase, ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem) {
+  public AutoTransportShootCmd(Drivebase drivebase, ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem) {
     super(new WaitCommand(1));
     addCommands(
-        new ShootPIDCmd(shooterSubsystem),
         new TransportShootCmd(transportSubsystem, shooterSubsystem.isEnoughRate())
             .onlyWhile(shooterSubsystem::isEnoughRate).onlyWhile(drivebase::hasFaceTarget));
   }
