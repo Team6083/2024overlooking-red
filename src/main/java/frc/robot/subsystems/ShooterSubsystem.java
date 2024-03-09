@@ -10,7 +10,11 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -48,6 +52,15 @@ public class ShooterSubsystem extends SubsystemBase {
 
     this.powerDistributionSubsystem = powerDistribution;
   }
+
+      public Command shooterPIDCommand() {
+        // implicitly requires `this`
+        return Commands.runEnd(()->this.setRateControl(),()->this.stopAllMotor());
+      }
+      public void stopAllMotor(){
+        stopDownMotor();
+        stopUpMotor();
+      }
 
   public void resetEncoder() {
     upEncoder.reset();
