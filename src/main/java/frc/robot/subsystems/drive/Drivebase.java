@@ -26,6 +26,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
@@ -225,11 +226,11 @@ public class Drivebase extends SubsystemBase {
    * 
    *                      using the wpi function to set the speed of the swerve
    */
-  public void drive(double ySpeed, double xSpeed, double rot, boolean fieldRelative) {
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     swerveModuleStates = kinematics.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, rot, gyro.getRotation2d())
-            : new ChassisSpeeds(ySpeed, xSpeed, rot));
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, gyro.getRotation2d())
+            : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DrivebaseConstants.kMaxSpeed);
     frontLeft.setDesiredState(swerveModuleStates[0]);
     frontRight.setDesiredState(swerveModuleStates[1]);
@@ -287,16 +288,6 @@ public class Drivebase extends SubsystemBase {
     return Math.abs(offset) < 4;
   }
 
-  public void faceTarget() {
-    double offset = aprilTagTracking.getTx();
-    double hasTarget = aprilTagTracking.getTv();
-    double rot = 0;
-    if (hasTarget == 1) {
-      rot = facingTagPID.calculate(offset, 0);
-    }
-    drive(0, 0, -rot, false);
-  }
-
   public double faceTargetMethod2() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
@@ -308,50 +299,22 @@ public class Drivebase extends SubsystemBase {
     return rot;
   }
 
-  public void follow() {
+  public double[] follow() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
-    double rot = 0;
-    if (hasTarget == 1) {
-      rot = facingTagPID.calculate(offset, 0);
-    }
-    double[] bt = aprilTagTracking.getBT();
-    double x_dis = bt[2];
-    // double y_dis = bt[2];
-    // double hasTarget = tag.getTv();
-    double xSpeed = 0;
-    // double ySpeed = 0;
-    if (hasTarget == 1) {
-      xSpeed = -followingTagPID.calculate(x_dis, 0.5);
-      // ySpeed = follow_pid.calculate(y_dis, 1);
-    }
-    SmartDashboard.putNumber("x_dis_speed", xSpeed);
-    // SmartDashboard.putNumber("y_dis_speed", ySpeed);
-    drive(xSpeed, 0, -rot, false);
-    SmartDashboard.putNumber("distance", aprilTagTracking.getMyDistance());
-    // drive(0, 0, -rot, false);
-  }
-
-  public void fixDistanceBT() {
-    double[] bt = aprilTagTracking.getBT();
-    double x_dis = bt[0];
-    double y_dis = bt[1];
-    double hasTarget = aprilTagTracking.getTv();
+    double[] speed = new double[3];
     double xSpeed = 0;
     double ySpeed = 0;
+    double rot = 0;
+    double x_dis = aprilTagTracking.getBT()[2];
     if (hasTarget == 1) {
-      xSpeed = followingTagPID.calculate(x_dis, 0);
-      ySpeed = followingTagPID.calculate(y_dis, 1);
+      rot = facingTagPID.calculate(offset, 0);
+      xSpeed = -followingTagPID.calculate(x_dis, 0.5);
     }
-    SmartDashboard.putNumber("x_dis_speed", xSpeed);
-    SmartDashboard.putNumber("y_dis_speed", ySpeed);
-    drive(xSpeed, 0, 0, true);
-  }
-
-  public void setRedSpeakerPipeline() {
-    aprilTagTracking.setCamMode(1);
-    aprilTagTracking.setLedMode(1);
-    aprilTagTracking.setPipeline(4);
+    speed[0] = xSpeed;
+    speed[1] = ySpeed;
+    speed[2] =rot;
+    return speed;
   }
 
   public void switchTrackCondition() {
@@ -440,20 +403,34 @@ public class Drivebase extends SubsystemBase {
     updateOdometry();
     // photonTracking.putDashboard();
     field2d.setRobotPose(getPose2d());
-    putDashboard();
+    // putDashboard();
   }
 
-  public void putDashboard() {
-    SmartDashboard.putNumber("frontLeft_speed", swerveModuleStates[0].speedMetersPerSecond);
-    SmartDashboard.putNumber("frontRight_speed", swerveModuleStates[1].speedMetersPerSecond);
-    SmartDashboard.putNumber("backLeft_speed", swerveModuleStates[2].speedMetersPerSecond);
-    SmartDashboard.putNumber("backRight_speed", swerveModuleStates[3].speedMetersPerSecond);
-    SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
-    SmartDashboard.putBoolean("trackingCondition", trackingCondition);
+  @Override
+  public void initSendable(SendableBuilder builder){
+    builder.setSmartDashboardType("driveBase");
+    builder.addDoubleProperty("frontLeft_speed",() -> swerveModuleStates[0].speedMetersPerSecond,null);
+    builder.addDoubleProperty("frontRight_speed",() -> swerveModuleStates[1].speedMetersPerSecond, null);
+    builder.addDoubleProperty("backLeft_speed",() -> swerveModuleStates[2].speedMetersPerSecond, null);
+    builder.addDoubleProperty("backRight_speed",() -> swerveModuleStates[3].speedMetersPerSecond, null);
+    builder.addDoubleProperty("gyro_heading",() -> gyro.getRotation2d().getDegrees(),null);
+    builder.addBooleanProperty("trackingCondition",() -> trackingCondition, null);
+    builder.addDoubleProperty("GyroResetCmd",null, null);
+    builder.addDoubleProperty("PoseResetCmd", null, null);
     aprilTagTracking.putDashboard();
-    SmartDashboard.putData(GyroResetCmd());
-    SmartDashboard.putData(PoseResetCmd());
   }
+
+  // public void putDashboard() {
+  //   SmartDashboard.putNumber("frontLeft_speed", swerveModuleStates[0].speedMetersPerSecond);
+  //   SmartDashboard.putNumber("frontRight_speed", swerveModuleStates[1].speedMetersPerSecond);
+  //   SmartDashboard.putNumber("backLeft_speed", swerveModuleStates[2].speedMetersPerSecond);
+  //   SmartDashboard.putNumber("backRight_speed", swerveModuleStates[3].speedMetersPerSecond);
+  //   SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
+  //   SmartDashboard.putBoolean("trackingCondition", trackingCondition);
+  //   aprilTagTracking.putDashboard();
+  //   SmartDashboard.putData(GyroResetCmd());
+  //   SmartDashboard.putData(PoseResetCmd());
+  // }
 
   public Command GyroResetCmd() {
     Command cmd = new InstantCommand(() -> resetGyro(), this);

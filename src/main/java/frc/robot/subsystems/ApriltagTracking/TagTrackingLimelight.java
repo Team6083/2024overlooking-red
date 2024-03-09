@@ -1,5 +1,12 @@
 package frc.robot.subsystems.apriltagTracking;
 
+import java.io.IOException;
+import java.util.Optional;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTable;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -9,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class TagTrackingLimelight extends SubsystemBase {
     public NetworkTable table;
+    public AprilTagFieldLayout m_layout;
 
     public double v;
     public double a;
@@ -17,12 +25,8 @@ public class TagTrackingLimelight extends SubsystemBase {
     public double area;
     public double ID;
     public double latency;
-    public double tagLong;
-    public double tagShort;
 
     public double[] bt; // botpose_targetspace
-    public double[] cr;// camerapose_robotspace
-    public double[] tr; // targetpose_robotpose;
     public double[] ct; // camerapose_targetspace
 
     public double MyDistance;
@@ -36,6 +40,13 @@ public class TagTrackingLimelight extends SubsystemBase {
 
     public TagTrackingLimelight() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
+        setCamMode(0);
+        setLedMode(0);
+        try {
+            m_layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+        } catch (IOException err) {
+            throw new RuntimeException();
+        }
     }
 
     public void setCamMode(int camMode) {
@@ -68,11 +79,6 @@ public class TagTrackingLimelight extends SubsystemBase {
         return y;
     }
 
-    public double getTa() {
-        a = table.getEntry("ta").getDouble(0);
-        return a;
-    }
-
     public double getTv() {
         v = table.getEntry("tv").getDouble(0);
         return v;
@@ -98,57 +104,10 @@ public class TagTrackingLimelight extends SubsystemBase {
         return ct;
     }
 
-    public double getTlong() {
-        tagLong = table.getEntry("tlong").getDouble(0);
-        return tagLong;
+    public double getHorizontalDis2() {
+        double horDis = Math.sqrt((Math.pow(getBT()[0], 2) + Math.pow(getBT()[2], 2)));
+        return horDis;
     }
-
-    public double getTshort() {
-        tagShort = table.getEntry("tshort").getDouble(0);
-        return tagShort;
-    }
-
-    // public void updatePoseEstimatorWithVisionBotPose() {
-    // PoseLatency visionBotPose = m_visionSystem.getPoseLatency();
-    // // invalid LL data
-    // if (visionBotPose.pose2d.getX() == 0.0) {
-    // return;
-    // }
-
-    // // distance from current pose to vision estimated pose
-    // double poseDifference =
-    // m_poseEstimator.getEstimatedPosition().getTranslation()
-    // .getDistance(visionBotPose.pose2d.getTranslation());
-
-    // if (m_visionSystem.areAnyTargetsValid()) {
-    // double xyStds;
-    // double degStds;
-    // // multiple targets detected
-    // if (m_visionSystem.getNumberOfTargetsVisible() >= 2) {
-    // xyStds = 0.5;
-    // degStds = 6;
-    // }
-    // // 1 target with large area and close to estimated pose
-    // else if (m_visionSystem.getBestTargetArea() > 0.8 && poseDifference < 0.5) {
-    // xyStds = 1.0;
-    // degStds = 12;
-    // }
-    // // 1 target farther away and estimated pose is close
-    // else if (m_visionSystem.getBestTargetArea() > 0.1 && poseDifference < 0.3) {
-    // xyStds = 2.0;
-    // degStds = 30;
-    // }
-    // // conditions don't match to add a vision measurement
-    // else {
-    // return;
-    // }
-
-    // m_poseEstimator.setVisionMeasurementStdDevs(
-    // VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(degStds)));
-    // m_poseEstimator.addVisionMeasurement(visionBotPose.pose2d,
-    // Timer.getFPGATimestamp() - visionBotPose.latencySeconds);
-    // }
-    // }
 
     /**
      * Returns goal height in metres
@@ -205,6 +164,36 @@ public class TagTrackingLimelight extends SubsystemBase {
     }
 
     /**
+     * Gets the tag's pose in 2 dimension
+     * 
+     * @return tagPose
+     */
+    public Pose2d getTagPose2d() {
+        if (getTv() != 0) {
+            Optional<Pose3d> tag_Pose3d = m_layout.getTagPose((int) getTID());
+            Pose2d tagPose2d = tag_Pose3d.isPresent() ? tag_Pose3d.get().toPose2d() : new Pose2d();
+            return tagPose2d;
+        } else {
+            return new Pose2d();
+        }
+    }
+
+    /**
+     * Gets the tag's pose in 2 dimension
+     * 
+     * @return tagPose
+     */
+    public Pose3d getTagPose3d() {
+        if (getTv() != 0) {
+            Optional<Pose3d> tag_Pose3d = m_layout.getTagPose((int) getTID());
+            Pose3d tagPose = tag_Pose3d.isPresent() ? tag_Pose3d.get() : new Pose3d();
+            return tagPose;
+        } else {
+            return new Pose3d();
+        }
+    }
+
+    /**
      * Set priority tag iD
      * 
      * @param priorityID the priority tag ID (int)
@@ -225,19 +214,12 @@ public class TagTrackingLimelight extends SubsystemBase {
         SmartDashboard.putNumber("LimelightID", getTID());
         SmartDashboard.putNumber("latency", getTl());
 
-        // botpose in targetspace
-        SmartDashboard.putNumber("bt_x", getBT()[0]);
-        SmartDashboard.putNumber("bt_y", getBT()[1]);
-        SmartDashboard.putNumber("bt_z", getBT()[2]);
-
         SmartDashboard.putNumber("hor_Dis", getHorizontalDis3());
-
-        // // campose in targetspace
-        // SmartDashboard.putNumber("ct_x", getCT()[0]);
-        // SmartDashboard.putNumber("ct_y", getCT()[1]);
-        // SmartDashboard.putNumber("ct_z", getCT()[2]);
-
         SmartDashboard.putNumber("MyDistance", getMyDistance());
+
+        SmartDashboard.putNumber("SpeakerDegree", getSpeakerDegree());
+        SmartDashboard.putNumber("TestSpeakerDegree", getTestSpeakerDegree());
+        SmartDashboard.putNumber("TestTwoDegree", getTestTwoDegree(30));
     }
 
     @Override
