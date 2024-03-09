@@ -54,7 +54,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public Command shootingPID() {
     Command shooterPID = runEnd(() -> this.setRateControl(), () -> this.stopAllMotor());
     shooterPID.setName("shooterPID");
-    return shootingPID();
+    return shooterPID;
   }
 
   public void stopAllMotor() {
