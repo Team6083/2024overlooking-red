@@ -31,8 +31,8 @@ public class HookSubsystem extends SubsystemBase {
   private double hookLeftPositionOffset = 0.0;
   private double hookRightPositionOffset = 0.0;
 
-  public HookSubsystem(PowerDistributionSubsystem powerDistribution) {
-    lineMotor = new CANSparkMax(HookConstants.kHookLineMotorChannel, MotorType.kBrushless);
+  public HookSubsystem(PowerDistributionSubsystem powerDistributionSubsystem) {
+    lineMotor = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
     hookLeftMotor = new VictorSPX(HookConstants.kHookLeftMotorCnannel);
     hookRightMotor = new VictorSPX(HookConstants.kHookRightMotorCnannel);
     linePID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
@@ -42,10 +42,10 @@ public class HookSubsystem extends SubsystemBase {
     hookLeftEncoder = new Encoder(HookConstants.kHookLeftEncoderChannelA, HookConstants.kHookLeftEncoderChannelB);
     hookRightEncoder = new Encoder(HookConstants.kHookRightEncoderChannelA, HookConstants.kHookRightEncoderChannelB);
     lineEncoder.setPositionConversionFactor(HookConstants.kHookPositionConversionfactor);
-    line.setInverted(HookConstants.kLineMotorInverted);
+    lineMotor.setInverted(HookConstants.kLineMotorInverted);
     hookLeftMotor.setInverted(HookConstants.kHookMotorLeftInverted);
     hookRightMotor.setInverted(HookConstants.kHookMotorRightInverted);
-    this.powerDistribution = powerDistribution;
+    this.powerDistributionSubsystem = powerDistributionSubsystem;
   }
 
   public void manualControlLine(double hookControlSpeed) {
