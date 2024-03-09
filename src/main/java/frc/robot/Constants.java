@@ -91,8 +91,8 @@ public final class Constants {
 
     public static class HookConstants {
         public static final int kHookLineChannel = 23;
-        public static final int kHookLeftMotorCnannel = 28;
-        public static final int kHookRightMotorCnannel = 27;
+        public static final int kHookLeftMotorChannel = 28;
+        public static final int kHookRightMotorChannel = 27;
         public static final boolean kHookMotorLeftInverted = true;
         public static final boolean kHookMotorRightInverted = false;
         public static final boolean kLineMotorInverted = false;
@@ -204,13 +204,13 @@ public final class Constants {
         public static final int kTransportCurrentchannel = 0;
         public static final int kRiseShooterCurrentchannel = 1;
 
-        public static final double kIntakeMotorMaxCurrent = 0;
-        public static final double kShooterDownMotorMaxCuurent = 0;
-        public static final double kShooterUpMotorMaxCurrent = 0;
-        public static final double kLineMotorMaxCurrent = 0;
-        public static final double kHookMotor1MaxCurrent = 0;
-        public static final double kHookMotor2MaxCurrent = 0;
-        public static final double kTransportMaxCurrent = 0;
+        public static final double kIntakeMotorMaxCurrent = 40.0;
+        public static final double kShooterDownMotorMaxCuurent = 40.0;
+        public static final double kShooterUpMotorMaxCurrent = 40.0;
+        public static final double kLineMotorMaxCurrent = 40.0;
+        public static final double kHookMotor1MaxCurrent = 40.0;
+        public static final double kHookMotor2MaxCurrent = 40.0;
+        public static final double kTransportMaxCurrent = 40.0;
         public static final double kRotateShooterMaxCurrent = 40.0;
     }
 
