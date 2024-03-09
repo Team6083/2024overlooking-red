@@ -107,6 +107,9 @@ public final class Constants {
         public static final double kLeftPositionMin = 0.0;
         public static final double kRightPositionMax = 60.0;
         public static final double kRightPositionMin = 0.0;
+        public static final double kHookleftToTopPositionMax = 45.0;
+        public static final double kHookRightToTopPositionMax = 45.0;
+        public static final double kHooklineToTopPositionMax = 45.0;
         public static final double kHookPositionConversionfactor = 1.0;
         public static final double kLinePower = 0;
         public static final double kHookMotorLeftVoltage = 0.0;
