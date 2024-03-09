@@ -32,13 +32,13 @@ public class IntakeSubsystem extends SubsystemBase {
   public Command setIntakingCmd() {
     Command setIntaking = Commands.startEnd(() -> setIntaking(), () -> stopMotor());
     setIntaking.setName("setIntaking");
-    return setIntakingCmd();
+    return setIntaking;
   }
 
   public Command setReIntakingCmd(){
-  Command reIntake = Commands.startEnd(() -> setThrowing(), () -> stopMotor());
-  reIntake.setName("setRetaking");
-  return setReIntakingCmd();
+  Command setReIntaking = Commands.startEnd(() -> setThrowing(), () -> stopMotor());
+  setReIntaking.setName("setRetaking");
+  return setReIntaking;
   }
 
   public void setIntaking() {
