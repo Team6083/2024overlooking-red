@@ -59,7 +59,6 @@ public class RobotContainer {
   private final HookSubsystem hook;
   private final TagTrackingLimelight aprilTagTracking;
   private final NoteTrackingPhotovision noteTracking;
-  private final TagTrackingPhotonvision photonTracking;
   private final TagTrackingLimelight tagLimelightTracking;
 
   private SendableChooser<Command> autoChooser;
@@ -69,12 +68,11 @@ public class RobotContainer {
     powerDistributionSubsystem = new PowerDistributionSubsystem();
     aprilTagTracking = new TagTrackingLimelight();
     noteTracking = new NoteTrackingPhotovision();
-    photonTracking = new TagTrackingPhotonvision();
     tagLimelightTracking = new TagTrackingLimelight();
 
     mainController = new CommandXboxController(DriveControllerConstants.kMainController);
     controlPanel = new CommandGenericHID(DriveControllerConstants.kControlPanel);
-    drivebase = new Drivebase(noteTracking, tagLimelightTracking, photonTracking);
+    drivebase = new Drivebase(noteTracking, tagLimelightTracking);
     // drivebaseAccelerate = new DrivebaseAccelerateCmd(drivebase);
     // drivebaseDefaultSpeed = new DrivebaseDefaultSpeedCmd(drivebase);
     intake = new IntakeSubsystem(powerDistributionSubsystem);
