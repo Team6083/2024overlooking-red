@@ -10,6 +10,7 @@ import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TransportConstants;
 
@@ -27,8 +28,17 @@ public class TransportSubsystem extends SubsystemBase {
 
     this.powerDistributionSubsystem = powerDistribution;
   }
+  public Command ReTransportIntakeCmd(){
+    return this.startEnd(()->this.setReTransport(),()->this.stopMotor());
+  }
+  public Command transportIntakeCmd(){
+    return this.startEnd(()->this.setTransport(),()->this.stopMotor());
+  }
 
-  public void setTransport() {
+  public Command TrasportShooter(){
+    return this.startEnd(()->this.setTransport(),()->this.stopMotor());
+  }
+    public void setTransport() {
     setMotor(TransportConstants.kTransVoltage);
   }
 

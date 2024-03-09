@@ -10,8 +10,10 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HookConstants;
 
@@ -24,8 +26,8 @@ public class HookSubsystem extends SubsystemBase {
   public final VictorSPX hookLeftMotor;
   public final VictorSPX hookRightMotor;
   private final RelativeEncoder lineEncoder;
-  private final Encoder hookRightEncoder;
-  private final Encoder hookLeftEncoder;
+  private final DutyCycleEncoder  hookRightEncoder;
+  private final DutyCycleEncoder  hookLeftEncoder;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
   private double linePositionOffset = 0.0;
   private double hookLeftPositionOffset = 0.0;
@@ -39,13 +41,29 @@ public class HookSubsystem extends SubsystemBase {
     hookLeftPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     hookRightMotorPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     lineEncoder = lineMotor.getEncoder();
-    hookLeftEncoder = new Encoder(HookConstants.kHookLeftEncoderChannelA, HookConstants.kHookLeftEncoderChannelB);
-    hookRightEncoder = new Encoder(HookConstants.kHookRightEncoderChannelA, HookConstants.kHookRightEncoderChannelB);
+    hookLeftEncoder = new DutyCycleEncoder (HookConstants.kHookLeftEncoderChannelA);
+    hookRightEncoder = new DutyCycleEncoder (HookConstants.kHookRightEncoderChannelB);
     lineEncoder.setPositionConversionFactor(HookConstants.kHookPositionConversionfactor);
     lineMotor.setInverted(HookConstants.kLineMotorInverted);
     hookLeftMotor.setInverted(HookConstants.kHookMotorLeftInverted);
     hookRightMotor.setInverted(HookConstants.kHookMotorRightInverted);
     this.powerDistributionSubsystem = powerDistributionSubsystem;
+  }
+
+  public Command runHookDouwnLeftManual(){
+    return this.startEnd(()->this.manualControlLeftHookMotor(-HookConstants.kManualControlLeftHookMotorPower),()->this.stopHookLeftMotor());
+  }
+
+  public Command runHookDownRightMaual(){
+   return this.startEnd(()->this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),()->this.stopHookRightMotor());
+  }
+
+  public Command runHookUpLeftManual(){
+    return this.startEnd(()->this.manualControlLeftHookMotor(-HookConstants.kManualControlRightHookMotorPower),()->this.stopHookLeftMotor());
+  }
+
+  public Command runHookupRightMaual(){
+   return this.startEnd(()->this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),()->this.stopHookRightMotor());
   }
 
   public void manualControlLine(double hookControlSpeed) {
