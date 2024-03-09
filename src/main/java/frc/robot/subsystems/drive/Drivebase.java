@@ -42,7 +42,6 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.NoteTrackingConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
-import frc.robot.subsystems.apriltagTracking.TagTrackingPhotonvision;
 import frc.robot.subsystems.noteTracking.NoteTrackingPhotovision;
 
 public class Drivebase extends SubsystemBase {
@@ -99,7 +98,7 @@ public class Drivebase extends SubsystemBase {
   private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
 
   public Drivebase(NoteTrackingPhotovision noteTracking,
-      TagTrackingLimelight aprilTagTracking, TagTrackingPhotonvision photonTracking) {
+      TagTrackingLimelight aprilTagTracking) {
     this.note = noteTracking;
     this.aprilTagTracking = aprilTagTracking;
     frontLeftLocation = new Translation2d(0.3, 0.3);
