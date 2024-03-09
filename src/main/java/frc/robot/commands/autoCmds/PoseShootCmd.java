@@ -21,6 +21,6 @@ public class PoseShootCmd extends ParallelDeadlineGroup {
     addCommands(
         shooterSubsystem.speakerShootPID(),
         Commands.run(transportSubsystem::transportShooterCmd)
-            .onlyWhile(shooterSubsystem::isEnoughRate));
+            .onlyWhile(() -> shooterSubsystem.isEnoughRate(1)));
   }
 }

@@ -81,18 +81,22 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void speakerRate(){
-    double speakerRate = ShooterConstants.kSpeakerShootRate;
-    setRateControl(speakerRate, speakerRate);
+    double upRate = ShooterConstants.kSpeakerShootRate[0];
+    double downRate = ShooterConstants.kSpeakerShootRate[1];
+    setRateControl(upRate, downRate);
   }
   
   public void ampRate(){
-    double ampRate = ShooterConstants.kAmpShootRate;
-    setRateControl(ampRate, ampRate);
+    double upRate = ShooterConstants.kAmpShootRate[0];
+    double downRate = ShooterConstants.kAmpShootRate[1];
+    setRateControl(upRate, downRate);
   }
   
   public void lowRate(){
-    double lowRate = ShooterConstants.kLowShooterRate;
-    setRateControl(lowRate, lowRate);
+    double upRate = ShooterConstants.kLowShooterRate[0];
+    double downRate = ShooterConstants.kLowShooterRate[1];
+
+    setRateControl(upRate, downRate);
   }
 
   public void setRateControl(double upRate, double downRate) {
@@ -154,9 +158,21 @@ public class ShooterSubsystem extends SubsystemBase {
     downMotor.set(VictorSPXControlMode.PercentOutput, power);
   }
 
-  public Boolean isEnoughRate() {
-    return getUpEncoderRate() >= ShooterConstants.kDeadbandRate
-        && getDownEncoderRate() >= ShooterConstants.kDeadbandRate;
+  //mode=1 speakMode mode=2 transMode mode=3 ampMode;
+  public boolean isEnoughRate(int mode) {
+    switch (mode) {
+      case 1:
+        return getUpEncoderRate() >= ShooterConstants.kSpeakerShootRate[0]
+        && getDownEncoderRate() >= ShooterConstants.kSpeakerShootRate[1];
+      case 2:
+        return getUpEncoderRate() >= ShooterConstants.kLowShooterRate[0]
+        && getDownEncoderRate() >= ShooterConstants.kLowShooterRate[1];
+      case 3:
+        return getUpEncoderRate() >= ShooterConstants.kAmpShootRate[0]
+        && getDownEncoderRate() >= ShooterConstants.kAmpShootRate[1];
+      default:
+        return false;
+    }
   }
 
   @Override
