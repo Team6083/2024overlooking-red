@@ -63,33 +63,9 @@ public class HookSubsystem extends SubsystemBase {
         () -> this.stopHookLeftMotor());
   }
 
-  public Command runHookupRightMaual() {
+  public Command runHookupRightManual() {
     return this.startEnd(() -> this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),
         () -> this.stopHookRightMotor());
-  }
-
-  public Command HookLeftMotorDownPIDCmd() {
-    double leftMotorDownSetpoint = getLeftHookSetpoint() - HookConstants.kLeftMotorModify;
-    Command HookLeftMotorDownPIDCmd = this.runEnd(() -> this.setLeftHookMotorSetpoint(leftMotorDownSetpoint),
-        () -> this.hookLeftMotorPIDControl());
-    return HookLeftMotorDownPIDCmd;
-  }
-
-  public Command HookLeftMotorUpPIDCmd() {
-    double leftMotorUpSetpoint = getLeftHookSetpoint() - HookConstants.kLeftMotorModify;
-    Command HookLeftMotorUpPIDCmd = this.runEnd(() -> this.setLeftHookMotorSetpoint(leftMotorUpSetpoint),
-        () -> this.hookLeftMotorPIDControl());
-      return HookLeftMotorUpPIDCmd;
-  }
-
-  public Command HookLeftTotopCmd() {
-    return this.runEnd(() -> this.setRightHookMotorSetpoint(HookConstants.kHookleftToTopPositionMax),
-        () -> this.hookLeftMotorPIDControl());
-  }
-
-  public Command HookLineTotop() {
-    return this.runEnd(() -> this.setLineSetpoint(HookConstants.kHooklineToTopPositionMax),
-        () -> this.hookRightMotorPIDControl());
   }
 
   public void manualControlLine(double hookControlSpeed) {
