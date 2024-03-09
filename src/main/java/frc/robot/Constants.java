@@ -111,18 +111,9 @@ public final class Constants {
         public static final double kLinePower = 0;
         public static final double kHookMotorLeftVoltage = 0.0;
         public static final double kHookMotorRightVoltage = 0.0;
-<<<<<<< HEAD
         public static final double kmanualControlLineMotorPower = 0.25;
         public static final double kmanualControlLeftHookMotorPower = 0.25;
         public static final double kmanualControlRightHookMotorPower = 0.25;
-=======
-        public static final double kManualControlLineMotorPower = 0.25;
-        public static final double kManualControlLeftHookMotorPower = 0.25;
-        public static final double kManualControlRightHookMotorPower = 0.25;
-        public static final boolean kLineMotorInverted = true;
-        public static final boolean kHookLeftMotorInverted = false;
-        public static final boolean kHookRightMotorInverted = true;
->>>>>>> 21f710a905fe1d941a8c9423568d62c4ba60453f
         public static final double kInitSetpoint = 0.0;
         public static final double kLeftMotorModify = 0.0; // TO DO
         public static final double kRightMotorModify = 0.0; // TO DO
