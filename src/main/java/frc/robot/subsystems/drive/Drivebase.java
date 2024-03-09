@@ -40,7 +40,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.NoteTrackingConstants;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.TagTrackingConstants;
 import frc.robot.subsystems.visionProcessing.NoteTracking;
 import frc.robot.subsystems.visionProcessing.TagTracking;
 

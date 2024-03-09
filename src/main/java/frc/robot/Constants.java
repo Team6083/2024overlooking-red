@@ -286,15 +286,10 @@ public final class Constants {
         public static final double minNoteDistance = 0.2;
     }
 
-    public static final class VisionConstants {
-
-        public static final Rotation2d sroffset = new Rotation2d(0);
-        public static final Transform2d speakeroffset = new Transform2d(0, 0, sroffset);
-
-        public static final double cam_offset = 0;
-
-        public static final double CamShooterHeight = 0;
-        public static final double SpeakerOpeningToTagHeight = 0;
-        public static final double CamToShooterOffset = 0.11;
+    public static final class TagTrackingConstants {
+        public static final double shooterHeight = 0.31;
+        public static final double camHeight = 0.615;
+        public static final double camPitch = 10.0;
+        public static final double camToShooterDistance = 0.11;
     }
 }
