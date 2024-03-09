@@ -251,6 +251,29 @@ public class Drivebase extends SubsystemBase {
     return magnification;
   }
 
+  /** Updates the field relative position of the robot. */
+  public void updateOdometry() {
+    odometry.update(
+        gyro.getRotation2d(),
+        new SwerveModulePosition[] {
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+        });
+  }
+
+  public Pose2d getPose2d() {
+    return odometry.getPoseMeters();
+  }
+
+  public void resetRobotPose2d() {
+    frontLeft.resetAllEncoder();
+    frontRight.resetAllEncoder();
+    backLeft.resetAllEncoder();
+    backRight.resetAllEncoder();
+  }
+
   public boolean hasTargets() {
     return note.hasTargets();
   }
@@ -284,15 +307,6 @@ public class Drivebase extends SubsystemBase {
     return speed;
   }
 
-  public boolean hasFaceTarget() {
-    double offset = aprilTagTracking.getTx();
-    double hasTarget = aprilTagTracking.getTv();
-    if (hasTarget == 0) {
-      return false;
-    }
-    return Math.abs(offset) < 4;
-  }
-
   public double facingTag(double currentRot) {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
@@ -306,9 +320,10 @@ public class Drivebase extends SubsystemBase {
 
   /**
    * Return a double array. [0] xSpeed, [1] ySpeed, [2] rot
+   * 
    * @return follow (double array)
    */
-  public double[] follow() {
+  public double[] followingTag() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
     double[] speed = new double[3];
@@ -334,28 +349,12 @@ public class Drivebase extends SubsystemBase {
     tagTrackingCondition = !tagTrackingCondition;
   }
 
-  public Command noteTrackCondition(){
-    return Commands.runOnce(()-> switchNoteTrackCondition());
+  public Command noteTrackCondition() {
+    return Commands.runOnce(() -> switchNoteTrackCondition());
   }
 
   public Command tagTrackConditionCmd() {
     return Commands.runOnce(() -> switchTagTrackCondition());
-  }
-
-  /** Updates the field relative position of the robot. */
-  public void updateOdometry() {
-    odometry.update(
-        gyro.getRotation2d(),
-        new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            backLeft.getPosition(),
-            backRight.getPosition()
-        });
-  }
-
-  public Pose2d getPose2d() {
-    return odometry.getPoseMeters();
   }
 
   public void driveToSpecificPose2d(Pose2d desiredPose) {
@@ -363,22 +362,14 @@ public class Drivebase extends SubsystemBase {
     Transform2d offset = desiredPose.minus(botpose);
     double xoffset = offset.getX();
     double yoffset = offset.getY();
-    Rotation2d roffset = offset.getRotation();
-    double aoffset = roffset.getDegrees();
+    double roffset = offset.getRotation().getDegrees();
     SmartDashboard.putNumber("xoffset", xoffset);
     SmartDashboard.putNumber("yoffset", yoffset);
-    SmartDashboard.putNumber("aoffset", aoffset);
+    SmartDashboard.putNumber("aoffset", roffset);
     double xSpeed = drivePID.calculate(xoffset);
     double ySpeed = drivePID.calculate(yoffset);
-    double rot = drivePID.calculate(aoffset);
+    double rot = drivePID.calculate(roffset);
     drive(xSpeed, ySpeed, rot, true);
-  }
-
-  public void resetRobotPose2d() {
-    frontLeft.resetAllEncoder();
-    frontRight.resetAllEncoder();
-    backLeft.resetAllEncoder();
-    backRight.resetAllEncoder();
   }
 
   @Override
