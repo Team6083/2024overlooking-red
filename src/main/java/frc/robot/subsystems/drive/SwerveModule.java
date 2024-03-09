@@ -17,6 +17,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivebaseConstants;
@@ -34,10 +35,14 @@ public class SwerveModule extends SubsystemBase {
 
   private final PIDController rotationController;
 
+  private final String swerveModuleName;
+
+  private double[] moduleState;
+
   public SwerveModule(int driveMotorChannel,
       int turningMotorChannel,
-      int turningEncoderChannel, boolean driveInverted, double canCoderMagOffset) {
-
+      int turningEncoderChannel, boolean driveInverted, double canCoderMagOffset, String swerveModuleName) {
+    this.swerveModuleName = swerveModuleName;
     driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
 
@@ -143,17 +148,22 @@ public class SwerveModule extends SubsystemBase {
     if (Math.abs(desiredState.speedMetersPerSecond) < DrivebaseConstants.kMinJoyStickValue) {
       stopModule();
     } else {
-      var moduleState = optimizeOutputVoltage(desiredState, getRotation());
+      moduleState = optimizeOutputVoltage(desiredState, getRotation());
       driveMotor.setVoltage(moduleState[0]);
       turningMotor.setVoltage(moduleState[1]);
-      SmartDashboard.putNumber("turningEncoder_ID" + turningEncoder.getDeviceID() + "_voltage", moduleState[0]);
     }
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("turningEncoder_ID" + turningEncoder.getDeviceID() + "_degree", getRotation());
+    // SmartDashboard.putNumber(swerveModuleName + "_degree", getRotation());
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.addDoubleArrayProperty(swerveModuleName + "_voltage", () -> moduleState, null);
+    builder.addDoubleProperty(swerveModuleName + "_degree", () ->  getRotation(),null);
   }
 
 }

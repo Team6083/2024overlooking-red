@@ -26,6 +26,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
@@ -402,20 +403,34 @@ public class Drivebase extends SubsystemBase {
     updateOdometry();
     // photonTracking.putDashboard();
     field2d.setRobotPose(getPose2d());
-    putDashboard();
+    // putDashboard();
   }
 
-  public void putDashboard() {
-    SmartDashboard.putNumber("frontLeft_speed", swerveModuleStates[0].speedMetersPerSecond);
-    SmartDashboard.putNumber("frontRight_speed", swerveModuleStates[1].speedMetersPerSecond);
-    SmartDashboard.putNumber("backLeft_speed", swerveModuleStates[2].speedMetersPerSecond);
-    SmartDashboard.putNumber("backRight_speed", swerveModuleStates[3].speedMetersPerSecond);
-    SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
-    SmartDashboard.putBoolean("trackingCondition", trackingCondition);
+  @Override
+  public void initSendable(SendableBuilder builder){
+    builder.setSmartDashboardType("driveBase");
+    builder.addDoubleProperty("frontLeft_speed",() -> swerveModuleStates[0].speedMetersPerSecond,null);
+    builder.addDoubleProperty("frontRight_speed",() -> swerveModuleStates[1].speedMetersPerSecond, null);
+    builder.addDoubleProperty("backLeft_speed",() -> swerveModuleStates[2].speedMetersPerSecond, null);
+    builder.addDoubleProperty("backRight_speed",() -> swerveModuleStates[3].speedMetersPerSecond, null);
+    builder.addDoubleProperty("gyro_heading",() -> gyro.getRotation2d().getDegrees(),null);
+    builder.addBooleanProperty("trackingCondition",() -> trackingCondition, null);
+    builder.addDoubleProperty("GyroResetCmd",null, null);
+    builder.addDoubleProperty("PoseResetCmd", null, null);
     aprilTagTracking.putDashboard();
-    SmartDashboard.putData(GyroResetCmd());
-    SmartDashboard.putData(PoseResetCmd());
   }
+
+  // public void putDashboard() {
+  //   SmartDashboard.putNumber("frontLeft_speed", swerveModuleStates[0].speedMetersPerSecond);
+  //   SmartDashboard.putNumber("frontRight_speed", swerveModuleStates[1].speedMetersPerSecond);
+  //   SmartDashboard.putNumber("backLeft_speed", swerveModuleStates[2].speedMetersPerSecond);
+  //   SmartDashboard.putNumber("backRight_speed", swerveModuleStates[3].speedMetersPerSecond);
+  //   SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
+  //   SmartDashboard.putBoolean("trackingCondition", trackingCondition);
+  //   aprilTagTracking.putDashboard();
+  //   SmartDashboard.putData(GyroResetCmd());
+  //   SmartDashboard.putData(PoseResetCmd());
+  // }
 
   public Command GyroResetCmd() {
     Command cmd = new InstantCommand(() -> resetGyro(), this);
