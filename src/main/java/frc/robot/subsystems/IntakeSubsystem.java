@@ -19,11 +19,9 @@ public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
   private final VictorSPX intakeMotor;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
-  private final boolean isGetNote;
 
-  public IntakeSubsystem(PowerDistributionSubsystem powerDistributionSubsystem ,boolean isGetNote) {
+  public IntakeSubsystem(PowerDistributionSubsystem powerDistributionSubsystem) {
     this.powerDistributionSubsystem = powerDistributionSubsystem;
-    this.isGetNote = isGetNote;
     intakeMotor = new VictorSPX(IntakeConstants.kIntakeChannel);
     intakeMotor.setInverted(IntakeConstants.kIntakeInverted);
 
