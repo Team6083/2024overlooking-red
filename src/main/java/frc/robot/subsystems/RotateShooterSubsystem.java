@@ -111,7 +111,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
 
   public double getAngleDegree() {
     double degree = (RotateShooterConstants.kEncoderInverted ? -1.0 : 1.0)
-        * ((rotateEncoder.getAbsolutePosition() * 360.0) - 251.0);
+        * ((rotateEncoder.getAbsolutePosition() * 360.0) - 189.0);
     SmartDashboard.putNumber("rotateShooterDegree", degree);
     return degree;
   }
