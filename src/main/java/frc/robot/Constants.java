@@ -89,8 +89,8 @@ public final class Constants {
 
     public static class HookConstants {
         public static final int kHookLineChannel = 23;
-        public static final int kHookLeftMotorCnannel = 28;
-        public static final int kHookRightMotorCnannel = 27;
+        public static final int kHookLeftMotorChannel = 28;
+        public static final int kHookRightMotorChannel = 27;
         public static final boolean kHookMotorLeftInverted = true;
         public static final boolean kHookMotorRightInverted = false;
         public static final boolean kLineMotorInverted = false;
