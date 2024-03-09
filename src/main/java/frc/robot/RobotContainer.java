@@ -139,7 +139,7 @@ public class RobotContainer {
     //mainController.a().toggleOnTrue(new ShootTransportCmd(transport, shooter.getRate()));
     
     //semi-automatic
-
+    mainController.rightStick().onTrue(drivebase.tagTrackConditionCmd());
 
     //reset
     //mainController.back().onTrue(new GyroResetCmd(drivebase));

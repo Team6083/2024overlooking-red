@@ -90,7 +90,8 @@ public class Drivebase extends SubsystemBase {
 
   private double noteTrackTargetError = 0.0;
 
-  private boolean trackingCondition = false;
+  private boolean noteTrackingCondition = false;
+  private boolean tagTrackingCondition = false;
 
   private final NoteTrackingPhotovision note;
   private final TagTrackingLimelight aprilTagTracking;
@@ -111,7 +112,8 @@ public class Drivebase extends SubsystemBase {
         DrivebaseConstants.kFrontLeftDriveMotorInverted, DrivebaseConstants.kFrontLeftCanCoderMagOffset, "frontLeft");
     frontRight = new SwerveModule(DrivebaseConstants.kFrontRightDriveMotorChannel,
         DrivebaseConstants.kFrontRightTurningMotorChannel, DrivebaseConstants.kFrontRightTurningEncoderChannel,
-        DrivebaseConstants.kFrontRightDriveMotorInverted, DrivebaseConstants.kFrontRightCanCoderMagOffset, "frontRight");
+        DrivebaseConstants.kFrontRightDriveMotorInverted, DrivebaseConstants.kFrontRightCanCoderMagOffset,
+        "frontRight");
     backLeft = new SwerveModule(DrivebaseConstants.kBackLeftDriveMotorChannel,
         DrivebaseConstants.kBackLeftTurningMotorChannel, DrivebaseConstants.kBackLeftTurningEncoderChannel,
         DrivebaseConstants.kBackLeftDriveMotorInverted, DrivebaseConstants.kBackLeftCanCoderMagOffset, "backLeft");
@@ -224,6 +226,12 @@ public class Drivebase extends SubsystemBase {
    *                      using the wpi function to set the speed of the swerve
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+    if (noteTrackingCondition) {
+      rot = facingNoteRot(rot);
+    }
+    if (tagTrackingCondition) {
+      rot = facingTag(rot);
+    }
     swerveModuleStates = kinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, gyro.getRotation2d())
@@ -285,17 +293,21 @@ public class Drivebase extends SubsystemBase {
     return Math.abs(offset) < 4;
   }
 
-  public double faceTargetMethod2() {
+  public double facingTag(double currentRot) {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
-    double rot = 0;
-    if (hasTarget == 1) {
-      rot = -facingTagPID.calculate(offset, 0);
+    double targetID = aprilTagTracking.getTID();
+    if (hasTarget == 1 && targetID != 3.0 && targetID != 8.0) {
+      double rot = -facingTagPID.calculate(offset, 0);
+      return rot;
     }
-    SmartDashboard.putNumber("rot", rot);
-    return rot;
+    return currentRot;
   }
 
+  /**
+   * Return a double array. [0] xSpeed, [1] ySpeed, [2] rot
+   * @return follow (double array)
+   */
   public double[] follow() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
@@ -310,24 +322,24 @@ public class Drivebase extends SubsystemBase {
     }
     speed[0] = xSpeed;
     speed[1] = ySpeed;
-    speed[2] =rot;
+    speed[2] = rot;
     return speed;
   }
 
-  public void switchTrackCondition() {
-    trackingCondition = !trackingCondition;
+  public void switchNoteTrackCondition() {
+    noteTrackingCondition = !noteTrackingCondition;
   }
 
-  public void addTrackTargetError() {
-    noteTrackTargetError += 2;
+  public void switchTagTrackCondition() {
+    tagTrackingCondition = !tagTrackingCondition;
   }
 
-  public void minusTrackTargetError() {
-    noteTrackTargetError -= 2;
+  public Command noteTrackCondition(){
+    return Commands.runOnce(()-> switchNoteTrackCondition());
   }
 
-  public void resetTrackTargetError() {
-    noteTrackTargetError = 0.0;
+  public Command tagTrackConditionCmd() {
+    return Commands.runOnce(() -> switchTagTrackCondition());
   }
 
   /** Updates the field relative position of the robot. */
@@ -361,7 +373,7 @@ public class Drivebase extends SubsystemBase {
     double rot = drivePID.calculate(aoffset);
     drive(xSpeed, ySpeed, rot, true);
   }
-  
+
   public void resetRobotPose2d() {
     frontLeft.resetAllEncoder();
     frontRight.resetAllEncoder();
@@ -379,29 +391,33 @@ public class Drivebase extends SubsystemBase {
   }
 
   @Override
-  public void initSendable(SendableBuilder builder){
+  public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("driveBase");
-    builder.addDoubleProperty("frontLeft_speed",() -> swerveModuleStates[0].speedMetersPerSecond,null);
-    builder.addDoubleProperty("frontRight_speed",() -> swerveModuleStates[1].speedMetersPerSecond, null);
-    builder.addDoubleProperty("backLeft_speed",() -> swerveModuleStates[2].speedMetersPerSecond, null);
-    builder.addDoubleProperty("backRight_speed",() -> swerveModuleStates[3].speedMetersPerSecond, null);
-    builder.addDoubleProperty("gyro_heading",() -> gyro.getRotation2d().getDegrees(),null);
-    builder.addBooleanProperty("trackingCondition",() -> trackingCondition, null);
-    builder.addDoubleProperty("GyroResetCmd",null, null);
+    builder.addDoubleProperty("frontLeft_speed", () -> swerveModuleStates[0].speedMetersPerSecond, null);
+    builder.addDoubleProperty("frontRight_speed", () -> swerveModuleStates[1].speedMetersPerSecond, null);
+    builder.addDoubleProperty("backLeft_speed", () -> swerveModuleStates[2].speedMetersPerSecond, null);
+    builder.addDoubleProperty("backRight_speed", () -> swerveModuleStates[3].speedMetersPerSecond, null);
+    builder.addDoubleProperty("gyro_heading", () -> gyro.getRotation2d().getDegrees(), null);
+    builder.addBooleanProperty("trackingCondition", () -> noteTrackingCondition, null);
+    builder.addDoubleProperty("GyroResetCmd", null, null);
     builder.addDoubleProperty("PoseResetCmd", null, null);
     aprilTagTracking.putDashboard();
   }
 
   // public void putDashboard() {
-  //   SmartDashboard.putNumber("frontLeft_speed", swerveModuleStates[0].speedMetersPerSecond);
-  //   SmartDashboard.putNumber("frontRight_speed", swerveModuleStates[1].speedMetersPerSecond);
-  //   SmartDashboard.putNumber("backLeft_speed", swerveModuleStates[2].speedMetersPerSecond);
-  //   SmartDashboard.putNumber("backRight_speed", swerveModuleStates[3].speedMetersPerSecond);
-  //   SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
-  //   SmartDashboard.putBoolean("trackingCondition", trackingCondition);
-  //   aprilTagTracking.putDashboard();
-  //   SmartDashboard.putData(GyroResetCmd());
-  //   SmartDashboard.putData(PoseResetCmd());
+  // SmartDashboard.putNumber("frontLeft_speed",
+  // swerveModuleStates[0].speedMetersPerSecond);
+  // SmartDashboard.putNumber("frontRight_speed",
+  // swerveModuleStates[1].speedMetersPerSecond);
+  // SmartDashboard.putNumber("backLeft_speed",
+  // swerveModuleStates[2].speedMetersPerSecond);
+  // SmartDashboard.putNumber("backRight_speed",
+  // swerveModuleStates[3].speedMetersPerSecond);
+  // SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
+  // SmartDashboard.putBoolean("trackingCondition", trackingCondition);
+  // aprilTagTracking.putDashboard();
+  // SmartDashboard.putData(GyroResetCmd());
+  // SmartDashboard.putData(PoseResetCmd());
   // }
 
   public Command GyroResetCmd() {
