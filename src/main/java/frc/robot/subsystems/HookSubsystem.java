@@ -11,7 +11,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,8 +25,7 @@ public class HookSubsystem extends SubsystemBase {
   public final VictorSPX hookLeftMotor;
   public final VictorSPX hookRightMotor;
   private final RelativeEncoder lineEncoder;
-  private final DutyCycleEncoder  hookRightEncoder;
-  private final DutyCycleEncoder  hookLeftEncoder;
+  private final DutyCycleEncoder  hookEncoder;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
   private double linePositionOffset = 0.0;
   private double hookLeftPositionOffset = 0.0;
@@ -41,8 +39,7 @@ public class HookSubsystem extends SubsystemBase {
     hookLeftPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     hookRightMotorPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     lineEncoder = lineMotor.getEncoder();
-    hookLeftEncoder = new DutyCycleEncoder (HookConstants.kHookLeftEncoderChannelA);
-    hookRightEncoder = new DutyCycleEncoder (HookConstants.kHookRightEncoderChannelB);
+    hookEncoder = new DutyCycleEncoder (HookConstants.kHookLeftEncoderChannel);
     lineEncoder.setPositionConversionFactor(HookConstants.kHookPositionConversionfactor);
     lineMotor.setInverted(HookConstants.kLineMotorInverted);
     hookLeftMotor.setInverted(HookConstants.kHookMotorLeftInverted);
@@ -157,13 +154,13 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public double getLeftMotorPosition() {
-    SmartDashboard.putNumber("LeftPosition", hookLeftEncoder.get());
-    return (hookLeftEncoder.get()) + hookLeftPositionOffset;
+    SmartDashboard.putNumber("LeftPosition", hookEncoder.get());
+    return (hookEncoder.get()) + hookLeftPositionOffset;
   }
 
   public double getRightMotorPosition() {
-    SmartDashboard.putNumber("RightPosition", hookRightEncoder.get());
-    return (hookRightEncoder.get()) + hookRightPositionOffset;
+    SmartDashboard.putNumber("RightPosition", hookEncoder.get());
+    return (hookEncoder.get()) + hookRightPositionOffset;
   }
 
   public double getHookLeftMotorBusVoltage() {
@@ -220,13 +217,20 @@ public class HookSubsystem extends SubsystemBase {
 
   public void resetEncoder() {
     lineEncoder.setPosition(0);
-    hookLeftEncoder.reset();
-    hookRightEncoder.reset();
+    hookEncoder.reset();
   }
 
   private int isExceedPhysicalLine(double position) {
     return (position < HookConstants.kLinePositionMin ? -1 : (position > HookConstants.kLinePositionMax) ? 1 : 0);
 
+  }
+
+  public double getAbsolutePosition(){
+    return hookEncoder.getAbsolutePosition()-hookEncoder.getPositionOffset();
+  }
+
+  public double getDistance(){
+    return hookEncoder.getDistance();
   }
 
   @Override

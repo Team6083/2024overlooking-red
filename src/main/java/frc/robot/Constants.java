@@ -94,7 +94,7 @@ public final class Constants {
         public static final boolean kHookMotorLeftInverted = true;
         public static final boolean kHookMotorRightInverted = false;
         public static final boolean kLineMotorInverted = false;
-        public static final int kHookLeftEncoderChannelA = 0;
+        public static final int kHookLeftEncoderChannel = 0;
         public static final int kHookLeftEncoderChannelB = 1;
         public static final int kHookRightEncoderChannelA = 2;
         public static final int kHookRightEncoderChannelB = 3;
