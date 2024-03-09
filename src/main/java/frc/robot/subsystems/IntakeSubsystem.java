@@ -9,19 +9,36 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
   private final VictorSPX intakeMotor;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
+  private final boolean isGetNote;
 
-  public IntakeSubsystem(PowerDistributionSubsystem powerDistributionSubsystem) {
+  public IntakeSubsystem(PowerDistributionSubsystem powerDistributionSubsystem ,boolean isGetNote) {
     this.powerDistributionSubsystem = powerDistributionSubsystem;
+    this.isGetNote = isGetNote;
     intakeMotor = new VictorSPX(IntakeConstants.kIntakeChannel);
     intakeMotor.setInverted(IntakeConstants.kIntakeInverted);
 
+  }
+
+  public Command setIntakingCmd() {
+    Command setIntaking = Commands.startEnd(() -> setIntaking(), () -> stopMotor());
+    setIntaking.setName("setIntaking");
+    return setIntakingCmd();
+  }
+
+  public Command setReIntakingCmd(){
+  Command reIntake = Commands.startEnd(() -> setThrowing(), () -> stopMotor());
+  reIntake.setName("setRetaking");
+  return setReIntakingCmd();
   }
 
   public void setIntaking() {
