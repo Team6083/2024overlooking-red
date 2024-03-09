@@ -97,7 +97,6 @@ public class RotateShooterSubsystem extends SubsystemBase {
     } else {
       return currentSetpoint;
     }
-
   }
 
   public double getAprilTagDegree2(double currentSetpoint) {

@@ -303,9 +303,6 @@ public final class Constants {
         public static final Rotation2d sroffset = new Rotation2d(0);
         public static final Transform2d speakeroffset = new Transform2d(0, 0, sroffset);
 
-        // The layout of the AprilTags on the field
-        public static final AprilTagFieldLayout kTagLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
-
         public static final double cam_offset = 0;
 
         public static final double CamShooterHeight = 0;

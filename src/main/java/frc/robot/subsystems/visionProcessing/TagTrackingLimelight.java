@@ -12,7 +12,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-// import frc.robot.Constants.AprilTagConstants;
 
 public class TagTrackingLimelight extends SubsystemBase {
     public NetworkTable table;
@@ -273,10 +272,8 @@ public class TagTrackingLimelight extends SubsystemBase {
     }
 
     public void putDashboard() {
-        // SmartDashboard.putNumber("hasTarget", getTv());
         SmartDashboard.putNumber("LimelightX", getTx());
         SmartDashboard.putNumber("LimelightY", getTy());
-        // SmartDashboard.putNumber("LimelightArea", getTa());
         SmartDashboard.putNumber("LimelightID", getTID());
         SmartDashboard.putNumber("latency", getTl());
 
