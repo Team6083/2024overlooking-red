@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -135,10 +136,19 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("upRate", getUpEncoderRate());
-    SmartDashboard.putNumber("downRate", getDownEncoderRate());
-    SmartDashboard.putNumber("upPower", upMotor.getMotorOutputPercent());
-    SmartDashboard.putNumber("downPower", downMotor.getMotorOutputPercent());
+    // SmartDashboard.putNumber("upRate", getUpEncoderRate());
+    // SmartDashboard.putNumber("downRate", getDownEncoderRate());
+    // SmartDashboard.putNumber("upPower", upMotor.getMotorOutputPercent());
+    // SmartDashboard.putNumber("downPower", downMotor.getMotorOutputPercent());
 
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("ShooterSubsystem");
+    builder.addDoubleProperty("upRate", () -> getUpEncoderRate(), null);
+    builder.addDoubleProperty("downRate", () -> getDownEncoderRate(), null);
+    builder.addDoubleProperty("upPower", () -> upMotor.getMotorOutputPercent(), null);
+    builder.addDoubleProperty("downPower", () -> downMotor.getMotorOutputPercent(), null);
   }
 }
