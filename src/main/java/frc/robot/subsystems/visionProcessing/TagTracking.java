@@ -173,7 +173,7 @@ public class TagTracking {
     }
 
     public double getHorizontalDistanceBy() {
-        double horDis = Math.sqrt((Math.pow(getBT()[0], 2) + Math.pow(getBT()[2], 2)));
+        double horDis = Math.sqrt((Math.pow(getBT()[0], 2.0) + Math.pow(getBT()[2], 2.0)));
         return horDis;
     }
 

@@ -83,6 +83,16 @@ public class RotateShooterSubsystem extends SubsystemBase {
     return degree;
   }
 
+  public double getAimDegree(double currentDegree) {
+    if (tagTrackingLimelight.getTv() == 1 && tagTrackingLimelight.getTID() != 3.0
+        && tagTrackingLimelight.getTID() != 8.0) {
+      double speakerToShooterHeight = RotateShooterConstants.kSpeakerHeight - RotateShooterConstants.kShooterHeight;
+      double degree = Math.toDegrees(speakerToShooterHeight / tagTrackingLimelight.getHorizontalDistanceBy());
+      return degree;
+    }
+    return currentDegree;
+  }
+
   public Command addErrorCommand(double error) {
     return Commands.run(() -> addError(error), this);
   }
@@ -112,7 +122,8 @@ public class RotateShooterSubsystem extends SubsystemBase {
   }
 
   private int hasExceedPhysicalLimit(double angle) {
-    return (angle < RotateShooterConstants.kRotateAngleMin ? -1 : (angle > RotateShooterConstants.kRotateAngleMax ? 1 : 0));
+    return (angle < RotateShooterConstants.kRotateAngleMin ? -1
+        : (angle > RotateShooterConstants.kRotateAngleMax ? 1 : 0));
   }
 
   @Override

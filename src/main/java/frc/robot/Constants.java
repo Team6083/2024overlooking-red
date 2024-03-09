@@ -1,18 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -75,7 +64,7 @@ public final class Constants {
         public static final Boolean kRotateShooterInverted = true;
         public static final Boolean kEncoderInverted = true;
         public static final int kEncoderChannel = 2;
-        public static final double kInitDegree = 60.0;
+        public static final double kInitDegree = 57.0;
         public static final double kRotateVoltLimit = 5.0;
         public static final double kRotateAngleMin = -5.0;
         public static final double kRotateAngleMax = 65.0;
@@ -83,9 +72,10 @@ public final class Constants {
         public static final double kRotateAngleOffset = 0.52;
         public static final double kRotateTriggerValue = 0.15;
         public static final double kSpeakerHeight = 2.0;
-        public static final double kP = 0.5;
-        public static final double kI = 0;
-        public static final double kD = 0;
+        public static final double kShooterHeight = 0.31;
+        public static final double kP = 0.09;
+        public static final double kI = 0.0004;
+        public static final double kD = 0.0002;
     }
 
     public static class HookConstants {
