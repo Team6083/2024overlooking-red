@@ -51,10 +51,10 @@ public class ShooterSubsystem extends SubsystemBase {
     this.powerDistributionSubsystem = powerDistribution;
   }
 
-  public Command shooter() {
+  public Command shootingPID() {
     Command shooterPID = runEnd(() -> this.setRateControl(), () -> this.stopAllMotor());
     shooterPID.setName("shooterPID");
-    return shooter();
+    return shootingPID();
   }
 
   public void stopAllMotor() {
