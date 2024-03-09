@@ -42,6 +42,7 @@ public class TagTrackingLimelight extends SubsystemBase {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         setCamMode(0);
         setLedMode(0);
+        setPipeline(0);
         try {
             m_layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
         } catch (IOException err) {
@@ -49,14 +50,40 @@ public class TagTrackingLimelight extends SubsystemBase {
         }
     }
 
+    /**
+     * Set desired limelight operation mode. 0 is vision processor. 1 is Driver
+     * Camera (Increases exposure, disables vision processing)
+     * 
+     * @param camMode set 0 plz
+     */
     public void setCamMode(int camMode) {
         table.getEntry("camMode").setNumber(camMode);
     }
 
+    /**
+     * Set desired green light state. 0 is default. 1 is force off. 2 is force
+     * blink. 3 is force on.
+     * 
+     * @param ledMode set 0 or 1 plz
+     */
     public void setLedMode(int ledMode) {
         table.getEntry("ledMode").setNumber(ledMode);
     }
 
+    /**
+     * Set desired limelight pipeline.
+     * 
+     * @param pipeline in this game let's set 0
+     */
+    public void setPipeline(int pipeline) {
+        table.getEntry("pipeline").setNumber(pipeline);
+    }
+
+    /**
+     * Returns bot to tag's direct distance.
+     * 
+     * @return distance (double)
+     */
     public double getMyDistance() {
         // readValue();
         double target_height = getBT()[1]; // botpose in targetspace y
@@ -69,36 +96,79 @@ public class TagTrackingLimelight extends SubsystemBase {
         return MyDistance;
     }
 
+    /**
+     * Returns the x offset between the tag and crosshair.
+     * 
+     * @return x offset
+     */
     public double getTx() {
         x = table.getEntry("tx").getDouble(0);
         return x;
     }
 
+    /**
+     * Returns the y offset between the tag and crosshair.
+     * 
+     * @return y offset
+     */
     public double getTy() {
         y = table.getEntry("ty").getDouble(0);
         return y;
     }
 
+    /**
+     * Returns 1 if a tag is detected. 0 if none.
+     * 
+     * @return 0 or 1
+     */
     public double getTv() {
         v = table.getEntry("tv").getDouble(0);
         return v;
     }
 
+    /**
+     * Returns the fiducial tag's ID (double)
+     * 
+     * @return tag ID
+     */
     public double getTID() {
         ID = table.getEntry("tid").getDouble(0);
         return ID;
     }
 
+    /**
+     * Returns the pipeline's total latency.
+     * 
+     * @return latency (double)
+     */
     public double getTl() {
-        latency = table.getEntry("tl").getDouble(0);
+        latency = table.getEntry("tl").getDouble(0) + table.getEntry("cl").getDouble(0);
         return latency;
     }
 
+    /**
+     * Returns a double array of botpose in target space. The former 3 refers to
+     * translation, while the latter 3 refers to rotation (in the sequence of roll,
+     * pitch, yaw) In target space, (0,0,0) is the centre of the tag, x+ points to
+     * the right side (when you're facing the tag), y+ points down, z+ points to
+     * front.
+     * 
+     * @return x, y, z, roll, pitch, yaw
+     */
     public double[] getBT() {
         bt = table.getEntry("botpose_targetspace").getDoubleArray(new double[6]);
         return bt;
     }
 
+        /**
+     * Returns a double array of campose in target space. The former 3 refers to
+     * translation, while the latter 3 refers to rotation (in the sequence of roll,
+     * pitch, yaw) In target space, (0,0,0) is the centre of the tag, x+ points to
+     * the right side (when you're facing the tag), y+ points down, z+ points to
+     * front.
+     * 
+     * @return x, y, z, roll, pitch, yaw
+     */
     public double[] getCT() {
         ct = table.getEntry("camerapose_targetspace").getDoubleArray(new double[6]);
         return ct;
@@ -142,26 +212,26 @@ public class TagTrackingLimelight extends SubsystemBase {
         return degree;
     }
 
-    public double getTestSpeakerDegree() {
-        double pitch = getTy();
-        double yaw = getTx();
-        double y = 0.615 * (1 / Math.tan(Math.toRadians(pitch + 10.0)));
-        double x = y * Math.tan(Math.toRadians(yaw - 0.0))
-                - 0;
-        double distance = Math.sqrt(Math.pow(y, 2.0) + Math.pow(x, 2.0));
-        double degree = Math.toDegrees(Math.atan((1.385 / distance)));
-        return degree;
-    }
+    // public double getTestSpeakerDegree() {
+    //     double pitch = getTy();
+    //     double yaw = getTx();
+    //     double y = 0.615 * (1 / Math.tan(Math.toRadians(pitch + 10.0)));
+    //     double x = y * Math.tan(Math.toRadians(yaw - 0.0))
+    //             - 0;
+    //     double distance = Math.sqrt(Math.pow(y, 2.0) + Math.pow(x, 2.0));
+    //     double degree = Math.toDegrees(Math.atan((1.385 / distance)));
+    //     return degree;
+    // }
 
-    public double getTestTwoDegree(double nowDegree) {
-        if (getTv() == 1) {
-            double horDis = Math.abs(getBT()[2]) - 0.21;
-            double degree = Math.toDegrees(Math.atan(1.6 / horDis));
-            return degree;
-        } else {
-            return nowDegree;
-        }
-    }
+    // public double getTestTwoDegree(double nowDegree) {
+    //     if (getTv() == 1) {
+    //         double horDis = Math.abs(getBT()[2]) - 0.21;
+    //         double degree = Math.toDegrees(Math.atan(1.6 / horDis));
+    //         return degree;
+    //     } else {
+    //         return nowDegree;
+    //     }
+    // }
 
     /**
      * Gets the tag's pose in 2 dimension
@@ -179,7 +249,7 @@ public class TagTrackingLimelight extends SubsystemBase {
     }
 
     /**
-     * Gets the tag's pose in 2 dimension
+     * Gets the tag's pose in 3 dimension
      * 
      * @return tagPose
      */
@@ -202,10 +272,6 @@ public class TagTrackingLimelight extends SubsystemBase {
         table.getEntry("priorityid").setNumber(priorityID);
     }
 
-    public void setPipeline(int pipeline) {
-        table.getEntry("pipeline").setNumber(pipeline);
-    }
-
     public void putDashboard() {
         // SmartDashboard.putNumber("hasTarget", getTv());
         SmartDashboard.putNumber("LimelightX", getTx());
@@ -216,10 +282,6 @@ public class TagTrackingLimelight extends SubsystemBase {
 
         SmartDashboard.putNumber("hor_Dis", getHorizontalDis3());
         SmartDashboard.putNumber("MyDistance", getMyDistance());
-
-        SmartDashboard.putNumber("SpeakerDegree", getSpeakerDegree());
-        SmartDashboard.putNumber("TestSpeakerDegree", getTestSpeakerDegree());
-        SmartDashboard.putNumber("TestTwoDegree", getTestTwoDegree(30));
     }
 
     @Override
