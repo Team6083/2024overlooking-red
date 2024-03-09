@@ -6,7 +6,7 @@ package frc.robot.commands.autoCmds;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.shooterCmds.ShootPIDCmd;
+// import frc.robot.commands.shooterCmds.ShootPIDCmd;
 import frc.robot.commands.transportCmds.TransportShootCmd;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
@@ -20,7 +20,7 @@ public class PoseShootCmd extends ParallelDeadlineGroup {
   public PoseShootCmd(Drivebase drivebase, ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem) {
     super(new WaitCommand(1));
     addCommands(
-        new ShootPIDCmd(shooterSubsystem),
+      shooterSubsystem.shootingPID(),
         new TransportShootCmd(transportSubsystem, shooterSubsystem.isEnoughRate())
             .onlyWhile(shooterSubsystem::isEnoughRate));
   }
