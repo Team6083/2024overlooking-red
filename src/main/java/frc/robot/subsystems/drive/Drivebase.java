@@ -298,28 +298,22 @@ public class Drivebase extends SubsystemBase {
     return rot;
   }
 
-  public void follow() {
+  public double[] follow() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
+    double[] speed = new double[3];
+    double xSpeed = 0;
+    double ySpeed = 0;
     double rot = 0;
+    double x_dis = aprilTagTracking.getBT()[2];
     if (hasTarget == 1) {
       rot = facingTagPID.calculate(offset, 0);
-    }
-    double[] bt = aprilTagTracking.getBT();
-    double x_dis = bt[2];
-    // double y_dis = bt[2];
-    // double hasTarget = tag.getTv();
-    double xSpeed = 0;
-    // double ySpeed = 0;
-    if (hasTarget == 1) {
       xSpeed = -followingTagPID.calculate(x_dis, 0.5);
-      // ySpeed = follow_pid.calculate(y_dis, 1);
     }
-    SmartDashboard.putNumber("x_dis_speed", xSpeed);
-    // SmartDashboard.putNumber("y_dis_speed", ySpeed);
-    drive(xSpeed, 0, -rot, false);
-    SmartDashboard.putNumber("distance", aprilTagTracking.getMyDistance());
-    // drive(0, 0, -rot, false);
+    speed[0] = xSpeed;
+    speed[1] = ySpeed;
+    speed[2] =rot;
+    return speed;
   }
 
   public void switchTrackCondition() {
