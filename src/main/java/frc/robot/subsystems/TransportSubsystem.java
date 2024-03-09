@@ -33,14 +33,6 @@ public class TransportSubsystem extends SubsystemBase {
     return this.startEnd(() -> this.setReTransport(), () -> this.stopMotor());
   }
 
-  public Command transportIntakeCmd() {
-    return this.startEnd(() -> this.setTransport(), () -> this.stopMotor());
-  }
-
-  public Command transportShooterCmd() {
-    return this.startEnd(() -> this.setTransport(), () -> this.stopMotor());
-  }
-
   public void setTransport() {
     setMotor(TransportConstants.kTransVoltage);
   }
