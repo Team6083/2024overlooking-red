@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.noteTracking;
+package frc.robot.subsystems.visionProcessing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +16,13 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.NoteTrackingConstants;
 
-public class NoteTrackingPhotovision {
+public class NoteTracking {
     /** Creates a new VisionTrackingPhotovision. */
 
     private final boolean driveMode = false;
     private final PhotonCamera noteCamera;
 
-    public NoteTrackingPhotovision() {
+    public NoteTracking() {
         noteCamera = new PhotonCamera(NoteTrackingConstants.kCameraName);
         noteCamera.setPipelineIndex(NoteTrackingConstants.noteTrakingPipeline);
         noteCamera.setDriverMode(driveMode);

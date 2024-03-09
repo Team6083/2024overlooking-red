@@ -41,8 +41,9 @@ public final class Constants {
         public static final Boolean kDownEncoderInverted = true;
         public static final double kUpMotorManualVoltage = 10.0;
         public static final double kDownMotorManualVoltage = 10.0;
-        public static final double kShooterRate = 60.0;
-        public static final double kDeadbandRate = 55.0;
+        public static final double[] kSpeakerShootRate = { 60.0, 60.0 };
+        public static final double[] kAmpShootRate = { 30.0, 45.0 };
+        public static final double[] kLowShooterRate = { 30.0, 30.0 };
         public static final double kP = 0.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
@@ -75,12 +76,12 @@ public final class Constants {
         public static final Boolean kEncoderInverted = true;
         public static final int kEncoderChannel = 2;
         public static final double kInitDegree = 60.0;
-        public static final double kRiseVoltLimit = 5.0;
-        public static final double kRiseAngleMin = -5.0;
-        public static final double kRiseAngleMax = 65.0;
-        public static final double kRiseDegreeErrorPoint = 3;
-        public static final double kRiseAngleOffset = 0.52;
-        public static final double kRiseTriggerValue = 0.15;
+        public static final double kRotateVoltLimit = 5.0;
+        public static final double kRotateAngleMin = -5.0;
+        public static final double kRotateAngleMax = 65.0;
+        public static final double kRotateDegreeErrorPoint = 3;
+        public static final double kRotateAngleOffset = 0.52;
+        public static final double kRotateTriggerValue = 0.15;
         public static final double kSpeakerHeight = 2.0;
         public static final double kP = 0.5;
         public static final double kI = 0;
@@ -88,10 +89,13 @@ public final class Constants {
     }
 
     public static class HookConstants {
-        public static final int kHookLineMotorChannel = 23;
-        public static final int kHookLeftMotorCnannel = 28;
-        public static final int kHookRightMotorCnannel = 27;
-        public static final int kHookLeftEncoderChannelA = 0;
+        public static final int kHookLineChannel = 23;
+        public static final int kHookLeftMotorChannel = 28;
+        public static final int kHookRightMotorChannel = 27;
+        public static final boolean kHookMotorLeftInverted = true;
+        public static final boolean kHookMotorRightInverted = false;
+        public static final boolean kLineMotorInverted = false;
+        public static final int kHookLeftEncoderChannel = 0;
         public static final int kHookLeftEncoderChannelB = 1;
         public static final int kHookRightEncoderChannelA = 2;
         public static final int kHookRightEncoderChannelB = 3;
@@ -104,6 +108,9 @@ public final class Constants {
         public static final double kLeftPositionMin = 0.0;
         public static final double kRightPositionMax = 60.0;
         public static final double kRightPositionMin = 0.0;
+        public static final double kHookleftToTopPositionMax = 45.0;
+        public static final double kHookRightToTopPositionMax = 45.0;
+        public static final double kHooklineToTopPositionMax = 45.0;
         public static final double kHookPositionConversionfactor = 1.0;
         public static final double kLinePower = 0;
         public static final double kHookMotorLeftVoltage = 0.0;
@@ -111,9 +118,6 @@ public final class Constants {
         public static final double kManualControlLineMotorPower = 0.25;
         public static final double kManualControlLeftHookMotorPower = 0.25;
         public static final double kManualControlRightHookMotorPower = 0.25;
-        public static final boolean kLineMotorInverted = true;
-        public static final boolean kHookLeftMotorInverted = false;
-        public static final boolean kHookRightMotorInverted = true;
         public static final double kInitSetpoint = 0.0;
         public static final double kLeftMotorModify = 0.0; // TO DO
         public static final double kRightMotorModify = 0.0; // TO DO
@@ -199,13 +203,13 @@ public final class Constants {
         public static final int kTransportCurrentchannel = 0;
         public static final int kRiseShooterCurrentchannel = 1;
 
-        public static final double kIntakeMotorMaxCurrent = 0;
-        public static final double kShooterDownMotorMaxCuurent = 0;
-        public static final double kShooterUpMotorMaxCurrent = 0;
-        public static final double kLineMotorMaxCurrent = 0;
-        public static final double kHookMotor1MaxCurrent = 0;
-        public static final double kHookMotor2MaxCurrent = 0;
-        public static final double kTransportMaxCurrent = 0;
+        public static final double kIntakeMotorMaxCurrent = 40.0;
+        public static final double kShooterDownMotorMaxCuurent = 40.0;
+        public static final double kShooterUpMotorMaxCurrent = 40.0;
+        public static final double kLineMotorMaxCurrent = 40.0;
+        public static final double kHookMotor1MaxCurrent = 40.0;
+        public static final double kHookMotor2MaxCurrent = 40.0;
+        public static final double kTransportMaxCurrent = 40.0;
         public static final double kRotateShooterMaxCurrent = 40.0;
     }
 
@@ -282,37 +286,15 @@ public final class Constants {
         public static final double minNoteDistance = 0.2;
     }
 
-    public static final class AprilTagConstants {
-        public static final int A_pipeline = 0;
-        public static final double klimelightLensHeightInches = 0;
-        public static final double klimelightMountAngleDegrees = 0;
-    }
-
     public static final class VisionConstants {
-        public static final String kCameraName = "Microsoft_LifeCam_HD-3000";
-        public static final String kCamera2Name = "TagCamera";
-        // Cam mounted facing forward, half a meter forward of center, half a meter up
-        // from center.
-        public static final Pose3d kRobotToCam = new Pose3d(new Translation3d(0.5, 0.0, 0.5),
-                new Rotation3d(0, 0, 0));
-        public static final Transform3d krobottocam = new Transform3d(new Translation3d(0.5, 0.0, 0.5),
-                new Rotation3d(0, 0, 0));
 
         public static final Rotation2d sroffset = new Rotation2d(0);
         public static final Transform2d speakeroffset = new Transform2d(0, 0, sroffset);
 
-        // The layout of the AprilTags on the field
-        public static final AprilTagFieldLayout kTagLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
-
         public static final double cam_offset = 0;
-        /**
-         * The vertical distance from the desired subsystem to the ground in metres.
-         */
-        public static final double camHeight = 0;
-        // The standard deviations of our vision estimated poses, which affect
-        // correction rate
-        // (Fake values. Experiment and determine estimation noise on an actual robot.)
-        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-        public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+
+        public static final double CamShooterHeight = 0;
+        public static final double SpeakerOpeningToTagHeight = 0;
+        public static final double CamToShooterOffset = 0.11;
     }
 }

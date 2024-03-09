@@ -9,7 +9,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TransportConstants;
 
@@ -28,6 +29,18 @@ public class TransportSubsystem extends SubsystemBase {
     this.powerDistributionSubsystem = powerDistribution;
   }
 
+  public Command reTransportIntakeCmd() {
+    return this.startEnd(() -> this.setReTransport(), () -> this.stopMotor());
+  }
+
+  public Command transportIntakeCmd() {
+    return this.startEnd(() -> this.setTransport(), () -> this.stopMotor());
+  }
+
+  public Command transportShooterCmd() {
+    return this.startEnd(() -> this.setTransport(), () -> this.stopMotor());
+  }
+
   public void setTransport() {
     setMotor(TransportConstants.kTransVoltage);
   }
@@ -38,8 +51,8 @@ public class TransportSubsystem extends SubsystemBase {
 
   public boolean isGetNote() {
     if (distanceSensor.isRangeValid()) {
-      SmartDashboard.putNumber("Range dist", distanceSensor.getRange());
-      SmartDashboard.putNumber("Timestamp dist", distanceSensor.getTimestamp());
+      // SmartDashboard.putNumber("Range dist", distanceSensor.getRange());
+      // SmartDashboard.putNumber("Timestamp dist", distanceSensor.getTimestamp());
       return distanceSensor.getRange() <= TransportConstants.kDistanceRange;
     }
     return false;
@@ -60,5 +73,12 @@ public class TransportSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType(" TransportSubsystem");
+    builder.addDoubleProperty("Range dist", () -> distanceSensor.getRange(), null);
+    builder.addDoubleProperty("Timestamp dist", () -> distanceSensor.getTimestamp(), null);
   }
 }

@@ -5,9 +5,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-// import com.revrobotics.RelativeEncoder;
-// import com.revrobotics.SparkMaxAbsoluteEncoder;
-// import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -16,7 +13,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RotateShooterConstants;
-import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.visionProcessing.TagTracking;
 
 public class RotateShooterSubsystem extends SubsystemBase {
 
@@ -27,15 +25,15 @@ public class RotateShooterSubsystem extends SubsystemBase {
   private final PIDController rotatePID;
   private double rotateDegreeError = 0.0;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
-  private final TagTrackingLimelight tagTrackingLimelight;
+  private final TagTracking tagTrackingLimelight;
   // private final SparkMaxRelativeEncoder riseEncoderSPX;
 
   public RotateShooterSubsystem(PowerDistributionSubsystem powerDistributionSubsystem,
-      TagTrackingLimelight aprilTagTracking) {
+      TagTracking aprilTagTracking) {
     rotateMotor = new CANSparkMax(RotateShooterConstants.kRotateShooterChannel, MotorType.kBrushless);
 
     rotateEncoder = new DutyCycleEncoder(RotateShooterConstants.kEncoderChannel);
-    angleDegreeOffset = RotateShooterConstants.kRiseAngleOffset;
+    angleDegreeOffset = RotateShooterConstants.kRotateAngleOffset;
 
     rotatePID = new PIDController(RotateShooterConstants.kP, RotateShooterConstants.kI, RotateShooterConstants.kD);
 
@@ -61,9 +59,9 @@ public class RotateShooterSubsystem extends SubsystemBase {
       return;
     }
     if (hasExceedPhysicalLimit(setpoint) == -1) {
-      setpoint = RotateShooterConstants.kRiseAngleMin;
+      setpoint = RotateShooterConstants.kRotateAngleMin;
     } else if (hasExceedPhysicalLimit(setpoint) == 1) {
-      setpoint = RotateShooterConstants.kRiseAngleMax;
+      setpoint = RotateShooterConstants.kRotateAngleMax;
     }
     rotatePID.setSetpoint(setpoint);
   }
@@ -71,8 +69,8 @@ public class RotateShooterSubsystem extends SubsystemBase {
   public void pidControl() {
     double rotateVoltage = rotatePID.calculate(getAngleDegree());
     double modifiedRotateVoltage = rotateVoltage;
-    if (Math.abs(modifiedRotateVoltage) > RotateShooterConstants.kRiseVoltLimit) {
-      modifiedRotateVoltage = RotateShooterConstants.kRiseVoltLimit * (rotateVoltage > 0 ? 1 : -1);
+    if (Math.abs(modifiedRotateVoltage) > RotateShooterConstants.kRotateVoltLimit) {
+      modifiedRotateVoltage = RotateShooterConstants.kRotateVoltLimit * (rotateVoltage > 0 ? 1 : -1);
     }
     setMotor(rotateVoltage);
     SmartDashboard.putNumber("rise_volt", modifiedRotateVoltage);
@@ -96,7 +94,6 @@ public class RotateShooterSubsystem extends SubsystemBase {
     } else {
       return currentSetpoint;
     }
-
   }
 
   public double getAprilTagDegree2(double currentSetpoint) {
@@ -121,7 +118,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
 
   public double getShooterToTagHoriDis() {
     // shooter to cam z dis, remember to move this to constant later on
-    double offset = 0.11;
+    double offset = VisionConstants.CamToShooterOffset;
     double z_dis = offset + tagTrackingLimelight.getCT()[2];
     double x_dis = tagTrackingLimelight.getCT()[0];
     double horDis = Math.sqrt(Math.pow(x_dis, 2) + Math.pow(z_dis, 2));
@@ -130,9 +127,8 @@ public class RotateShooterSubsystem extends SubsystemBase {
 
   public double getGoalHeight() {
     double tagHeight = tagTrackingLimelight.getTagPose3d().getY();
-    double goalTagOffset = 1; // 1 should be a constant of speaker opening to tag in metres.
-    double offset = tagTrackingLimelight.getCT()[1] - 0; // the zero here should be a constant: cam to shooter height
-                                                         // offset
+    double goalTagOffset = VisionConstants.SpeakerOpeningToTagHeight; // 1 should be a constant of speaker opening to tag in metres.
+    double offset = tagTrackingLimelight.getCT()[1] - VisionConstants.CamShooterHeight;
     double height = tagHeight + goalTagOffset - offset;
     return height;
   }
@@ -158,7 +154,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
   }
 
   public void addError(double error) {
-    rotateDegreeError = error * RotateShooterConstants.kRiseDegreeErrorPoint;
+    rotateDegreeError = error * RotateShooterConstants.kRotateDegreeErrorPoint;
   }
 
   public void resetEncoder() {
@@ -182,7 +178,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
   }
 
   private int hasExceedPhysicalLimit(double angle) {
-    return (angle < RotateShooterConstants.kRiseAngleMin ? -1 : (angle > RotateShooterConstants.kRiseAngleMax ? 1 : 0));
+    return (angle < RotateShooterConstants.kRotateAngleMin ? -1 : (angle > RotateShooterConstants.kRotateAngleMax ? 1 : 0));
   }
 
   @Override

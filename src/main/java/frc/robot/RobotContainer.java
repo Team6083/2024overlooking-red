@@ -17,19 +17,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriveControllerConstants;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.drive.Drivebase;
-import frc.robot.subsystems.noteTracking.NoteTrackingPhotovision;
-import frc.robot.commands.controllerCmds.DrivebaseAccelerateCmd;
-import frc.robot.commands.controllerCmds.DrivebaseDefaultSpeedCmd;
+import frc.robot.subsystems.visionProcessing.NoteTracking;
+import frc.robot.subsystems.visionProcessing.TagTracking;
 import frc.robot.subsystems.PowerDistributionSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
-import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
-import frc.robot.subsystems.apriltagTracking.TagTrackingPhotonvision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.HookSubsystem;
-import frc.robot.commands.hookCmds.ManualControl.HookUpLeftManualCmd;
-import frc.robot.commands.hookCmds.ManualControl.HookUpRightManualCmd;
-import frc.robot.commands.hookCmds.ManualControl.LineUpManualCmd;
 import frc.robot.commands.hookCmds.PIDControl.HookLeftMotorDownPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.HookLeftMotorUpPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.HookRightMotorDownPIDCmd;
@@ -37,13 +31,8 @@ import frc.robot.commands.hookCmds.PIDControl.HookRightMotorUpPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.LineDownPIDCmd;
 import frc.robot.commands.hookCmds.PIDControl.LineUpPIDCmd;
 // import frc.robot.subsystems.AprilTagTracking;
-import frc.robot.subsystems.HookSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.PowerDistributionSubsystem;
 import frc.robot.subsystems.RotateShooterSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.TransportSubsystem;
-import frc.robot.subsystems.drive.Drivebase;
+
 
 public class RobotContainer {
   private final CommandXboxController mainController;
@@ -57,24 +46,22 @@ public class RobotContainer {
   private final ShooterSubsystem shooter;
   private final RotateShooterSubsystem riseShooter;
   private final HookSubsystem hook;
-  private final TagTrackingLimelight aprilTagTracking;
-  private final NoteTrackingPhotovision noteTracking;
-  private final TagTrackingPhotonvision photonTracking;
-  private final TagTrackingLimelight tagLimelightTracking;
+  private final TagTracking aprilTagTracking;
+  private final NoteTracking noteTracking;
+  private final TagTracking tagLimelightTracking;
 
   private SendableChooser<Command> autoChooser;
   private SendableChooser<String> initialChooser;
 
   public RobotContainer() {
     powerDistributionSubsystem = new PowerDistributionSubsystem();
-    aprilTagTracking = new TagTrackingLimelight();
-    noteTracking = new NoteTrackingPhotovision();
-    photonTracking = new TagTrackingPhotonvision();
-    tagLimelightTracking = new TagTrackingLimelight();
+    aprilTagTracking = new TagTracking();
+    noteTracking = new NoteTracking();
+    tagLimelightTracking = new TagTracking();
 
     mainController = new CommandXboxController(DriveControllerConstants.kMainController);
     controlPanel = new CommandGenericHID(DriveControllerConstants.kControlPanel);
-    drivebase = new Drivebase(noteTracking, tagLimelightTracking, photonTracking);
+    drivebase = new Drivebase(noteTracking, tagLimelightTracking);
     // drivebaseAccelerate = new DrivebaseAccelerateCmd(drivebase);
     // drivebaseDefaultSpeed = new DrivebaseDefaultSpeedCmd(drivebase);
     intake = new IntakeSubsystem(powerDistributionSubsystem);
@@ -152,7 +139,7 @@ public class RobotContainer {
     //mainController.a().toggleOnTrue(new ShootTransportCmd(transport, shooter.getRate()));
     
     //semi-automatic
-
+    mainController.rightStick().onTrue(drivebase.tagTrackConditionCmd());
 
     //reset
     //mainController.back().onTrue(new GyroResetCmd(drivebase));

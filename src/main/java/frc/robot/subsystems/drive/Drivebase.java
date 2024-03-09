@@ -41,9 +41,8 @@ import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.NoteTrackingConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
-import frc.robot.subsystems.apriltagTracking.TagTrackingPhotonvision;
-import frc.robot.subsystems.noteTracking.NoteTrackingPhotovision;
+import frc.robot.subsystems.visionProcessing.NoteTracking;
+import frc.robot.subsystems.visionProcessing.TagTracking;
 
 public class Drivebase extends SubsystemBase {
   /** Creates a new Drivetain. */
@@ -91,19 +90,18 @@ public class Drivebase extends SubsystemBase {
 
   private double noteTrackTargetError = 0.0;
 
-  private boolean trackingCondition = false;
+  private boolean noteTrackingCondition = false;
+  private boolean tagTrackingCondition = false;
 
-  private final NoteTrackingPhotovision note;
-  private final TagTrackingLimelight aprilTagTracking;
-  private final TagTrackingPhotonvision photonTracking;
+  private final NoteTracking note;
+  private final TagTracking aprilTagTracking;
 
   private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
 
-  public Drivebase(NoteTrackingPhotovision noteTracking,
-      TagTrackingLimelight aprilTagTracking, TagTrackingPhotonvision photonTracking) {
+  public Drivebase(NoteTracking noteTracking,
+      TagTracking aprilTagTracking) {
     this.note = noteTracking;
     this.aprilTagTracking = aprilTagTracking;
-    this.photonTracking = photonTracking;
     frontLeftLocation = new Translation2d(0.3, 0.3);
     frontRightLocation = new Translation2d(0.3, -0.3);
     backLeftLocation = new Translation2d(-0.3, 0.3);
@@ -111,16 +109,17 @@ public class Drivebase extends SubsystemBase {
 
     frontLeft = new SwerveModule(DrivebaseConstants.kFrontLeftDriveMotorChannel,
         DrivebaseConstants.kFrontLeftTurningMotorChannel, DrivebaseConstants.kFrontLeftTurningEncoderChannel,
-        DrivebaseConstants.kFrontLeftDriveMotorInverted, DrivebaseConstants.kFrontLeftCanCoderMagOffset);
+        DrivebaseConstants.kFrontLeftDriveMotorInverted, DrivebaseConstants.kFrontLeftCanCoderMagOffset, "frontLeft");
     frontRight = new SwerveModule(DrivebaseConstants.kFrontRightDriveMotorChannel,
         DrivebaseConstants.kFrontRightTurningMotorChannel, DrivebaseConstants.kFrontRightTurningEncoderChannel,
-        DrivebaseConstants.kFrontRightDriveMotorInverted, DrivebaseConstants.kFrontRightCanCoderMagOffset);
+        DrivebaseConstants.kFrontRightDriveMotorInverted, DrivebaseConstants.kFrontRightCanCoderMagOffset,
+        "frontRight");
     backLeft = new SwerveModule(DrivebaseConstants.kBackLeftDriveMotorChannel,
         DrivebaseConstants.kBackLeftTurningMotorChannel, DrivebaseConstants.kBackLeftTurningEncoderChannel,
-        DrivebaseConstants.kBackLeftDriveMotorInverted, DrivebaseConstants.kBackLeftCanCoderMagOffset);
+        DrivebaseConstants.kBackLeftDriveMotorInverted, DrivebaseConstants.kBackLeftCanCoderMagOffset, "backLeft");
     backRight = new SwerveModule(DrivebaseConstants.kBackRightDriveMotorChannel,
         DrivebaseConstants.kBackRightTurningMotorChannel, DrivebaseConstants.kBackRightTurningEncoderChannel,
-        DrivebaseConstants.kBackRightDriveMotorInverted, DrivebaseConstants.kBackRightCanCoderMagOffset);
+        DrivebaseConstants.kBackRightDriveMotorInverted, DrivebaseConstants.kBackRightCanCoderMagOffset, "backRight");
 
     SmartDashboard.putData("frontLeft", frontLeft);
     SmartDashboard.putData("frontRight", frontRight);
@@ -227,6 +226,12 @@ public class Drivebase extends SubsystemBase {
    *                      using the wpi function to set the speed of the swerve
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+    if (noteTrackingCondition) {
+      rot = facingNoteRot(rot);
+    }
+    if (tagTrackingCondition) {
+      rot = facingTag(rot);
+    }
     swerveModuleStates = kinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, gyro.getRotation2d())
@@ -244,6 +249,29 @@ public class Drivebase extends SubsystemBase {
 
   public double getMagnification() {
     return magnification;
+  }
+
+  /** Updates the field relative position of the robot. */
+  public void updateOdometry() {
+    odometry.update(
+        gyro.getRotation2d(),
+        new SwerveModulePosition[] {
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+        });
+  }
+
+  public Pose2d getPose2d() {
+    return odometry.getPoseMeters();
+  }
+
+  public void resetRobotPose2d() {
+    frontLeft.resetAllEncoder();
+    frontRight.resetAllEncoder();
+    backLeft.resetAllEncoder();
+    backRight.resetAllEncoder();
   }
 
   public boolean hasTargets() {
@@ -279,27 +307,23 @@ public class Drivebase extends SubsystemBase {
     return speed;
   }
 
-  public boolean hasFaceTarget() {
+  public double facingTag(double currentRot) {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
-    if (hasTarget == 0) {
-      return false;
+    double targetID = aprilTagTracking.getTID();
+    if (hasTarget == 1 && targetID != 3.0 && targetID != 8.0) {
+      double rot = -facingTagPID.calculate(offset, 0);
+      return rot;
     }
-    return Math.abs(offset) < 4;
+    return currentRot;
   }
 
-  public double faceTargetMethod2() {
-    double offset = aprilTagTracking.getTx();
-    double hasTarget = aprilTagTracking.getTv();
-    double rot = 0;
-    if (hasTarget == 1) {
-      rot = -facingTagPID.calculate(offset, 0);
-    }
-    SmartDashboard.putNumber("rot", rot);
-    return rot;
-  }
-
-  public double[] follow() {
+  /**
+   * Return a double array. [0] xSpeed, [1] ySpeed, [2] rot
+   * 
+   * @return follow (double array)
+   */
+  public double[] followingTag() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
     double[] speed = new double[3];
@@ -313,40 +337,24 @@ public class Drivebase extends SubsystemBase {
     }
     speed[0] = xSpeed;
     speed[1] = ySpeed;
-    speed[2] =rot;
+    speed[2] = rot;
     return speed;
   }
 
-  public void switchTrackCondition() {
-    trackingCondition = !trackingCondition;
+  public void switchNoteTrackCondition() {
+    noteTrackingCondition = !noteTrackingCondition;
   }
 
-  public void addTrackTargetError() {
-    noteTrackTargetError += 2;
+  public void switchTagTrackCondition() {
+    tagTrackingCondition = !tagTrackingCondition;
   }
 
-  public void minusTrackTargetError() {
-    noteTrackTargetError -= 2;
+  public Command noteTrackCondition() {
+    return Commands.runOnce(() -> switchNoteTrackCondition());
   }
 
-  public void resetTrackTargetError() {
-    noteTrackTargetError = 0.0;
-  }
-
-  /** Updates the field relative position of the robot. */
-  public void updateOdometry() {
-    odometry.update(
-        gyro.getRotation2d(),
-        new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            backLeft.getPosition(),
-            backRight.getPosition()
-        });
-  }
-
-  public Pose2d getPose2d() {
-    return odometry.getPoseMeters();
+  public Command tagTrackConditionCmd() {
+    return Commands.runOnce(() -> switchTagTrackCondition());
   }
 
   public void driveToSpecificPose2d(Pose2d desiredPose) {
@@ -354,47 +362,14 @@ public class Drivebase extends SubsystemBase {
     Transform2d offset = desiredPose.minus(botpose);
     double xoffset = offset.getX();
     double yoffset = offset.getY();
-    Rotation2d roffset = offset.getRotation();
-    double aoffset = roffset.getDegrees();
+    double roffset = offset.getRotation().getDegrees();
     SmartDashboard.putNumber("xoffset", xoffset);
     SmartDashboard.putNumber("yoffset", yoffset);
-    SmartDashboard.putNumber("aoffset", aoffset);
+    SmartDashboard.putNumber("aoffset", roffset);
     double xSpeed = drivePID.calculate(xoffset);
     double ySpeed = drivePID.calculate(yoffset);
-    double rot = drivePID.calculate(aoffset);
+    double rot = drivePID.calculate(roffset);
     drive(xSpeed, ySpeed, rot, true);
-  }
-
-  // remember to fine the constants value
-  public void driveToSpeaker() {
-    Pose2d tagpose = photonTracking.getTagPose2d();
-    Pose2d desiredPose = tagpose.plus(VisionConstants.speakeroffset);
-    driveToSpecificPose2d(desiredPose);
-  }
-
-  /**
-   * Photonvision version of face target.
-   */
-  public void facePhoton() {
-    boolean hasTarget = photonTracking.hasTarget();
-    if (hasTarget) {
-      Rotation2d offset = photonTracking.getYawToPoseRotation2d(getPose2d(),
-          photonTracking.getTagPose2d());
-      double angle = offset.getDegrees();
-
-      double rot = 0;
-
-      rot = facingTagPID.calculate(angle, 0);
-      drive(0, 0, -rot, true);
-    }
-
-  }
-
-  public void resetRobotPose2d() {
-    frontLeft.resetAllEncoder();
-    frontRight.resetAllEncoder();
-    backLeft.resetAllEncoder();
-    backRight.resetAllEncoder();
   }
 
   @Override
@@ -407,29 +382,33 @@ public class Drivebase extends SubsystemBase {
   }
 
   @Override
-  public void initSendable(SendableBuilder builder){
+  public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("driveBase");
-    builder.addDoubleProperty("frontLeft_speed",() -> swerveModuleStates[0].speedMetersPerSecond,null);
-    builder.addDoubleProperty("frontRight_speed",() -> swerveModuleStates[1].speedMetersPerSecond, null);
-    builder.addDoubleProperty("backLeft_speed",() -> swerveModuleStates[2].speedMetersPerSecond, null);
-    builder.addDoubleProperty("backRight_speed",() -> swerveModuleStates[3].speedMetersPerSecond, null);
-    builder.addDoubleProperty("gyro_heading",() -> gyro.getRotation2d().getDegrees(),null);
-    builder.addBooleanProperty("trackingCondition",() -> trackingCondition, null);
-    builder.addDoubleProperty("GyroResetCmd",null, null);
+    builder.addDoubleProperty("frontLeft_speed", () -> swerveModuleStates[0].speedMetersPerSecond, null);
+    builder.addDoubleProperty("frontRight_speed", () -> swerveModuleStates[1].speedMetersPerSecond, null);
+    builder.addDoubleProperty("backLeft_speed", () -> swerveModuleStates[2].speedMetersPerSecond, null);
+    builder.addDoubleProperty("backRight_speed", () -> swerveModuleStates[3].speedMetersPerSecond, null);
+    builder.addDoubleProperty("gyro_heading", () -> gyro.getRotation2d().getDegrees(), null);
+    builder.addBooleanProperty("trackingCondition", () -> noteTrackingCondition, null);
+    builder.addDoubleProperty("GyroResetCmd", null, null);
     builder.addDoubleProperty("PoseResetCmd", null, null);
     aprilTagTracking.putDashboard();
   }
 
   // public void putDashboard() {
-  //   SmartDashboard.putNumber("frontLeft_speed", swerveModuleStates[0].speedMetersPerSecond);
-  //   SmartDashboard.putNumber("frontRight_speed", swerveModuleStates[1].speedMetersPerSecond);
-  //   SmartDashboard.putNumber("backLeft_speed", swerveModuleStates[2].speedMetersPerSecond);
-  //   SmartDashboard.putNumber("backRight_speed", swerveModuleStates[3].speedMetersPerSecond);
-  //   SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
-  //   SmartDashboard.putBoolean("trackingCondition", trackingCondition);
-  //   aprilTagTracking.putDashboard();
-  //   SmartDashboard.putData(GyroResetCmd());
-  //   SmartDashboard.putData(PoseResetCmd());
+  // SmartDashboard.putNumber("frontLeft_speed",
+  // swerveModuleStates[0].speedMetersPerSecond);
+  // SmartDashboard.putNumber("frontRight_speed",
+  // swerveModuleStates[1].speedMetersPerSecond);
+  // SmartDashboard.putNumber("backLeft_speed",
+  // swerveModuleStates[2].speedMetersPerSecond);
+  // SmartDashboard.putNumber("backRight_speed",
+  // swerveModuleStates[3].speedMetersPerSecond);
+  // SmartDashboard.putNumber("gyro_heading", gyro.getRotation2d().getDegrees());
+  // SmartDashboard.putBoolean("trackingCondition", trackingCondition);
+  // aprilTagTracking.putDashboard();
+  // SmartDashboard.putData(GyroResetCmd());
+  // SmartDashboard.putData(PoseResetCmd());
   // }
 
   public Command GyroResetCmd() {

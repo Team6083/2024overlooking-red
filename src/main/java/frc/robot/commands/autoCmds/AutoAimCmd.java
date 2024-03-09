@@ -4,9 +4,9 @@
 
 package frc.robot.commands.autoCmds;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.apriltagCmd.FaceTag;
 import frc.robot.commands.rotateShooterCmds.RotateShooterAutoControlCmd;
 import frc.robot.subsystems.RotateShooterSubsystem;
 import frc.robot.subsystems.drive.Drivebase;
@@ -21,7 +21,7 @@ public class AutoAimCmd extends ParallelDeadlineGroup {
     // addCommands().
     super(new WaitCommand(0.5));
     addCommands(
-        new FaceTag(drivebase),
+        Commands.run(() -> drivebase.drive(0, 0, drivebase.facingTag(0), true), drivebase),
         new RotateShooterAutoControlCmd(rotateShooterSubsystem));
   }
 }
