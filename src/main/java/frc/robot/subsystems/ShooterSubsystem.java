@@ -11,10 +11,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -45,7 +42,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     upMotorFeedForwardController = new SimpleMotorFeedforward(ShooterConstants.kUpMotorS, ShooterConstants.kUpMotorV,
         ShooterConstants.kUpMotorA);
-    downMotorFeedForwardController = new SimpleMotorFeedforward(ShooterConstants.kDownMotorS, ShooterConstants.kDownMotorV,
+    downMotorFeedForwardController = new SimpleMotorFeedforward(ShooterConstants.kDownMotorS,
+        ShooterConstants.kDownMotorV,
         ShooterConstants.kDownMotorA);
 
     resetEncoder();
@@ -53,14 +51,16 @@ public class ShooterSubsystem extends SubsystemBase {
     this.powerDistributionSubsystem = powerDistribution;
   }
 
-      public Command shooterPIDCommand() {
-        // implicitly requires `this`
-        return Commands.runEnd(()->this.setRateControl(),()->this.stopAllMotor());
-      }
-      public void stopAllMotor(){
-        stopDownMotor();
-        stopUpMotor();
-      }
+  public Command shooter() {
+    Command shooterPID = runEnd(() -> this.setRateControl(), () -> this.stopAllMotor());
+    shooterPID.setName("shooterPID");
+    return shooter();
+  }
+
+  public void stopAllMotor() {
+    stopDownMotor();
+    stopUpMotor();
+  }
 
   public void resetEncoder() {
     upEncoder.reset();
@@ -127,8 +127,9 @@ public class ShooterSubsystem extends SubsystemBase {
     downMotor.set(VictorSPXControlMode.PercentOutput, power);
   }
 
-    public Boolean isEnoughRate(){
-    return getUpEncoderRate() >= ShooterConstants.kDeadbandRate && getDownEncoderRate() >= ShooterConstants.kDeadbandRate;
+  public Boolean isEnoughRate() {
+    return getUpEncoderRate() >= ShooterConstants.kDeadbandRate
+        && getDownEncoderRate() >= ShooterConstants.kDeadbandRate;
   }
 
   @Override
