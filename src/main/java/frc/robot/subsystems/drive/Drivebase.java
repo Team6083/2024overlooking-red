@@ -41,8 +41,8 @@ import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.NoteTrackingConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.visionProcessing.NoteTrackingPhotovision;
-import frc.robot.subsystems.visionProcessing.TagTrackingLimelight;
+import frc.robot.subsystems.visionProcessing.NoteTracking;
+import frc.robot.subsystems.visionProcessing.TagTracking;
 
 public class Drivebase extends SubsystemBase {
   /** Creates a new Drivetain. */
@@ -93,13 +93,13 @@ public class Drivebase extends SubsystemBase {
   private boolean noteTrackingCondition = false;
   private boolean tagTrackingCondition = false;
 
-  private final NoteTrackingPhotovision note;
-  private final TagTrackingLimelight aprilTagTracking;
+  private final NoteTracking note;
+  private final TagTracking aprilTagTracking;
 
   private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
 
-  public Drivebase(NoteTrackingPhotovision noteTracking,
-      TagTrackingLimelight aprilTagTracking) {
+  public Drivebase(NoteTracking noteTracking,
+      TagTracking aprilTagTracking) {
     this.note = noteTracking;
     this.aprilTagTracking = aprilTagTracking;
     frontLeftLocation = new Translation2d(0.3, 0.3);

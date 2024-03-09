@@ -16,13 +16,13 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.NoteTrackingConstants;
 
-public class NoteTrackingPhotovision {
+public class NoteTracking {
     /** Creates a new VisionTrackingPhotovision. */
 
     private final boolean driveMode = false;
     private final PhotonCamera noteCamera;
 
-    public NoteTrackingPhotovision() {
+    public NoteTracking() {
         noteCamera = new PhotonCamera(NoteTrackingConstants.kCameraName);
         noteCamera.setPipelineIndex(NoteTrackingConstants.noteTrakingPipeline);
         noteCamera.setDriverMode(driveMode);

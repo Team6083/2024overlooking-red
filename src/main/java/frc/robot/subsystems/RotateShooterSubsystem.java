@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RotateShooterConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.visionProcessing.TagTrackingLimelight;
+import frc.robot.subsystems.visionProcessing.TagTracking;
 
 public class RotateShooterSubsystem extends SubsystemBase {
 
@@ -28,11 +28,11 @@ public class RotateShooterSubsystem extends SubsystemBase {
   private final PIDController rotatePID;
   private double rotateDegreeError = 0.0;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
-  private final TagTrackingLimelight tagTrackingLimelight;
+  private final TagTracking tagTrackingLimelight;
   // private final SparkMaxRelativeEncoder riseEncoderSPX;
 
   public RotateShooterSubsystem(PowerDistributionSubsystem powerDistributionSubsystem,
-      TagTrackingLimelight aprilTagTracking) {
+      TagTracking aprilTagTracking) {
     rotateMotor = new CANSparkMax(RotateShooterConstants.kRotateShooterChannel, MotorType.kBrushless);
 
     rotateEncoder = new DutyCycleEncoder(RotateShooterConstants.kEncoderChannel);

@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriveControllerConstants;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.drive.Drivebase;
-import frc.robot.subsystems.visionProcessing.NoteTrackingPhotovision;
-import frc.robot.subsystems.visionProcessing.TagTrackingLimelight;
+import frc.robot.subsystems.visionProcessing.NoteTracking;
+import frc.robot.subsystems.visionProcessing.TagTracking;
 import frc.robot.subsystems.PowerDistributionSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
@@ -46,18 +46,18 @@ public class RobotContainer {
   private final ShooterSubsystem shooter;
   private final RotateShooterSubsystem riseShooter;
   private final HookSubsystem hook;
-  private final TagTrackingLimelight aprilTagTracking;
-  private final NoteTrackingPhotovision noteTracking;
-  private final TagTrackingLimelight tagLimelightTracking;
+  private final TagTracking aprilTagTracking;
+  private final NoteTracking noteTracking;
+  private final TagTracking tagLimelightTracking;
 
   private SendableChooser<Command> autoChooser;
   private SendableChooser<String> initialChooser;
 
   public RobotContainer() {
     powerDistributionSubsystem = new PowerDistributionSubsystem();
-    aprilTagTracking = new TagTrackingLimelight();
-    noteTracking = new NoteTrackingPhotovision();
-    tagLimelightTracking = new TagTrackingLimelight();
+    aprilTagTracking = new TagTracking();
+    noteTracking = new NoteTracking();
+    tagLimelightTracking = new TagTracking();
 
     mainController = new CommandXboxController(DriveControllerConstants.kMainController);
     controlPanel = new CommandGenericHID(DriveControllerConstants.kControlPanel);

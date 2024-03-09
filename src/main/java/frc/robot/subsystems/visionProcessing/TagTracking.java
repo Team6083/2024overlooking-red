@@ -13,7 +13,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class TagTrackingLimelight extends SubsystemBase {
+public class TagTracking extends SubsystemBase {
     public NetworkTable table;
     public AprilTagFieldLayout m_layout;
 
@@ -37,7 +37,7 @@ public class TagTrackingLimelight extends SubsystemBase {
     public double angleToGoalRadians;
     public double goalHeightInches;
 
-    public TagTrackingLimelight() {
+    public TagTracking() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         setCamMode(0);
         setLedMode(0);
@@ -211,26 +211,30 @@ public class TagTrackingLimelight extends SubsystemBase {
         return degree;
     }
 
-    // public double getTestSpeakerDegree() {
-    //     double pitch = getTy();
-    //     double yaw = getTx();
-    //     double y = 0.615 * (1 / Math.tan(Math.toRadians(pitch + 10.0)));
-    //     double x = y * Math.tan(Math.toRadians(yaw - 0.0))
-    //             - 0;
-    //     double distance = Math.sqrt(Math.pow(y, 2.0) + Math.pow(x, 2.0));
-    //     double degree = Math.toDegrees(Math.atan((1.385 / distance)));
-    //     return degree;
-    // }
+    /**
+     * Not yet experiented. 
+     * @return
+     */
+    public double getTestSpeakerDegree() {
+        double pitch = getTy();
+        double yaw = getTx();
+        double y = 0.615 * (1 / Math.tan(Math.toRadians(pitch + 10.0)));
+        double x = y * Math.tan(Math.toRadians(yaw - 0.0))
+                - 0;
+        double distance = Math.sqrt(Math.pow(y, 2.0) + Math.pow(x, 2.0));
+        double degree = Math.toDegrees(Math.atan((1.385 / distance)));
+        return degree;
+    }
 
-    // public double getTestTwoDegree(double nowDegree) {
-    //     if (getTv() == 1) {
-    //         double horDis = Math.abs(getBT()[2]) - 0.21;
-    //         double degree = Math.toDegrees(Math.atan(1.6 / horDis));
-    //         return degree;
-    //     } else {
-    //         return nowDegree;
-    //     }
-    // }
+    public double getTestTwoDegree(double nowDegree) {
+        if (getTv() == 1) {
+            double horDis = Math.abs(getBT()[2]) - 0.21;
+            double degree = Math.toDegrees(Math.atan(1.6 / horDis));
+            return degree;
+        } else {
+            return nowDegree;
+        }
+    }
 
     /**
      * Gets the tag's pose in 2 dimension
