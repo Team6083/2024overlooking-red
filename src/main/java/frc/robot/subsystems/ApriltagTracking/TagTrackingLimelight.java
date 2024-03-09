@@ -1,4 +1,4 @@
-package frc.robot.subsystems.apriltagTracking;
+package frc.robot.subsystems.ApriltagTracking;
 
 import java.io.IOException;
 import java.util.Optional;

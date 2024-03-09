@@ -41,9 +41,9 @@ import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.NoteTrackingConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
-import frc.robot.subsystems.apriltagTracking.TagTrackingPhotonvision;
-import frc.robot.subsystems.noteTracking.NoteTrackingPhotovision;
+import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
+import frc.robot.subsystems.ApriltagTracking.TagTrackingPhotonvision;
+import frc.robot.subsystems.NoteTracking.NoteTrackingPhotovision;
 
 public class Drivebase extends SubsystemBase {
   /** Creates a new Drivetain. */

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.apriltagTracking;
+package frc.robot.subsystems.ApriltagTracking;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
