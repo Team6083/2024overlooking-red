@@ -287,16 +287,6 @@ public class Drivebase extends SubsystemBase {
     return Math.abs(offset) < 4;
   }
 
-  public void faceTarget() {
-    double offset = aprilTagTracking.getTx();
-    double hasTarget = aprilTagTracking.getTv();
-    double rot = 0;
-    if (hasTarget == 1) {
-      rot = facingTagPID.calculate(offset, 0);
-    }
-    drive(0, 0, -rot, false);
-  }
-
   public double faceTargetMethod2() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
@@ -330,28 +320,6 @@ public class Drivebase extends SubsystemBase {
     drive(xSpeed, 0, -rot, false);
     SmartDashboard.putNumber("distance", aprilTagTracking.getMyDistance());
     // drive(0, 0, -rot, false);
-  }
-
-  public void fixDistanceBT() {
-    double[] bt = aprilTagTracking.getBT();
-    double x_dis = bt[0];
-    double y_dis = bt[1];
-    double hasTarget = aprilTagTracking.getTv();
-    double xSpeed = 0;
-    double ySpeed = 0;
-    if (hasTarget == 1) {
-      xSpeed = followingTagPID.calculate(x_dis, 0);
-      ySpeed = followingTagPID.calculate(y_dis, 1);
-    }
-    SmartDashboard.putNumber("x_dis_speed", xSpeed);
-    SmartDashboard.putNumber("y_dis_speed", ySpeed);
-    drive(xSpeed, 0, 0, true);
-  }
-
-  public void setRedSpeakerPipeline() {
-    aprilTagTracking.setCamMode(1);
-    aprilTagTracking.setLedMode(1);
-    aprilTagTracking.setPipeline(4);
   }
 
   public void switchTrackCondition() {
