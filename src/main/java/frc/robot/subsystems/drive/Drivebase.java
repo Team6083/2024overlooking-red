@@ -225,11 +225,11 @@ public class Drivebase extends SubsystemBase {
    * 
    *                      using the wpi function to set the speed of the swerve
    */
-  public void drive(double ySpeed, double xSpeed, double rot, boolean fieldRelative) {
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     swerveModuleStates = kinematics.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, rot, gyro.getRotation2d())
-            : new ChassisSpeeds(ySpeed, xSpeed, rot));
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, gyro.getRotation2d())
+            : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DrivebaseConstants.kMaxSpeed);
     frontLeft.setDesiredState(swerveModuleStates[0]);
     frontRight.setDesiredState(swerveModuleStates[1]);
