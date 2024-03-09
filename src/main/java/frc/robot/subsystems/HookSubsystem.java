@@ -42,7 +42,9 @@ public class HookSubsystem extends SubsystemBase {
     hookLeftEncoder = new Encoder(HookConstants.kHookLeftEncoderChannelA, HookConstants.kHookLeftEncoderChannelB);
     hookRightEncoder = new Encoder(HookConstants.kHookRightEncoderChannelA, HookConstants.kHookRightEncoderChannelB);
     lineEncoder.setPositionConversionFactor(HookConstants.kHookPositionConversionfactor);
-    line.setInverted(HookConstants.kHookMotorLeftInverted);
+    line.setInverted(HookConstants.kLineMotorInverted);
+    hookLeftMotor.setInverted(HookConstants.kHookMotorLeftInverted);
+    hookRightMotor.setInverted(HookConstants.kHookMotorRightInverted);
     this.powerDistribution = powerDistribution;
   }
 

@@ -64,9 +64,12 @@ public final class Constants {
     }
 
     public static class HookConstants {
-        public static final int kHookLineChannel = 22;
-        public static final int kHookLeftMotorCnannel = 1;
-        public static final int kHookRightMotorCnannel = 2;
+        public static final int kHookLineChannel = 23;
+        public static final int kHookLeftMotorCnannel = 28;
+        public static final int kHookRightMotorCnannel = 27;
+        public static final boolean kHookMotorLeftInverted = true;
+        public static final boolean kHookMotorRightInverted = false;
+        public static final boolean kLineMotorInverted = false;
         public static final int kHookLeftEncoderChannelA = 0;
         public static final int kHookLeftEncoderChannelB = 1;
         public static final int kHookRightEncoderChannelA = 2;
@@ -84,11 +87,9 @@ public final class Constants {
         public static final double kLinePower = 0;
         public static final double kHookMotorLeftVoltage = 0.0;
         public static final double kHookMotorRightVoltage = 0.0;
-        public static final double kmanualControlLineMotorPower=0.25;
+        public static final double kmanualControlLineMotorPower = 0.25;
         public static final double kmanualControlLeftHookMotorPower = 0.25;
         public static final double kmanualControlRightHookMotorPower = 0.25;
-        public static final boolean kHookMotorLeftInverted = false;
-        public static final boolean kHookMotorRightInverted = false;
         public static final double kInitSetpoint = 0.0;
         public static final double kLeftMotorModify = 0.0;// 以下皆未定值需更改
         public static final double kRightMotorModify = 0.0;
