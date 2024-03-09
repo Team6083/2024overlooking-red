@@ -20,7 +20,7 @@ public class PoseShootCmd extends ParallelDeadlineGroup {
   public PoseShootCmd(Drivebase drivebase, ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem) {
     super(new WaitCommand(1));
     addCommands(
-      shooterSubsystem.shootingPID(),
+      shooterSubsystem.speakerShootPID(),
         new TransportShootCmd(transportSubsystem, shooterSubsystem.isEnoughRate())
             .onlyWhile(shooterSubsystem::isEnoughRate));
   }

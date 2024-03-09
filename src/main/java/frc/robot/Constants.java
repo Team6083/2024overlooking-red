@@ -41,7 +41,9 @@ public final class Constants {
         public static final Boolean kDownEncoderInverted = true;
         public static final double kUpMotorManualVoltage = 10.0;
         public static final double kDownMotorManualVoltage = 10.0;
-        public static final double kShooterRate = 60.0;
+        public static final double kSpeakerShootRate = 60.0;
+        public static final double kAmpShootRate = 45.0;
+        public static final double kLowShooterRate = 30.0;
         public static final double kDeadbandRate = 55.0;
         public static final double kP = 0.0;
         public static final double kI = 0.0;

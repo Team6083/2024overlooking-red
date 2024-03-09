@@ -21,7 +21,7 @@ public class AutoShootCmd extends ParallelDeadlineGroup {
   public AutoShootCmd(Drivebase drivebase, ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem) {
     super(new WaitCommand(1));
     addCommands(
-        shooterSubsystem.shootingPID(),
+        shooterSubsystem.speakerShootPID(),
 
         new TransportShootCmd(transportSubsystem, shooterSubsystem.isEnoughRate())
             .onlyWhile(shooterSubsystem::isEnoughRate).onlyWhile(drivebase::hasFaceTarget));
