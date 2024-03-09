@@ -33,7 +33,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
     rotateMotor = new CANSparkMax(RotateShooterConstants.kRotateShooterChannel, MotorType.kBrushless);
 
     rotateEncoder = new DutyCycleEncoder(RotateShooterConstants.kEncoderChannel);
-    angleDegreeOffset = RotateShooterConstants.kRiseAngleOffset;
+    angleDegreeOffset = RotateShooterConstants.kRotateAngleOffset;
 
     rotatePID = new PIDController(RotateShooterConstants.kP, RotateShooterConstants.kI, RotateShooterConstants.kD);
 
@@ -59,9 +59,9 @@ public class RotateShooterSubsystem extends SubsystemBase {
       return;
     }
     if (hasExceedPhysicalLimit(setpoint) == -1) {
-      setpoint = RotateShooterConstants.kRiseAngleMin;
+      setpoint = RotateShooterConstants.kRotateAngleMin;
     } else if (hasExceedPhysicalLimit(setpoint) == 1) {
-      setpoint = RotateShooterConstants.kRiseAngleMax;
+      setpoint = RotateShooterConstants.kRotateAngleMax;
     }
     rotatePID.setSetpoint(setpoint);
   }
@@ -69,8 +69,8 @@ public class RotateShooterSubsystem extends SubsystemBase {
   public void pidControl() {
     double rotateVoltage = rotatePID.calculate(getAngleDegree());
     double modifiedRotateVoltage = rotateVoltage;
-    if (Math.abs(modifiedRotateVoltage) > RotateShooterConstants.kRiseVoltLimit) {
-      modifiedRotateVoltage = RotateShooterConstants.kRiseVoltLimit * (rotateVoltage > 0 ? 1 : -1);
+    if (Math.abs(modifiedRotateVoltage) > RotateShooterConstants.kRotateVoltLimit) {
+      modifiedRotateVoltage = RotateShooterConstants.kRotateVoltLimit * (rotateVoltage > 0 ? 1 : -1);
     }
     setMotor(rotateVoltage);
     SmartDashboard.putNumber("rise_volt", modifiedRotateVoltage);
@@ -154,7 +154,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
   }
 
   public void addError(double error) {
-    rotateDegreeError = error * RotateShooterConstants.kRiseDegreeErrorPoint;
+    rotateDegreeError = error * RotateShooterConstants.kRotateDegreeErrorPoint;
   }
 
   public void resetEncoder() {
@@ -178,7 +178,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
   }
 
   private int hasExceedPhysicalLimit(double angle) {
-    return (angle < RotateShooterConstants.kRiseAngleMin ? -1 : (angle > RotateShooterConstants.kRiseAngleMax ? 1 : 0));
+    return (angle < RotateShooterConstants.kRotateAngleMin ? -1 : (angle > RotateShooterConstants.kRotateAngleMax ? 1 : 0));
   }
 
   @Override
