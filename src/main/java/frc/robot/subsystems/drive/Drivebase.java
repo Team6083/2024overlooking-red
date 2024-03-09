@@ -41,9 +41,9 @@ import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.NoteTrackingConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.ApriltagTracking.TagTrackingLimelight;
-import frc.robot.subsystems.ApriltagTracking.TagTrackingPhotonvision;
-import frc.robot.subsystems.NoteTracking.NoteTrackingPhotovision;
+import frc.robot.subsystems.apriltagTracking.TagTrackingLimelight;
+import frc.robot.subsystems.apriltagTracking.TagTrackingPhotonvision;
+import frc.robot.subsystems.noteTracking.NoteTrackingPhotovision;
 
 public class Drivebase extends SubsystemBase {
   /** Creates a new Drivetain. */
@@ -95,7 +95,6 @@ public class Drivebase extends SubsystemBase {
 
   private final NoteTrackingPhotovision note;
   private final TagTrackingLimelight aprilTagTracking;
-  private final TagTrackingPhotonvision photonTracking;
 
   private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
 
@@ -103,7 +102,6 @@ public class Drivebase extends SubsystemBase {
       TagTrackingLimelight aprilTagTracking, TagTrackingPhotonvision photonTracking) {
     this.note = noteTracking;
     this.aprilTagTracking = aprilTagTracking;
-    this.photonTracking = photonTracking;
     frontLeftLocation = new Translation2d(0.3, 0.3);
     frontRightLocation = new Translation2d(0.3, -0.3);
     backLeftLocation = new Translation2d(-0.3, 0.3);
@@ -364,32 +362,7 @@ public class Drivebase extends SubsystemBase {
     double rot = drivePID.calculate(aoffset);
     drive(xSpeed, ySpeed, rot, true);
   }
-
-  // remember to fine the constants value
-  public void driveToSpeaker() {
-    Pose2d tagpose = photonTracking.getTagPose2d();
-    Pose2d desiredPose = tagpose.plus(VisionConstants.speakeroffset);
-    driveToSpecificPose2d(desiredPose);
-  }
-
-  /**
-   * Photonvision version of face target.
-   */
-  public void facePhoton() {
-    boolean hasTarget = photonTracking.hasTarget();
-    if (hasTarget) {
-      Rotation2d offset = photonTracking.getYawToPoseRotation2d(getPose2d(),
-          photonTracking.getTagPose2d());
-      double angle = offset.getDegrees();
-
-      double rot = 0;
-
-      rot = facingTagPID.calculate(angle, 0);
-      drive(0, 0, -rot, true);
-    }
-
-  }
-
+  
   public void resetRobotPose2d() {
     frontLeft.resetAllEncoder();
     frontRight.resetAllEncoder();
