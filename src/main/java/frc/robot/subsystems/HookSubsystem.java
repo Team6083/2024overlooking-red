@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HookConstants;
 
@@ -31,8 +32,8 @@ public class HookSubsystem extends SubsystemBase {
   private double hookLeftPositionOffset = 0.0;
   private double hookRightPositionOffset = 0.0;
 
-  public HookSubsystem(PowerDistributionSubsystem powerDistribution) {
-    lineMotor = new CANSparkMax(HookConstants.kHookLineMotorChannel, MotorType.kBrushless);
+  public HookSubsystem(PowerDistributionSubsystem powerDistributionSubsystem) {
+    lineMotor = new CANSparkMax(HookConstants.kHookLineChannel, MotorType.kBrushless);
     hookLeftMotor = new VictorSPX(HookConstants.kHookLeftMotorCnannel);
     hookRightMotor = new VictorSPX(HookConstants.kHookRightMotorCnannel);
     linePID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
@@ -42,8 +43,26 @@ public class HookSubsystem extends SubsystemBase {
     hookLeftEncoder = new Encoder(HookConstants.kHookLeftEncoderChannelA, HookConstants.kHookLeftEncoderChannelB);
     hookRightEncoder = new Encoder(HookConstants.kHookRightEncoderChannelA, HookConstants.kHookRightEncoderChannelB);
     lineEncoder.setPositionConversionFactor(HookConstants.kHookPositionConversionfactor);
-    lineMotor.setInverted(HookConstants.kHookLeftMotorInverted);
-    this.powerDistributionSubsystem = powerDistribution;
+    lineMotor.setInverted(HookConstants.kLineMotorInverted);
+    hookLeftMotor.setInverted(HookConstants.kHookMotorLeftInverted);
+    hookRightMotor.setInverted(HookConstants.kHookMotorRightInverted);
+    this.powerDistributionSubsystem = powerDistributionSubsystem;
+  }
+
+  public Command runHookDouwnLeftManual(){
+    return this.startEnd(()->this.manualControlLeftHookMotor(-HookConstants.kManualControlLeftHookMotorPower),()->this.stopHookLeftMotor());
+  }
+
+  public Command runHookDownRightMaual(){
+   return this.startEnd(()->this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),()->this.stopHookRightMotor());
+  }
+
+  public Command runHookUpLeftManual(){
+    return this.startEnd(()->this.manualControlLeftHookMotor(-HookConstants.kManualControlRightHookMotorPower),()->this.stopHookLeftMotor());
+  }
+
+  public Command runHookupRightMaual(){
+   return this.startEnd(()->this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),()->this.stopHookRightMotor());
   }
 
   public void manualControlLine(double hookControlSpeed) {

@@ -88,9 +88,12 @@ public final class Constants {
     }
 
     public static class HookConstants {
-        public static final int kHookLineMotorChannel = 23;
+        public static final int kHookLineChannel = 23;
         public static final int kHookLeftMotorCnannel = 28;
         public static final int kHookRightMotorCnannel = 27;
+        public static final boolean kHookMotorLeftInverted = true;
+        public static final boolean kHookMotorRightInverted = false;
+        public static final boolean kLineMotorInverted = false;
         public static final int kHookLeftEncoderChannelA = 0;
         public static final int kHookLeftEncoderChannelB = 1;
         public static final int kHookRightEncoderChannelA = 2;
@@ -104,6 +107,9 @@ public final class Constants {
         public static final double kLeftPositionMin = 0.0;
         public static final double kRightPositionMax = 60.0;
         public static final double kRightPositionMin = 0.0;
+        public static final double kHookleftToTopPositionMax = 45.0;
+        public static final double kHookRightToTopPositionMax = 45.0;
+        public static final double kHooklineToTopPositionMax = 45.0;
         public static final double kHookPositionConversionfactor = 1.0;
         public static final double kLinePower = 0;
         public static final double kHookMotorLeftVoltage = 0.0;
@@ -111,9 +117,6 @@ public final class Constants {
         public static final double kManualControlLineMotorPower = 0.25;
         public static final double kManualControlLeftHookMotorPower = 0.25;
         public static final double kManualControlRightHookMotorPower = 0.25;
-        public static final boolean kLineMotorInverted = true;
-        public static final boolean kHookLeftMotorInverted = false;
-        public static final boolean kHookRightMotorInverted = true;
         public static final double kInitSetpoint = 0.0;
         public static final double kLeftMotorModify = 0.0; // TO DO
         public static final double kRightMotorModify = 0.0; // TO DO
