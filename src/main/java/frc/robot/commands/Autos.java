@@ -16,7 +16,6 @@ import frc.robot.commands.autoCmds.AutoRotateShooterCmd;
 import frc.robot.commands.autoCmds.AutoTransportShootCmd;
 import frc.robot.commands.autoCmds.PoseRotateShooterCmd;
 import frc.robot.commands.autoCmds.PoseShootCmd;
-import frc.robot.commands.shooterCmds.ShootPIDCmd;
 // import frc.robot.commands.autoTimerCmds.GoBackCmd;
 // import frc.robot.commands.autoTimerCmds.GoForwardCmd;
 // import frc.robot.commands.autoTimerCmds.GoLeftCmd;
@@ -230,7 +229,7 @@ public final class Autos {
     int length = autoNumber.length();
     Command runPeriodicCommand = new ParallelCommandGroup(
         new AutoRotateShooterCmd(rotateShooterSubsystem),
-        new ShootPIDCmd(shooterSubsystem));
+        shooterSubsystem.speakerShootPID());
     Command runAutoCommand = new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem,
         transportSubsystem);
     char pre = '0';
