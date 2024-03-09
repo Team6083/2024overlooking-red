@@ -53,7 +53,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public Command speakerShootPID() {
-    Command speakerShootPID = runEnd(() -> this.speakerRate(), () -> this.stopAllMotor());
+    Command speakerShootPID = runEnd(this::speakerRate, this::stopAllMotor);
     speakerShootPID.setName("speakerShootPID");
     return speakerShootPID;
   }
