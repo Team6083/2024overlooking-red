@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -16,6 +17,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriveControllerConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.autoCmds.AutoAimAndShootCmd;
+import frc.robot.commands.autoCmds.AutoRotateShooterCmd;
+import frc.robot.commands.autoCmds.AutoTransportShootCmd;
 import frc.robot.subsystems.drive.Drivebase;
 import frc.robot.subsystems.visionProcessing.NoteTracking;
 import frc.robot.subsystems.visionProcessing.TagTracking;
@@ -33,18 +37,15 @@ import frc.robot.commands.hookCmds.PIDControl.LineUpPIDCmd;
 // import frc.robot.subsystems.AprilTagTracking;
 import frc.robot.subsystems.RotateShooterSubsystem;
 
-
 public class RobotContainer {
   private final CommandXboxController mainController;
   private final CommandGenericHID controlPanel;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
   private final Drivebase drivebase;
-  // private final DrivebaseAccelerateCmd drivebaseAccelerate;
-  // private final DrivebaseDefaultSpeedCmd drivebaseDefaultSpeed;
   private final IntakeSubsystem intake;
   private final TransportSubsystem transport;
   private final ShooterSubsystem shooter;
-  private final RotateShooterSubsystem riseShooter;
+  private final RotateShooterSubsystem rotateShooter;
   private final HookSubsystem hook;
   private final TagTracking aprilTagTracking;
   private final NoteTracking noteTracking;
@@ -62,12 +63,10 @@ public class RobotContainer {
     mainController = new CommandXboxController(DriveControllerConstants.kMainController);
     controlPanel = new CommandGenericHID(DriveControllerConstants.kControlPanel);
     drivebase = new Drivebase(noteTracking, tagLimelightTracking);
-    // drivebaseAccelerate = new DrivebaseAccelerateCmd(drivebase);
-    // drivebaseDefaultSpeed = new DrivebaseDefaultSpeedCmd(drivebase);
     intake = new IntakeSubsystem(powerDistributionSubsystem);
     transport = new TransportSubsystem(powerDistributionSubsystem);
     shooter = new ShooterSubsystem(powerDistributionSubsystem);
-    riseShooter = new RotateShooterSubsystem(powerDistributionSubsystem, aprilTagTracking);
+    rotateShooter = new RotateShooterSubsystem(powerDistributionSubsystem, aprilTagTracking);
     hook = new HookSubsystem(powerDistributionSubsystem);
 
     // AprilTagTracking.init();
@@ -110,39 +109,45 @@ public class RobotContainer {
     // NamedCommands.registerCommand("TakeNote", new
     // IntakeCmd(intake).withTimeout(2));
 
+    NamedCommands.registerCommand("AutoAim", new AutoRotateShooterCmd(rotateShooter));
+    NamedCommands.registerCommand("AutoShootRate", shooter.speakerShootPID());
+    NamedCommands.registerCommand("AutoTransport", new AutoTransportShootCmd(drivebase, shooter, transport));
+    NamedCommands.registerCommand("AutoIntakeWithTransport", null);
+    NamedCommands.registerCommand("AutoFaceAndShoot", new AutoAimAndShootCmd(drivebase, rotateShooter, shooter, transport));
   }
 
   private void configureBindings() {
-    //drivetrain
-    //drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
-    //mainController.pov(0).toggleOnTrue(DrivebaseAccelerateCmd(drivebase));
-    //mainController.pov(180).toggleOnTrue(DrivebaseDefaultSpeedCmd(drivebase));
+    // drivetrain
+    // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
+    // mainController.pov(0).toggleOnTrue(DrivebaseAccelerateCmd(drivebase));
+    // mainController.pov(180).toggleOnTrue(DrivebaseDefaultSpeedCmd(drivebase));
 
-    //riseshooter
-    riseShooter.addErrorCommand(controlPanel.getRawAxis(0));
-    //hook
+    // riseshooter
+    rotateShooter.addErrorCommand(controlPanel.getRawAxis(0));
+    // hook
     mainController.pov(270).whileTrue(new LineDownPIDCmd(hook));
     mainController.pov(90).whileTrue(new LineUpPIDCmd(hook));
     mainController.leftTrigger().whileTrue(new HookLeftMotorDownPIDCmd(hook));
     mainController.leftBumper().whileTrue(new HookLeftMotorUpPIDCmd(hook));
     mainController.rightTrigger().whileTrue(new HookRightMotorDownPIDCmd(hook));
     mainController.rightBumper().whileTrue(new HookRightMotorUpPIDCmd(hook));
-  
+
     // intake and transport
     // mainController.y().toggleOnTrue(new IntakeWithTransportCmd(transport,
     // intake)); // onTrue could be okay, too
     // mainController.x().whileTrue(new ReIntakeWithTransportCmd(transport,
     // intake));
 
-    //shooter
-    //mainController.b().toggleOnTrue(new ShootPIDCmd(shooter));
-    //mainController.a().toggleOnTrue(new ShootTransportCmd(transport, shooter.getRate()));
-    
-    //semi-automatic
+    // shooter
+    // mainController.b().toggleOnTrue(new ShootPIDCmd(shooter));
+    // mainController.a().toggleOnTrue(new ShootTransportCmd(transport,
+    // shooter.getRate()));
+
+    // semi-automatic
     mainController.rightStick().onTrue(drivebase.tagTrackConditionCmd());
 
-    //reset
-    //mainController.back().onTrue(new GyroResetCmd(drivebase));
+    // reset
+    // mainController.back().onTrue(new GyroResetCmd(drivebase));
   }
 
   public Command getAutonomousCommand() {
@@ -157,7 +162,7 @@ public class RobotContainer {
     }
     // return Autos.auto(drivebase, riseShooter, shooter, transport, intake,
     // autoNumber, initial);
-    return Autos.autoOptimize(drivebase, riseShooter, shooter, transport, intake, autoNumber, initial);
+    return Autos.autoOptimize(drivebase, rotateShooter, shooter, transport, intake, autoNumber, initial);
     // return Commands.none();
   }
 
