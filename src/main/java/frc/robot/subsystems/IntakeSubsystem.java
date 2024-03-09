@@ -24,7 +24,6 @@ public class IntakeSubsystem extends SubsystemBase {
     this.powerDistributionSubsystem = powerDistributionSubsystem;
     intakeMotor = new VictorSPX(IntakeConstants.kIntakeChannel);
     intakeMotor.setInverted(IntakeConstants.kIntakeInverted);
-
   }
 
   public Command setIntakingCmd() {
