@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.TagTrackingConstants;
 
 public class TagTracking {
     private final NetworkTable table;
@@ -67,21 +68,6 @@ public class TagTracking {
      */
     public void setPipeline(int pipeline) {
         table.getEntry("pipeline").setNumber(pipeline);
-    }
-
-    /**
-     * Returns bot to tag's direct distance.
-     * 
-     * @return distance (double)
-     */
-    public double getDistance() {
-        // readValue();
-        double targetHeight = getBT()[1]; // botpose in targetspace y
-        double xDis = getBT()[0];
-        double zDis = getBT()[2];
-        double horDis = Math.sqrt(Math.pow(xDis, 2) + Math.pow(zDis, 2));
-        distance = Math.sqrt(Math.pow(targetHeight, 2) + Math.pow(horDis, 2));
-        return distance;
     }
 
     /**
@@ -162,42 +148,33 @@ public class TagTracking {
         return ct;
     }
 
-    public double getHorizontalDistance() {
+    /**
+     * Set priority tag iD
+     * 
+     * @param priorityID the priority tag ID (int)
+     */
+    public void setPriorityInViewTag(int priorityID) {
+        table.getEntry("priorityid").setNumber(priorityID);
+    }
+
+    /**
+     * Returns bot to tag's direct distance.
+     * 
+     * @return distance (double)
+     */
+    public double getDistance() {
+        // readValue();
+        double targetHeight = getBT()[1]; // botpose in targetspace y
+        double xDis = getBT()[0];
+        double zDis = getBT()[2];
+        double horDis = Math.sqrt(Math.pow(xDis, 2) + Math.pow(zDis, 2));
+        distance = Math.sqrt(Math.pow(targetHeight, 2) + Math.pow(horDis, 2));
+        return distance;
+    }
+
+    public double getHorizontalDistanceBy() {
         double horDis = Math.sqrt((Math.pow(getBT()[0], 2) + Math.pow(getBT()[2], 2)));
         return horDis;
-    }
-
-    /**
-     * Returns goal height in metres
-     * 
-     * @param offset tag to goal (metres)
-     * @return goal height (metres)
-     */
-    public double getGoalHeight(double offset) {
-        double goalHeight = Math.abs(getBT()[1]) + offset;
-        return goalHeight;
-    }
-
-    /**
-     * Returns bot to tag horizontal distance in metres
-     * 
-     * @return bot to tag horizontal distance (metres)
-     */
-    public double getHorizontalDisByRoll() {
-        double angleDegree = getBT()[4]; // roll
-        double angleRadian = Math.toRadians(angleDegree);
-        double horDis = Math.abs(getBT()[2]) / Math.cos(angleRadian);
-        return horDis;
-    }
-
-    /**
-     * Returns bot to speaker angle in degree
-     * 
-     * @return bot to speaker angle (degree)
-     */
-    public double getSpeakerDegree() {
-        double degree = Math.toDegrees(Math.atan(getGoalHeight(0.515) / getHorizontalDisByRoll()));
-        return degree;
     }
 
     /**
@@ -206,32 +183,25 @@ public class TagTracking {
      * 
      * @return shooter to goal angle (degree)
      */
-    public double getSpeakerDegreeByCal() {
+    public double getHorDistanceByCal() {
         double pitch = getTy();
         double yaw = getTx();
-        double y = 0.615 * (1 / Math.tan(Math.toRadians(pitch + 10.0)));
-        double x = y * Math.tan(Math.toRadians(yaw - 0.0))
-                - 0;
-        double distance = Math.sqrt(Math.pow(y, 2.0) + Math.pow(x, 2.0));
-        double degree = Math.toDegrees(Math.atan((1.385 / distance)));
-        return degree;
+        double y = TagTrackingConstants.camHeight
+                * (1 / Math.tan(Math.toRadians(pitch + TagTrackingConstants.camPitch)));
+        double x = y * Math.tan(Math.toRadians(yaw));
+        double horDistance = Math.sqrt(Math.pow(y, 2.0) + Math.pow(x, 2.0));
+        return horDistance;
     }
 
     /**
-     * Not yet experimented. Rerurn shooter to goal angle degree by botpose
-     * targetspace when tag detected
+     * Returns goal height in metres
      * 
-     * @param nowDegree shooter degree calculated by encoder
-     * @return shooter to goal angle (degree)
+     * @param offset tag to goal (metres)
+     * @return goal height (metres)
      */
-    public double getSpeakerDegreeByBT(double nowDegree) {
-        if (getTv() == 1) {
-            double horDis = Math.abs(getBT()[2]) - 0.21;
-            double degree = Math.toDegrees(Math.atan(1.6 / horDis));
-            return degree;
-        } else {
-            return nowDegree;
-        }
+    public double getTagHeight() {
+        double goalHeight = Math.abs(getBT()[1]);
+        return goalHeight;
     }
 
     /**
@@ -240,7 +210,7 @@ public class TagTracking {
      * @return tagPose
      */
     public Pose2d getTagPose2d() {
-        if (getTv() != 0) {
+        if (getTv() == 1) {
             Optional<Pose3d> tag_Pose3d = m_layout.getTagPose((int) getTID());
             Pose2d tagPose2d = tag_Pose3d.isPresent() ? tag_Pose3d.get().toPose2d() : new Pose2d();
             return tagPose2d;
@@ -255,7 +225,7 @@ public class TagTracking {
      * @return tagPose
      */
     public Pose3d getTagPose3d() {
-        if (getTv() != 0) {
+        if (getTv() == 1) {
             Optional<Pose3d> tag_Pose3d = m_layout.getTagPose((int) getTID());
             Pose3d tagPose = tag_Pose3d.isPresent() ? tag_Pose3d.get() : new Pose3d();
             return tagPose;
@@ -264,23 +234,13 @@ public class TagTracking {
         }
     }
 
-    /**
-     * Set priority tag iD
-     * 
-     * @param priorityID the priority tag ID (int)
-     */
-    public void setPriorityInViewTag(int priorityID) {
-        table.getEntry("priorityid").setNumber(priorityID);
-    }
-
     public void putDashboard() {
         SmartDashboard.putNumber("LimelightX", getTx());
         SmartDashboard.putNumber("LimelightY", getTy());
         SmartDashboard.putNumber("LimelightID", getTID());
         SmartDashboard.putNumber("latency", getTl());
-
-        SmartDashboard.putNumber("hor_Dis", getHorizontalDisByRoll());
-        SmartDashboard.putNumber("MyDistance", getDistance());
+        SmartDashboard.putNumber("horDistance", getHorizontalDistanceBy());
+        SmartDashboard.putNumber("RealDistance", getDistance());
     }
 
 }
