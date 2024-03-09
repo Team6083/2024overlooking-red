@@ -118,8 +118,8 @@ public class RobotContainer {
   private void configureBindings() {
     // drivetrain
     // drivebase.setDefaultCommand(new SwerveJoystickCmd(drivebase, main));
-    // mainController.pov(0).toggleOnTrue(DrivebaseAccelerateCmd(drivebase));
-    // mainController.pov(180).toggleOnTrue(DrivebaseDefaultSpeedCmd(drivebase));
+    mainController.pov(0).onTrue(drivebase.accelerateCmd());
+    mainController.pov(180).onTrue(drivebase.defaultSpeedCmd());
 
     // riseshooter
     // rotateShooter.addErrorCommand(controlPanel.getRawAxis(0));

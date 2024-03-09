@@ -176,8 +176,8 @@ public final class Constants {
         public static final boolean kGyroInverted = false; // wheather gyro is under the robot
         public static final double kGyroOffSet = 0;
 
-        public static final double kLowMagnification = 1.0;
-        public static final double kHighMagnification = 1.2;
+        public static final double kDefaultMagnification = 0.8;
+        public static final double kHighMagnification = 1.0;
     }
 
     public static final class ModuleConstants {

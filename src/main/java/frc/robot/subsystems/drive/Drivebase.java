@@ -146,7 +146,7 @@ public class Drivebase extends SubsystemBase {
     field2d = new Field2d();
 
     // initialize magnification value
-    magnification = 1.0;
+    magnification = DrivebaseConstants.kDefaultMagnification;
 
     // reset the gyro
     resetGyro();
@@ -241,6 +241,16 @@ if (noteTrackingCondition) {
     frontRight.setDesiredState(swerveModuleStates[1]);
     backLeft.setDesiredState(swerveModuleStates[2]);
     backRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  public Command accelerateCmd() {
+    Command cmd = Commands.runOnce(() -> magnification = DrivebaseConstants.kHighMagnification, this);
+    return cmd;
+  }
+
+  public Command defaultSpeedCmd() {
+    Command cmd = Commands.runOnce(() -> magnification = DrivebaseConstants.kDefaultMagnification, this);
+    return cmd;
   }
 
   public void setMagnification(double magnification) {
@@ -412,13 +422,13 @@ double x_dis = aprilTagTracking.getBT()[2];
   // }
 
   public Command GyroResetCmd() {
-    Command cmd = new InstantCommand(() -> resetGyro(), this);
+    Command cmd = Commands.runOnce(this::resetGyro, this);
     cmd.setName("GyroResetCmd");
     return cmd;
   }
 
   public Command PoseResetCmd() {
-    Command cmd = new InstantCommand(() -> resetPose2dAndEncoder(), this);
+    Command cmd = Commands.runOnce(this::resetPose2dAndEncoder, this);
     cmd.setName("PoseResetCmd");
     return cmd;
   }
