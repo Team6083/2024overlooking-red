@@ -21,7 +21,7 @@ public class AutoAimCmd extends ParallelDeadlineGroup {
     // addCommands().
     super(new WaitCommand(0.5));
     addCommands(
-        Commands.run(() -> drivebase.drive(0, 0, drivebase.facingTag(0), true), null),
+        Commands.run(() -> drivebase.drive(0, 0, drivebase.facingTag(0), true), drivebase),
         new RotateShooterAutoControlCmd(rotateShooterSubsystem));
   }
 }
