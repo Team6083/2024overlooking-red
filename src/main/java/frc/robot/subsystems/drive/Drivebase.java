@@ -382,7 +382,10 @@ public class Drivebase extends SubsystemBase {
     drive(xSpeed, ySpeed, rot, true);
   }
 
-  // choice: medium, left, right
+  /**
+   * Drvie to stage by a button. 
+   * @param choice three modes: middle, left and right. All Lower case.
+   */ 
   public void driveToStage(String choice) {
     Transform2d offset = new Transform2d();
     switch (choice) {

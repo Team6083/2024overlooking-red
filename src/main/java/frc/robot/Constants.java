@@ -72,6 +72,7 @@ public final class Constants {
         public static final double kRotateAngleOffset = 0.52;
         public static final double kRotateTriggerValue = 0.15;
         public static final double kSpeakerHeight = 2.0;
+        public static final double kAMPHeight = 0.89;
         public static final double kShooterHeight = 0.31;
         public static final double kP = 0.095;
         public static final double kI = 0.0004;
