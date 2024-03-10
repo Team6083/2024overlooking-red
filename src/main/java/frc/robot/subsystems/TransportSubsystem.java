@@ -11,6 +11,7 @@ import com.revrobotics.Rev2mDistanceSensor.Port;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TransportConstants;
 
@@ -31,6 +32,13 @@ public class TransportSubsystem extends SubsystemBase {
 
   public Command reTransportIntakeCmd() {
     return this.startEnd(() -> this.setReTransport(), () -> this.stopMotor());
+  }
+
+  public Command runTransportCmd(){
+    Command runTrans = Commands.runEnd(this::setTransport,
+  this::stopMotor);
+  runTrans.setName("RunTransport");
+    return runTrans;
   }
 
   public void setTransport() {
