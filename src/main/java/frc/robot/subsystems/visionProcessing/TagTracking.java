@@ -24,7 +24,7 @@ public class TagTracking {
 
     private double[] bt; // botpose_targetspace
     private double[] ct; // camerapose_targetspace
-    public double[] ids;
+    private double[] ids;
 
     private double distance;
 
@@ -47,7 +47,7 @@ public class TagTracking {
      * 
      * @param camMode set 0 plz
      */
-    public void setCamMode(int camMode) {
+    private void setCamMode(int camMode) {
         table.getEntry("camMode").setNumber(camMode);
     }
 
@@ -57,7 +57,7 @@ public class TagTracking {
      * 
      * @param ledMode set 0 or 1 plz
      */
-    public void setLedMode(int ledMode) {
+    private void setLedMode(int ledMode) {
         table.getEntry("ledMode").setNumber(ledMode);
     }
 
@@ -66,7 +66,7 @@ public class TagTracking {
      * 
      * @param pipeline in this game let's set 0
      */
-    public void setPipeline(int pipeline) {
+    private void setPipeline(int pipeline) {
         table.getEntry("pipeline").setNumber(pipeline);
     }
 
@@ -115,7 +115,7 @@ public class TagTracking {
      * 
      * @return latency (double)
      */
-    public double getTl() {
+    private double getTl() {
         latency = table.getEntry("tl").getDouble(0) + table.getEntry("cl").getDouble(0);
         return latency;
     }
@@ -245,7 +245,7 @@ public class TagTracking {
         table.getEntry("priorityid").setNumber(priorityID);
     }
 
-    public double[] getIDs() {
+    private double[] getIDs() {
         int i = 0;
         while (i < 3) {
             if (i == 2 && ids[i - 1] == -1) {

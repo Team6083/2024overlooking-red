@@ -25,7 +25,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
   private final PIDController rotatePID;
   private double rotateDegreeError = 0.0;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
-  private final TagTracking tagTrackingLimelight;
+  private final TagTracking apriltagTracking;
   // private final SparkMaxRelativeEncoder riseEncoderSPX;
 
   public RotateShooterSubsystem(PowerDistributionSubsystem powerDistributionSubsystem,
@@ -39,7 +39,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
 
     rotateMotor.setInverted(RotateShooterConstants.kRotateShooterInverted);
     this.powerDistributionSubsystem = powerDistributionSubsystem;
-    this.tagTrackingLimelight = aprilTagTracking;
+    this.apriltagTracking = aprilTagTracking;
     setSetpoint(RotateShooterConstants.kInitDegree);
     rotatePID.enableContinuousInput(-180.0, 180.0);
   }
@@ -83,19 +83,19 @@ public class RotateShooterSubsystem extends SubsystemBase {
   }
 
   public double getAimDegree(double currentDegree) {
-    if (tagTrackingLimelight.getTv() == 1 && tagTrackingLimelight.getTID() != 3.0
-        && tagTrackingLimelight.getTID() != 8.0) {
+    if (apriltagTracking.getTv() == 1 && apriltagTracking.getTID() != 3.0
+        && apriltagTracking.getTID() != 8.0) {
       double speakerToShooterHeight = RotateShooterConstants.kSpeakerHeight - RotateShooterConstants.kShooterHeight;
-      double degree = Math.toDegrees(Math.atan(speakerToShooterHeight / tagTrackingLimelight.getHorizontalDistanceByCT()));
+      double degree = Math.toDegrees(Math.atan(speakerToShooterHeight / apriltagTracking.getHorizontalDistanceByCT()));
       return degree;
     }
     return currentDegree;
   }
 
     public double getAMPDegree(double currentDegree) {
-    if (tagTrackingLimelight.getTv() == 1) {
+    if (apriltagTracking.getTv() == 1) {
       double ampToShooterHeight = RotateShooterConstants.kAMPHeight - RotateShooterConstants.kShooterHeight;
-      double degree = Math.toDegrees(Math.atan(ampToShooterHeight / tagTrackingLimelight.getHorizontalDistanceByCT()));
+      double degree = Math.toDegrees(Math.atan(ampToShooterHeight / apriltagTracking.getHorizontalDistanceByCT()));
       return degree;
     }
     return currentDegree;
