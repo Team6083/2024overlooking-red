@@ -108,7 +108,7 @@ public class RobotContainer {
     // IntakeCmd(intake).withTimeout(2));
 
     NamedCommands.registerCommand("AutoAim", new AutoRotateShooterCmd(rotateShooter));
-    NamedCommands.registerCommand("AutoShootRate", shooter.speakerShootPID());
+    NamedCommands.registerCommand("AutoShootRate", shooter.speakerShootPIDCmd());
     NamedCommands.registerCommand("AutoTransport", new AutoTransportShootCmd(drivebase, shooter, transport));
     NamedCommands.registerCommand("AutoIntakeWithTransport", new IntakeWithTransportCmd(transport, intake));
     NamedCommands.registerCommand("AutoFaceAndShoot",
@@ -137,7 +137,7 @@ public class RobotContainer {
     mainController.x().whileTrue(intake.setReIntakingCmd());
 
     // shooter
-    mainController.b().toggleOnTrue(shooter.speakerShootPID());
+    mainController.b().toggleOnTrue(shooter.speakerShootPIDCmd());
     // mainController.a().toggleOnTrue(new ShootTransportCmd(transport,
     // shooter.getRate()));
 

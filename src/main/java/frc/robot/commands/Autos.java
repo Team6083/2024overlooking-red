@@ -229,7 +229,7 @@ public final class Autos {
     int length = autoNumber.length();
     Command runPeriodicCommand = new ParallelCommandGroup(
         new AutoRotateShooterCmd(rotateShooterSubsystem),
-        shooterSubsystem.speakerShootPID());
+        shooterSubsystem.speakerShootPIDCmd());
     Command runAutoCommand = new AutoAimAndShootCmd(drivebase, rotateShooterSubsystem, shooterSubsystem,
         transportSubsystem);
     char pre = '0';
