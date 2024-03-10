@@ -92,6 +92,15 @@ public class RotateShooterSubsystem extends SubsystemBase {
     return currentDegree;
   }
 
+    public double getAMPDegree(double currentDegree) {
+    if (tagTrackingLimelight.getTv() == 1) {
+      double ampToShooterHeight = RotateShooterConstants.kAMPHeight - RotateShooterConstants.kShooterHeight;
+      double degree = Math.toDegrees(Math.atan(ampToShooterHeight / tagTrackingLimelight.getHorizontalDistanceByCT()));
+      return degree;
+    }
+    return currentDegree;
+  }
+
 
   public Command setAutoAim() {
     Command cmd = Commands.runOnce(
