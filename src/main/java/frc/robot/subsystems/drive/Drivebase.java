@@ -40,7 +40,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.NoteTrackingConstants;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.TagTrackingConstants;
 import frc.robot.subsystems.visionProcessing.NoteTracking;
 import frc.robot.subsystems.visionProcessing.TagTracking;
 
@@ -146,7 +146,7 @@ public class Drivebase extends SubsystemBase {
     field2d = new Field2d();
 
     // initialize magnification value
-    magnification = 1.0;
+    magnification = DrivebaseConstants.kDefaultMagnification;
 
     // reset the gyro
     resetGyro();
@@ -226,7 +226,7 @@ public class Drivebase extends SubsystemBase {
    *                      using the wpi function to set the speed of the swerve
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    if (noteTrackingCondition) {
+if (noteTrackingCondition) {
       rot = facingNoteRot(rot);
     }
     if (tagTrackingCondition) {
@@ -241,6 +241,16 @@ public class Drivebase extends SubsystemBase {
     frontRight.setDesiredState(swerveModuleStates[1]);
     backLeft.setDesiredState(swerveModuleStates[2]);
     backRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  public Command accelerateCmd() {
+    Command cmd = Commands.runOnce(() -> magnification = DrivebaseConstants.kHighMagnification, this);
+    return cmd;
+  }
+
+  public Command defaultSpeedCmd() {
+    Command cmd = Commands.runOnce(() -> magnification = DrivebaseConstants.kDefaultMagnification, this);
+    return cmd;
   }
 
   public void setMagnification(double magnification) {
@@ -313,9 +323,9 @@ public class Drivebase extends SubsystemBase {
     double targetID = aprilTagTracking.getTID();
     if (hasTarget == 1 && targetID != 3.0 && targetID != 8.0) {
       double rot = -facingTagPID.calculate(offset, 0);
-      return rot;
-    }
-    return currentRot;
+    return rot;
+  }
+return currentRot;
   }
 
   /**
@@ -326,15 +336,15 @@ public class Drivebase extends SubsystemBase {
   public double[] followingTag() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
-    double[] speed = new double[3];
+double[] speed = new double[3];
     double xSpeed = 0;
     double ySpeed = 0;
     double rot = 0;
-    double x_dis = aprilTagTracking.getBT()[2];
+double x_dis = aprilTagTracking.getBT()[2];
     if (hasTarget == 1) {
       rot = facingTagPID.calculate(offset, 0);
-      xSpeed = -followingTagPID.calculate(x_dis, 0.5);
-    }
+          xSpeed = -followingTagPID.calculate(x_dis, 0.5);
+      }
     speed[0] = xSpeed;
     speed[1] = ySpeed;
     speed[2] = rot;
@@ -397,7 +407,7 @@ public class Drivebase extends SubsystemBase {
     builder.addDoubleProperty("GyroResetCmd", null, null);
     builder.addDoubleProperty("PoseResetCmd", null, null);
     aprilTagTracking.putDashboard();
-  }
+    }
 
   // public void putDashboard() {
   // SmartDashboard.putNumber("frontLeft_speed",
@@ -412,17 +422,17 @@ public class Drivebase extends SubsystemBase {
   // SmartDashboard.putBoolean("trackingCondition", trackingCondition);
   // aprilTagTracking.putDashboard();
   // SmartDashboard.putData(GyroResetCmd());
-  // SmartDashboard.putData(PoseResetCmd());
+    // SmartDashboard.putData(PoseResetCmd());
   // }
 
   public Command GyroResetCmd() {
-    Command cmd = new InstantCommand(() -> resetGyro(), this);
+    Command cmd = Commands.runOnce(this::resetGyro, this);
     cmd.setName("GyroResetCmd");
     return cmd;
   }
 
   public Command PoseResetCmd() {
-    Command cmd = new InstantCommand(() -> resetPose2dAndEncoder(), this);
+    Command cmd = Commands.runOnce(this::resetPose2dAndEncoder, this);
     cmd.setName("PoseResetCmd");
     return cmd;
   }

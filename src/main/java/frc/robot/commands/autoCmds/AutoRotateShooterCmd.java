@@ -20,20 +20,20 @@ public class AutoRotateShooterCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    rotateShooterSubsystem.setSetpoint(rotateShooterSubsystem.getAprilTagDegree(rotateShooterSubsystem.getSetpoint()));
+    rotateShooterSubsystem.setSetpoint(rotateShooterSubsystem.getAimDegree(rotateShooterSubsystem.getSetpoint()));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    rotateShooterSubsystem.setSetpoint(rotateShooterSubsystem.getAprilTagDegree(rotateShooterSubsystem.getSetpoint()));
-    rotateShooterSubsystem.pidControl();
+    rotateShooterSubsystem.setSetpoint(rotateShooterSubsystem.getAimDegree(rotateShooterSubsystem.getSetpoint()));
+    rotateShooterSubsystem.setPIDControl();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    rotateShooterSubsystem.pidControl();
+    rotateShooterSubsystem.setPIDControl();
   }
 
   // Returns true when the command should end.

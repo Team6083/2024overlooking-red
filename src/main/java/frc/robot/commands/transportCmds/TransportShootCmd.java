@@ -2,43 +2,44 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.controllerCmds;
+package frc.robot.commands.transportCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.DrivebaseConstants;
-import frc.robot.subsystems.drive.Drivebase;
+import frc.robot.subsystems.TransportSubsystem;
 
-public class DrivebaseAccelerateCmd extends Command {
-  Drivebase drivebase;
+public class TransportShootCmd extends Command {
+  /** Creates a new Trans. */
+  private final TransportSubsystem transportSubsystem;
+  private final boolean isEnoughRate;
 
-  /** Creates a new DriveTrainAccelerationCmd. */
-  public DrivebaseAccelerateCmd(Drivebase drivebase) {
-    this.drivebase = drivebase;
-    addRequirements(this.drivebase);
+  public TransportShootCmd(TransportSubsystem transportSubsystem, boolean isEnoughRate) {
+    this.transportSubsystem = transportSubsystem;
+    this.isEnoughRate = isEnoughRate;
+    addRequirements(this.transportSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drivebase.setMagnification(DrivebaseConstants.kLowMagnification);
+    transportSubsystem.stopMotor();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivebase.setMagnification(DrivebaseConstants.kHighMagnification);
+    transportSubsystem.setTransport();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivebase.setMagnification(DrivebaseConstants.kLowMagnification);
+    transportSubsystem.stopMotor();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return !isEnoughRate;
   }
 }

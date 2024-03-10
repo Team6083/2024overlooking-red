@@ -1,18 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -41,10 +30,9 @@ public final class Constants {
         public static final Boolean kDownEncoderInverted = true;
         public static final double kUpMotorManualVoltage = 10.0;
         public static final double kDownMotorManualVoltage = 10.0;
-        public static final double kSpeakerShootRate = 60.0;
-        public static final double kAmpShootRate = 45.0;
-        public static final double kLowShooterRate = 30.0;
-        public static final double kDeadbandRate = 55.0;
+        public static final double[] kSpeakerShootRate = { 60.0, 60.0 };
+        public static final double[] kAmpShootRate = { 30.0, 45.0 };
+        public static final double[] kCarryShooterRate = { 30.0, 30.0 };
         public static final double kP = 0.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
@@ -76,17 +64,38 @@ public final class Constants {
         public static final Boolean kRotateShooterInverted = true;
         public static final Boolean kEncoderInverted = true;
         public static final int kEncoderChannel = 2;
-        public static final double kInitDegree = 60.0;
-        public static final double kRiseVoltLimit = 5.0;
-        public static final double kRiseAngleMin = -5.0;
-        public static final double kRiseAngleMax = 65.0;
-        public static final double kRiseDegreeErrorPoint = 3;
-        public static final double kRiseAngleOffset = 0.52;
-        public static final double kRiseTriggerValue = 0.15;
+        public static final double kInitDegree = 57.0;
+        public static final double kRotateVoltLimit = 5.0;
+        public static final double kRotateAngleMin = 5.0;
+        public static final double kRotateAngleMax = 65.0;
+        public static final double kRotateDegreeErrorPoint = 3;
+        public static final double kRotateAngleOffset = 0.52;
+        public static final double kRotateTriggerValue = 0.15;
         public static final double kSpeakerHeight = 2.0;
-        public static final double kP = 0.5;
-        public static final double kI = 0;
-        public static final double kD = 0;
+        public static final double kShooterHeight = 0.31;
+        public static final double kP = 0.095;
+        public static final double kI = 0.0004;
+        public static final double kD = 0.0002;
+    }
+
+    public static class RotateIntakeConstants {
+        public static final int kRotateIntakeChannel = 29;
+        public static final boolean kRotateIntakeInverted = false;
+        public static final boolean kEncoderInverted = false;
+        public static final int kRotateEncoderChannel = 4;
+        public static final double kRotateIntakeMaxDegree = 89.0;
+        public static final double kRotateIntakeMinDegree = 0.01;
+        public static final double kRotateDownVoltage = 5.0;
+        public static final double kRotateUpVoltage = -5.0;
+        public static final double kP = 0.05;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kInitDegree = 90.0;
+        public static final double kUpDegree = 30.0;
+        public static final double kDownDegree = 0.0;
+        public static final double kMaxDegree = 92.0;
+        public static final double kMinDegree = 0.0;
+        public static final double kRotateVoltLimit = 5.0;
     }
 
     public static class HookConstants {
@@ -167,8 +176,8 @@ public final class Constants {
         public static final boolean kGyroInverted = false; // wheather gyro is under the robot
         public static final double kGyroOffSet = 0;
 
-        public static final double kLowMagnification = 1.0;
-        public static final double kHighMagnification = 1.2;
+        public static final double kDefaultMagnification = 0.8;
+        public static final double kHighMagnification = 1.0;
     }
 
     public static final class ModuleConstants {
@@ -199,10 +208,11 @@ public final class Constants {
         public static final int kShooterDownMotorCurrentchannel = 1;
         public static final int kShooterUpMotorCurrentchannel = 2;
         public static final int kLineCurrentchannel = 3;
-        public static final int kHookMotor1Currentchannel = 4;
-        public static final int kHookMotor2Currentchannel = 5;
+        public static final int kHookLeftMotorCurrentchannel = 4;
+        public static final int kHookRightMotorCurrentchannel = 5;
         public static final int kTransportCurrentchannel = 0;
         public static final int kRiseShooterCurrentchannel = 1;
+        public static final int kRotateIntakeCurrentchannel = 7;
 
         public static final double kIntakeMotorMaxCurrent = 40.0;
         public static final double kShooterDownMotorMaxCuurent = 40.0;
@@ -212,6 +222,7 @@ public final class Constants {
         public static final double kHookMotor2MaxCurrent = 40.0;
         public static final double kTransportMaxCurrent = 40.0;
         public static final double kRotateShooterMaxCurrent = 40.0;
+        public static final double kRotateIntakeMaxCurrent = 40.0;
     }
 
     public static final class AutoConstants {
@@ -287,15 +298,10 @@ public final class Constants {
         public static final double minNoteDistance = 0.2;
     }
 
-    public static final class VisionConstants {
-
-        public static final Rotation2d sroffset = new Rotation2d(0);
-        public static final Transform2d speakeroffset = new Transform2d(0, 0, sroffset);
-
-        public static final double cam_offset = 0;
-
-        public static final double CamShooterHeight = 0;
-        public static final double SpeakerOpeningToTagHeight = 0;
-        public static final double CamToShooterOffset = 0.11;
+    public static final class TagTrackingConstants {
+        public static final double shooterHeight = 0.31;
+        public static final double camHeight = 0.615;
+        public static final double camPitch = 10.0;
+        public static final double camToShooterDistance = 0.11;
     }
 }

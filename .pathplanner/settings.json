@@ -3,12 +3,16 @@
   "robotLength": 0.68,
   "holonomicMode": true,
   "pathFolders": [
+    "AmpAndAmp",
     "LBSToNote",
     "LTSToNote",
-    "Test",
+    "LeftAndLeft(failed)",
+    "MiddleAndMiddle",
     "RBSToNote",
     "RTSToNote",
-    "Relay To Shoot Point"
+    "Relay To Shoot Point",
+    "SourceAndSource",
+    "Test"
   ],
   "autoFolders": [
     "Test"

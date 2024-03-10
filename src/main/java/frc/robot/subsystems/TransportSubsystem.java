@@ -33,14 +33,6 @@ public class TransportSubsystem extends SubsystemBase {
     return this.startEnd(() -> this.setReTransport(), () -> this.stopMotor());
   }
 
-  public Command transportIntakeCmd() {
-    return this.startEnd(() -> this.setTransport(), () -> this.stopMotor());
-  }
-
-  public Command transportShooterCmd() {
-    return this.startEnd(() -> this.setTransport(), () -> this.stopMotor());
-  }
-
   public void setTransport() {
     setMotor(TransportConstants.kTransVoltage);
   }
@@ -77,8 +69,8 @@ public class TransportSubsystem extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType(" TransportSubsystem");
-    builder.addDoubleProperty("Range dist", () -> distanceSensor.getRange(), null);
-    builder.addDoubleProperty("Timestamp dist", () -> distanceSensor.getTimestamp(), null);
+    builder.setSmartDashboardType(" transportSubsystem");
+    builder.addDoubleProperty("rangeDistance", distanceSensor::getRange, null);
+    builder.addDoubleProperty("timestampDistance", distanceSensor::getTimestamp, null);
   }
 }

@@ -13,104 +13,131 @@ public class PowerDistributionSubsystem {
 
   public PowerDistributionSubsystem() {
     powerDistribution = new PowerDistribution();
-    SmartDashboard.putNumber("intakeCurrent", intakeCurrent());
-    SmartDashboard.putNumber("hookLeftCurrent", hookLeftCurrent());
-    SmartDashboard.putNumber("hookRightCurrent", hookRightCurrent());
-    SmartDashboard.putNumber("upShooterCurrent", upShooterCurrent());
-    SmartDashboard.putNumber("downShooterCurrent", downShooterCurrent());
-    SmartDashboard.putNumber("lineCurrent", lineCurrent());
-    SmartDashboard.putNumber("transportCurrent", transportCurrent());
-    SmartDashboard.putNumber("rotateShooterCurrent", rotateShooterCurrent());
-    SmartDashboard.putBoolean("isIntakeOverCurren", isIntakeOverCurrent());
-    SmartDashboard.putBoolean("isHookLeftOverCurrent", isHookLeftOverCurrent());
-    SmartDashboard.putBoolean("isHookRightOverCurrent", isHookRightOverCurrent());
-    SmartDashboard.putBoolean("isShooterUpOverCurren", isShooterUpOverCurrent());
-    SmartDashboard.putBoolean("isShooterDownOverCurrent", isShooterDownOverCurrent());
-    SmartDashboard.putBoolean("isTransportOverCurrent", isTransportOverCurrent());
-    SmartDashboard.putBoolean("isLineMoterOverCurrent", isLineMoterOverCurrent());
-    SmartDashboard.putBoolean("isRotateShooterOverCurrent", isRotateShooterOverCurrent());
+    SmartDashboard.putNumber("intakeCurrent", 0);
+    SmartDashboard.putNumber("hookLeftCurrent", 0);
+    SmartDashboard.putNumber("hookRightCurrent", 0);
+    SmartDashboard.putNumber("upShooterCurrent", 0);
+    SmartDashboard.putNumber("downShooterCurrent", 0);
+    SmartDashboard.putNumber("lineCurrent", 0);
+    SmartDashboard.putNumber("transportCurrent", 0);
+    SmartDashboard.putNumber("rotateShooterCurrent", 0);
+    SmartDashboard.putBoolean("isIntakeOverCurren", false);
+    SmartDashboard.putBoolean("isHookLeftOverCurrent", false);
+    SmartDashboard.putBoolean("isHookRightOverCurrent", false);
+    SmartDashboard.putBoolean("isShooterUpOverCurren", false);
+    SmartDashboard.putBoolean("isShooterDownOverCurrent", false);
+    SmartDashboard.putBoolean("isTransportOverCurrent", false);
+    SmartDashboard.putBoolean("isLineMoterOverCurrent", false);
+    SmartDashboard.putBoolean("isRotateShooterOverCurrent", false);
   }
 
   public double intakeCurrent() {
-    SmartDashboard.putNumber("intakeCurrent", intakeCurrent());
-    return powerDistribution.getCurrent(PowerDistributionConstants.kIntakeMotorCurrrentchannel);
+    double current = powerDistribution.getCurrent(PowerDistributionConstants.kIntakeMotorCurrrentchannel);
+    SmartDashboard.putNumber("intakeCurrent", current);
+    return current;
   }
 
   public double hookLeftCurrent() {
-    SmartDashboard.putNumber("hookLeftCurrent", hookLeftCurrent());
-    return powerDistribution.getCurrent(PowerDistributionConstants.kHookMotor1Currentchannel);
+    double current = powerDistribution.getCurrent(PowerDistributionConstants.kHookLeftMotorCurrentchannel);
+    SmartDashboard.putNumber("hookLeftCurrent", current);
+    return current;
   }
 
   public double hookRightCurrent() {
-    SmartDashboard.putNumber("hookRightCurrent", hookRightCurrent());
-    return powerDistribution.getCurrent(PowerDistributionConstants.kHookMotor2Currentchannel);
+    double current = powerDistribution.getCurrent(PowerDistributionConstants.kHookRightMotorCurrentchannel);
+    SmartDashboard.putNumber("hookRightCurrent", current);
+    return current;
   }
 
   public double upShooterCurrent() {
-    SmartDashboard.putNumber("upShooterCurrent", upShooterCurrent());
-    return powerDistribution.getCurrent(PowerDistributionConstants.kShooterUpMotorCurrentchannel);
+    double current = powerDistribution.getCurrent(PowerDistributionConstants.kShooterUpMotorCurrentchannel);
+    SmartDashboard.putNumber("upShooterCurrent", current);
+    return current;
   }
 
   public double downShooterCurrent() {
-    SmartDashboard.putNumber("downShooterCurrent", downShooterCurrent());
-    return powerDistribution.getCurrent(PowerDistributionConstants.kShooterDownMotorCurrentchannel);
+    double current = powerDistribution.getCurrent(PowerDistributionConstants.kShooterDownMotorCurrentchannel);
+    SmartDashboard.putNumber("downShooterCurrent", current);
+    return current;
   }
 
   public double lineCurrent() {
-    SmartDashboard.putNumber("lineCurrent", lineCurrent());
-    return powerDistribution.getCurrent(PowerDistributionConstants.kLineCurrentchannel);
+    double current = powerDistribution.getCurrent(PowerDistributionConstants.kLineCurrentchannel);
+    SmartDashboard.putNumber("lineCurrent", current);
+    return current;
   }
 
   public double transportCurrent() {
-    SmartDashboard.putNumber("transportCurrent", transportCurrent());
-    return powerDistribution.getCurrent(PowerDistributionConstants.kTransportCurrentchannel);
+    double current = powerDistribution.getCurrent(PowerDistributionConstants.kTransportCurrentchannel);
+    SmartDashboard.putNumber("transportCurrent", current);
+    return current;
   }
 
   public double rotateShooterCurrent() {
-    SmartDashboard.putNumber("rotateShooterCurrent", rotateShooterCurrent());
-    return powerDistribution.getCurrent(PowerDistributionConstants.kRiseShooterCurrentchannel);
+    double current = powerDistribution.getCurrent(PowerDistributionConstants.kRiseShooterCurrentchannel);
+    SmartDashboard.putNumber("rotateShooterCurrent", current);
+    return current;
+  }
+
+  public double rotateIntakeCurrent() {
+    double current = powerDistribution.getCurrent(PowerDistributionConstants.kRotateIntakeCurrentchannel);
+    SmartDashboard.putNumber("rotateIntakeCurrent", current);
+    return current;
   }
 
   public boolean isIntakeOverCurrent() {
-    SmartDashboard.putBoolean("isIntakeOverCurren", isIntakeOverCurrent());
-    return (intakeCurrent() > PowerDistributionConstants.kIntakeMotorMaxCurrent);
+    boolean isOverCurrent = intakeCurrent() > PowerDistributionConstants.kIntakeMotorMaxCurrent;
+    SmartDashboard.putBoolean("isIntakeOverCurren", isOverCurrent);
+    return isOverCurrent;
   }
 
   public boolean isHookLeftOverCurrent() {
-    SmartDashboard.putBoolean("isHookLeftOverCurrent", isHookLeftOverCurrent());
-    return (hookLeftCurrent() > PowerDistributionConstants.kHookMotor1MaxCurrent);
+    boolean isOverCurrent = hookLeftCurrent() > PowerDistributionConstants.kHookMotor1MaxCurrent;
+    SmartDashboard.putBoolean("isHookLeftOverCurrent", isOverCurrent);
+    return isOverCurrent;
   }
 
   public boolean isHookRightOverCurrent() {
-    SmartDashboard.putBoolean("isHookRightOverCurrent", isHookRightOverCurrent());
-    return (hookRightCurrent() > PowerDistributionConstants.kHookMotor2MaxCurrent);
+    boolean isOverCurrent = hookRightCurrent() > PowerDistributionConstants.kHookMotor2MaxCurrent;
+    SmartDashboard.putBoolean("isHookRightOverCurrent", isOverCurrent);
+    return isOverCurrent;
   }
 
   public boolean isShooterUpOverCurrent() {
-    SmartDashboard.putBoolean("isShooterUpOverCurren", isShooterUpOverCurrent());
-    return (upShooterCurrent() > PowerDistributionConstants.kShooterUpMotorMaxCurrent);
+    boolean isOverCurrent = upShooterCurrent() > PowerDistributionConstants.kShooterUpMotorMaxCurrent;
+    SmartDashboard.putBoolean("isShooterUpOverCurren", isOverCurrent);
+    return isOverCurrent;
   }
 
   public boolean isShooterDownOverCurrent() {
-    SmartDashboard.putBoolean("isShooterDownOverCurrent", isShooterDownOverCurrent());
-    return (downShooterCurrent() > PowerDistributionConstants.kShooterDownMotorMaxCuurent);
+    boolean isOverCurrent = downShooterCurrent() > PowerDistributionConstants.kShooterDownMotorMaxCuurent;
+    SmartDashboard.putBoolean("isShooterDownOverCurrent", isOverCurrent);
+    return isOverCurrent;
   }
 
   public boolean isTransportOverCurrent() {
-    SmartDashboard.putBoolean("isTransportOverCurrent", isTransportOverCurrent());
-    return (transportCurrent() > PowerDistributionConstants.kTransportMaxCurrent);
+    boolean isOverCurrent = transportCurrent() > PowerDistributionConstants.kTransportMaxCurrent;
+    SmartDashboard.putBoolean("isTransportOverCurrent", isOverCurrent);
+    return isOverCurrent;
 
   }
 
   public boolean isLineMoterOverCurrent() {
-    SmartDashboard.putBoolean("isLineMoterOverCurrent", isLineMoterOverCurrent());
-    return (lineCurrent() > PowerDistributionConstants.kLineMotorMaxCurrent);
+    boolean isOverCurrent = lineCurrent() > PowerDistributionConstants.kLineMotorMaxCurrent;
+    SmartDashboard.putBoolean("isLineMoterOverCurrent", isOverCurrent);
+    return isOverCurrent;
 
   }
 
   public boolean isRotateShooterOverCurrent() {
-    SmartDashboard.putBoolean("isRotateShooterOverCurrent", isRotateShooterOverCurrent());
-    return (rotateShooterCurrent() > PowerDistributionConstants.kRotateShooterMaxCurrent);
+    boolean isOverCurrent = rotateShooterCurrent() > PowerDistributionConstants.kRotateShooterMaxCurrent;
+    SmartDashboard.putBoolean("isRotateShooterOverCurrent", isOverCurrent);
+    return isOverCurrent;
+  }
+
+  public boolean isRotateIntakeOverCurrent() {
+    boolean isOverCurrent = rotateIntakeCurrent() > PowerDistributionConstants.kRotateIntakeMaxCurrent;
+    return isOverCurrent;
   }
 
 }

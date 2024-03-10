@@ -21,7 +21,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private final VictorSPX downMotor;
   private final Encoder upEncoder;
   private final Encoder downEncoder;
-  private final PIDController ratePidController;
+  private final PIDController ratePIDController;
   private final SimpleMotorFeedforward upMotorFeedForwardController;
   private final SimpleMotorFeedforward downMotorFeedForwardController;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
@@ -36,7 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
     upEncoder.setReverseDirection(ShooterConstants.kUpEncoderInverted);
     downEncoder.setReverseDirection(ShooterConstants.kDownEncoderInverted);
 
-    ratePidController = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
+    ratePIDController = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
 
     upMotor.setInverted(ShooterConstants.kUpMotorInverted);
     downMotor.setInverted(ShooterConstants.kDownMotorInverted);
@@ -52,22 +52,22 @@ public class ShooterSubsystem extends SubsystemBase {
     this.powerDistributionSubsystem = powerDistribution;
   }
 
-  public Command speakerShootPID() {
-    Command speakerShootPID = runEnd(() -> this.speakerRate(), () -> this.stopAllMotor());
-    speakerShootPID.setName("speakerShootPID");
-    return speakerShootPID;
+  public Command speakerShootPIDCmd() {
+    Command cmd = runEnd(this::speakerRate, this::stopAllMotor);
+    cmd.setName("speakerShootPIDCmd");
+    return cmd;
   }
 
-  public Command ampShootPID() {
-    Command ampShootPID = runEnd(() -> this.ampRate(), () -> this.stopAllMotor());
-    ampShootPID.setName("ampShootPID");
-    return ampShootPID;
+  public Command ampShootPIDCmd() {
+    Command cmd = runEnd(this::ampRate, this::stopAllMotor);
+    cmd.setName("ampShootPIDCmd");
+    return cmd;
   }
 
-  public Command lowShootPID() {
-    Command lowShootPID = runEnd(() -> this.lowRate(), () -> this.stopAllMotor());
-    lowShootPID.setName("lowShootPID");
-    return lowShootPID;
+  public Command carryShootPIDCmd() {
+    Command cmd = runEnd(this::carryRate, this::stopAllMotor);
+    cmd.setName("carryShootPIDCmd");
+    return cmd;
   }
 
   public void stopAllMotor() {
@@ -80,30 +80,34 @@ public class ShooterSubsystem extends SubsystemBase {
     downEncoder.reset();
   }
 
-  public void speakerRate(){
-    double speakerRate = ShooterConstants.kSpeakerShootRate;
-    setRateControl(speakerRate, speakerRate);
+  public void speakerRate() {
+    double upRate = ShooterConstants.kSpeakerShootRate[0];
+    double downRate = ShooterConstants.kSpeakerShootRate[1];
+    setRateControl(upRate, downRate);
   }
-  
-  public void ampRate(){
-    double ampRate = ShooterConstants.kAmpShootRate;
-    setRateControl(ampRate, ampRate);
+
+  public void ampRate() {
+    double upRate = ShooterConstants.kAmpShootRate[0];
+    double downRate = ShooterConstants.kAmpShootRate[1];
+    setRateControl(upRate, downRate);
   }
-  
-  public void lowRate(){
-    double lowRate = ShooterConstants.kLowShooterRate;
-    setRateControl(lowRate, lowRate);
+
+  public void carryRate() {
+    double upRate = ShooterConstants.kCarryShooterRate[0];
+    double downRate = ShooterConstants.kCarryShooterRate[1];
+
+    setRateControl(upRate, downRate);
   }
 
   public void setRateControl(double upRate, double downRate) {
     final double upMotorVoltage = upMotorFeedForwardController.calculate(upRate)
-        + ratePidController.calculate(getUpEncoderRate(), upRate);
+        + ratePIDController.calculate(getUpEncoderRate(), upRate);
     final double downMotorVoltage = downMotorFeedForwardController.calculate(downRate)
-        + ratePidController.calculate(getDownEncoderRate(), downRate);
+        + ratePIDController.calculate(getDownEncoderRate(), downRate);
     setUpMotorVoltage(upMotorVoltage);
     setDownMotorVoltage(downMotorVoltage);
-    SmartDashboard.putNumber("upMotorVoltage", upMotorVoltage);
-    SmartDashboard.putNumber("downMotorVoltage", downMotorVoltage);
+    // SmartDashboard.putNumber("upMotorVoltage", upMotorVoltage);
+    // SmartDashboard.putNumber("downMotorVoltage", downMotorVoltage);
   }
 
   public void stopUpMotor() {
@@ -154,9 +158,26 @@ public class ShooterSubsystem extends SubsystemBase {
     downMotor.set(VictorSPXControlMode.PercentOutput, power);
   }
 
-  public Boolean isEnoughRate() {
-    return getUpEncoderRate() >= ShooterConstants.kDeadbandRate
-        && getDownEncoderRate() >= ShooterConstants.kDeadbandRate;
+  /**
+   * @param mode set shooter rate mode
+   * @param 0    speaker mode
+   * @param 1    amp mode
+   * @param 2    carry mode
+   */
+  public boolean isEnoughRate(int mode) {
+    switch (mode) {
+      case 0:
+        return (getUpEncoderRate() >= ShooterConstants.kSpeakerShootRate[0]
+            && getDownEncoderRate() >= ShooterConstants.kSpeakerShootRate[1]);
+      case 1:
+        return (getUpEncoderRate() >= ShooterConstants.kAmpShootRate[0]
+            && getDownEncoderRate() >= ShooterConstants.kAmpShootRate[1]);
+      case 2:
+        return (getUpEncoderRate() >= ShooterConstants.kCarryShooterRate[0]
+            && getDownEncoderRate() >= ShooterConstants.kCarryShooterRate[1]);
+      default:
+        return false;
+    }
   }
 
   @Override
@@ -172,9 +193,9 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("ShooterSubsystem");
-    builder.addDoubleProperty("upRate", () -> getUpEncoderRate(), null);
-    builder.addDoubleProperty("downRate", () -> getDownEncoderRate(), null);
-    builder.addDoubleProperty("upPower", () -> upMotor.getMotorOutputPercent(), null);
-    builder.addDoubleProperty("downPower", () -> downMotor.getMotorOutputPercent(), null);
+    builder.addDoubleProperty("upRate", this::getUpEncoderRate, null);
+    builder.addDoubleProperty("downRate", this::getDownEncoderRate, null);
+    builder.addDoubleProperty("upVoltage", upMotor::getMotorOutputVoltage, null);
+    builder.addDoubleProperty("downVoltage", downMotor::getMotorOutputVoltage, null);
   }
 }

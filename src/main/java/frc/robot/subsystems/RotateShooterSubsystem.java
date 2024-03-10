@@ -5,18 +5,15 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-// import com.revrobotics.RelativeEncoder;
-// import com.revrobotics.SparkMaxAbsoluteEncoder;
-// import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RotateShooterConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.visionProcessing.TagTracking;
 
 public class RotateShooterSubsystem extends SubsystemBase {
@@ -36,18 +33,18 @@ public class RotateShooterSubsystem extends SubsystemBase {
     rotateMotor = new CANSparkMax(RotateShooterConstants.kRotateShooterChannel, MotorType.kBrushless);
 
     rotateEncoder = new DutyCycleEncoder(RotateShooterConstants.kEncoderChannel);
-    angleDegreeOffset = RotateShooterConstants.kRiseAngleOffset;
+    angleDegreeOffset = RotateShooterConstants.kRotateAngleOffset;
 
     rotatePID = new PIDController(RotateShooterConstants.kP, RotateShooterConstants.kI, RotateShooterConstants.kD);
 
     rotateMotor.setInverted(RotateShooterConstants.kRotateShooterInverted);
     this.powerDistributionSubsystem = powerDistributionSubsystem;
     this.tagTrackingLimelight = aprilTagTracking;
-    setSetpoint(angleDegreeOffset);
+    setSetpoint(RotateShooterConstants.kInitDegree);
     rotatePID.enableContinuousInput(-180.0, 180.0);
   }
 
-  public void manualControl(double RotateSpeed) {
+  public void setManualControl(double RotateSpeed) {
     setMotor(RotateSpeed);
     rotatePID.setSetpoint(getAngleDegree());
   }
@@ -57,99 +54,48 @@ public class RotateShooterSubsystem extends SubsystemBase {
   }
 
   public void setSetpoint(double setpoint) {
-    final double currentSetpoint = getSetpoint();
+    final double currentSetpoint = getSetpoint() + rotateDegreeError;
     if (hasExceedPhysicalLimit(currentSetpoint) != 0) {
       return;
     }
     if (hasExceedPhysicalLimit(setpoint) == -1) {
-      setpoint = RotateShooterConstants.kRiseAngleMin;
+      setpoint = RotateShooterConstants.kRotateAngleMin;
     } else if (hasExceedPhysicalLimit(setpoint) == 1) {
-      setpoint = RotateShooterConstants.kRiseAngleMax;
+      setpoint = RotateShooterConstants.kRotateAngleMax;
     }
     rotatePID.setSetpoint(setpoint);
   }
 
-  public void pidControl() {
+  public void setPIDControl() {
     double rotateVoltage = rotatePID.calculate(getAngleDegree());
     double modifiedRotateVoltage = rotateVoltage;
-    if (Math.abs(modifiedRotateVoltage) > RotateShooterConstants.kRiseVoltLimit) {
-      modifiedRotateVoltage = RotateShooterConstants.kRiseVoltLimit * (rotateVoltage > 0 ? 1 : -1);
+    if (Math.abs(modifiedRotateVoltage) > RotateShooterConstants.kRotateVoltLimit) {
+      modifiedRotateVoltage = RotateShooterConstants.kRotateVoltLimit * (rotateVoltage > 0 ? 1 : -1);
     }
-    setMotor(rotateVoltage);
-    SmartDashboard.putNumber("rise_volt", modifiedRotateVoltage);
-  }
-
-  public void fineTurnUpShooter() {
-    rotateEncoder.setPositionOffset(angleDegreeOffset);
-  }
-
-  public void fineTurnDownShooter() {
-    rotateEncoder.setPositionOffset(-angleDegreeOffset);
-  }
-
-  public double getAprilTagDegree(double currentSetpoint) {
-    if (tagTrackingLimelight.getTv() == 1) {
-      double horizontalDistance = getShooterToTagHoriDis();
-      double degree = Math.toDegrees(Math.atan(
-          (1.6 + Math.sin(Math.toRadians(getAngleDegree()))
-              / horizontalDistance)));
-      return degree;
-    } else {
-      return currentSetpoint;
-    }
-  }
-
-  public double getAprilTagDegree2(double currentSetpoint) {
-    if (tagTrackingLimelight.getTv() == 1) {
-      double horizontalDistance = getShooterToTagHoriDis();
-      // constants shooter hegiht
-      double degree = Math.toDegrees(Math.atan(
-          (1.6 + Math.sin(Math.toRadians(getAngleDegree()))
-              / horizontalDistance)));
-      return degree;
-    } else {
-      return currentSetpoint;
-    }
+    setMotor(modifiedRotateVoltage);
   }
 
   public double getAngleDegree() {
     double degree = (RotateShooterConstants.kEncoderInverted ? -1.0 : 1.0)
-        * ((rotateEncoder.getAbsolutePosition() * 360.0) - 251.0);
-    SmartDashboard.putNumber("rotateShooterDegree", degree);
+        * ((rotateEncoder.getAbsolutePosition() * 360.0) - 189.0);
+    // SmartDashboard.putNumber("rotateShooterDegree", degree);
     return degree;
   }
 
-  public double getShooterToTagHoriDis() {
-    // shooter to cam z dis, remember to move this to constant later on
-    double offset = VisionConstants.CamToShooterOffset;
-    double z_dis = offset + tagTrackingLimelight.getCT()[2];
-    double x_dis = tagTrackingLimelight.getCT()[0];
-    double horDis = Math.sqrt(Math.pow(x_dis, 2) + Math.pow(z_dis, 2));
-    return horDis;
+  public double getAimDegree(double currentDegree) {
+    if (tagTrackingLimelight.getTv() == 1 && tagTrackingLimelight.getTID() != 3.0
+        && tagTrackingLimelight.getTID() != 8.0) {
+      double speakerToShooterHeight = RotateShooterConstants.kSpeakerHeight - RotateShooterConstants.kShooterHeight;
+      double degree = Math.toDegrees(speakerToShooterHeight / tagTrackingLimelight.getHorizontalDistanceBy());
+      return degree;
+    }
+    return currentDegree;
   }
 
-  public double getGoalHeight() {
-    double tagHeight = tagTrackingLimelight.getTagPose3d().getY();
-    double goalTagOffset = VisionConstants.SpeakerOpeningToTagHeight; // 1 should be a constant of speaker opening to tag in metres.
-    double offset = tagTrackingLimelight.getCT()[1] - VisionConstants.CamShooterHeight;
-    double height = tagHeight + goalTagOffset - offset;
-    return height;
-  }
-
-  public double getDistance() {
-    double dis = Math.sqrt(Math.pow(getGoalHeight(), 2) + Math.pow(getShooterToTagHoriDis(), 2));
-    return dis;
-  }
-
-  /**
-   * Get the angle between the shooter anthor and the speaker opening. Can be used
-   * for rotate shooter's setpoint
-   * 
-   * @return angle (degree)
-   */
-  public double getDesiredAngle() {
-    double angle = Math.toDegrees(Math.acos(getShooterToTagHoriDis() / getDistance()));
-    return angle;
+  public Command setAutoAim() {
+    Command autoAimCmd = Commands.runOnce(() -> setSetpoint(getAimDegree(getSetpoint())), this);
+    autoAimCmd.setName("autoAimCommand");
+    return autoAimCmd;
   }
 
   public Command addErrorCommand(double error) {
@@ -157,7 +103,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
   }
 
   public void addError(double error) {
-    rotateDegreeError = error * RotateShooterConstants.kRiseDegreeErrorPoint;
+    rotateDegreeError = error * RotateShooterConstants.kRotateDegreeErrorPoint;
   }
 
   public void resetEncoder() {
@@ -181,12 +127,21 @@ public class RotateShooterSubsystem extends SubsystemBase {
   }
 
   private int hasExceedPhysicalLimit(double angle) {
-    return (angle < RotateShooterConstants.kRiseAngleMin ? -1 : (angle > RotateShooterConstants.kRiseAngleMax ? 1 : 0));
+    return (angle < RotateShooterConstants.kRotateAngleMin ? -1
+        : (angle > RotateShooterConstants.kRotateAngleMax ? 1 : 0));
   }
 
   @Override
   public void periodic() {
+    setPIDControl();
     SmartDashboard.putData("rotate_PID", rotatePID);
-    SmartDashboard.putNumber("rotate_motor", rotateMotor.getOutputCurrent());
+    // SmartDashboard.putNumber("rotate_motor", rotateMotor.getOutputCurrent());
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("RotateShooterSubsystem");
+    builder.addDoubleProperty("rotateVoltage", () -> rotateMotor.get() * rotateMotor.getBusVoltage(), null);
+    builder.addDoubleProperty("roateAngelDegree", () -> this.getAimDegree(getAngleDegree()), null);
   }
 }

@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import frc.robot.commands.transportCmds.TransportIntakeCmd;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.TransportSubsystem;
 
@@ -15,8 +16,7 @@ import frc.robot.subsystems.TransportSubsystem;
 public class IntakeWithTransportCmd extends ParallelDeadlineGroup {
   /** Creates a new IntakeAndTransportCmd. */
   public IntakeWithTransportCmd(TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem) {
-    super(
-      Commands.run(()->transportSubsystem.transportIntakeCmd()));
-    addCommands(Commands.run(()->intakeSubsystem.setIntakingCmd()));
+    super(new TransportIntakeCmd(transportSubsystem));
+    addCommands(Commands.run(() -> intakeSubsystem.setIntakingCmd()));
   }
 }
