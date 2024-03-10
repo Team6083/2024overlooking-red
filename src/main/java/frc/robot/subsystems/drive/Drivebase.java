@@ -382,6 +382,10 @@ double x_dis = aprilTagTracking.getBT()[2];
     drive(xSpeed, ySpeed, rot, true);
   }
 
+  public void driveToStage(){
+    
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

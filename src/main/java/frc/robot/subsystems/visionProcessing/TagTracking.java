@@ -1,6 +1,8 @@
 package frc.robot.subsystems.visionProcessing;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -148,14 +150,6 @@ public class TagTracking {
         return ct;
     }
 
-    /**
-     * Set priority tag iD
-     * 
-     * @param priorityID the priority tag ID (int)
-     */
-    public void setPriorityInViewTag(int priorityID) {
-        table.getEntry("priorityid").setNumber(priorityID);
-    }
 
     /**
      * Returns bot to tag's direct distance.
@@ -172,8 +166,8 @@ public class TagTracking {
         return distance;
     }
 
-    public double getHorizontalDistanceBy() {
-        double horDis = Math.sqrt((Math.pow(getBT()[0], 2.0) + Math.pow(getBT()[2], 2.0)));
+    public double getHorizontalDistanceByCT() {
+        double horDis = Math.sqrt((Math.pow(getCT()[2]+TagTrackingConstants.camToShooterDistance, 2.0) + Math.pow(getCT()[0], 2.0)));
         return horDis;
     }
 
@@ -234,12 +228,21 @@ public class TagTracking {
         }
     }
 
+    /**
+     * Set priority tag iD
+     * 
+     * @param priorityID the priority tag ID (int)
+     */
+    public void setPriorityInViewTag(int priorityID) {
+        table.getEntry("priorityid").setNumber(priorityID);
+    }
+
     public void putDashboard() {
         SmartDashboard.putNumber("LimelightX", getTx());
         SmartDashboard.putNumber("LimelightY", getTy());
         SmartDashboard.putNumber("LimelightID", getTID());
         SmartDashboard.putNumber("latency", getTl());
-        SmartDashboard.putNumber("horDistance", getHorizontalDistanceBy());
+        SmartDashboard.putNumber("horDistance", getHorizontalDistanceByCT());
         SmartDashboard.putNumber("RealDistance", getDistance());
     }
 

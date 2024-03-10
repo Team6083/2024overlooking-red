@@ -86,7 +86,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
     if (tagTrackingLimelight.getTv() == 1 && tagTrackingLimelight.getTID() != 3.0
         && tagTrackingLimelight.getTID() != 8.0) {
       double speakerToShooterHeight = RotateShooterConstants.kSpeakerHeight - RotateShooterConstants.kShooterHeight;
-      double degree = Math.toDegrees(speakerToShooterHeight / tagTrackingLimelight.getHorizontalDistanceBy());
+      double degree = Math.toDegrees(Math.atan(speakerToShooterHeight / tagTrackingLimelight.getHorizontalDistanceByCT()));
       return degree;
     }
     return currentDegree;
