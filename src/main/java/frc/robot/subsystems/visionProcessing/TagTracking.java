@@ -150,14 +150,6 @@ public class TagTracking {
         return ct;
     }
 
-    /**
-     * Set priority tag iD
-     * 
-     * @param priorityID the priority tag ID (int)
-     */
-    public void setPriorityInViewTag(int priorityID) {
-        table.getEntry("priorityid").setNumber(priorityID);
-    }
 
     /**
      * Returns bot to tag's direct distance.
