@@ -388,15 +388,15 @@ public class Drivebase extends SubsystemBase {
     switch (choice) {
       case "middle":
         Rotation2d rot1 = new Rotation2d(Math.toRadians(180));
-        offset = new Transform2d(1, 0, rot1);
+        offset = new Transform2d(0.42, 0, rot1);
         break;
       case "left":
         Rotation2d rot2 = new Rotation2d(Math.toRadians(180));
-        offset = new Transform2d(1, 0.5, rot2);
+        offset = new Transform2d(0.42, 0.7, rot2);
         break;
       case "right":
         Rotation2d rot3 = new Rotation2d(Math.toRadians(180));
-        offset = new Transform2d(1, -0.5, rot3);
+        offset = new Transform2d(0.42, -0.7, rot3);
         break;
     }
     Pose2d tagPose = aprilTagTracking.getDesiredTagPose2d(aprilTagTracking.getLastID());
