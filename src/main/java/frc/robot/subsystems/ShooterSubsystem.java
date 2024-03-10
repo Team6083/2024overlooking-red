@@ -80,19 +80,19 @@ public class ShooterSubsystem extends SubsystemBase {
     downEncoder.reset();
   }
 
-  public void speakerRate(){
+  public void speakerRate() {
     double upRate = ShooterConstants.kSpeakerShootRate[0];
     double downRate = ShooterConstants.kSpeakerShootRate[1];
     setRateControl(upRate, downRate);
   }
-  
-  public void ampRate(){
+
+  public void ampRate() {
     double upRate = ShooterConstants.kAmpShootRate[0];
     double downRate = ShooterConstants.kAmpShootRate[1];
     setRateControl(upRate, downRate);
   }
-  
-  public void lowRate(){
+
+  public void lowRate() {
     double upRate = ShooterConstants.kLowShooterRate[0];
     double downRate = ShooterConstants.kLowShooterRate[1];
 
@@ -158,18 +158,23 @@ public class ShooterSubsystem extends SubsystemBase {
     downMotor.set(VictorSPXControlMode.PercentOutput, power);
   }
 
-  //mode=1 speakMode mode=2 transMode mode=3 ampMode;
+  /**
+   * @param mode set shooter rate mode
+   * @param 0    speaker mode
+   * @param 1    amp mode
+   * @param 2    transport mode
+   */
   public boolean isEnoughRate(int mode) {
     switch (mode) {
+      case 0:
+        return (getUpEncoderRate() >= ShooterConstants.kSpeakerShootRate[0]
+            && getDownEncoderRate() >= ShooterConstants.kSpeakerShootRate[1]);
       case 1:
-        return getUpEncoderRate() >= ShooterConstants.kSpeakerShootRate[0]
-        && getDownEncoderRate() >= ShooterConstants.kSpeakerShootRate[1];
+        return (getUpEncoderRate() >= ShooterConstants.kAmpShootRate[0]
+            && getDownEncoderRate() >= ShooterConstants.kAmpShootRate[1]);
       case 2:
-        return getUpEncoderRate() >= ShooterConstants.kLowShooterRate[0]
-        && getDownEncoderRate() >= ShooterConstants.kLowShooterRate[1];
-      case 3:
-        return getUpEncoderRate() >= ShooterConstants.kAmpShootRate[0]
-        && getDownEncoderRate() >= ShooterConstants.kAmpShootRate[1];
+        return (getUpEncoderRate() >= ShooterConstants.kLowShooterRate[0]
+            && getDownEncoderRate() >= ShooterConstants.kLowShooterRate[1]);
       default:
         return false;
     }
@@ -188,9 +193,9 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("ShooterSubsystem");
-    builder.addDoubleProperty("upRate", () -> getUpEncoderRate(), null);
-    builder.addDoubleProperty("downRate", () -> getDownEncoderRate(), null);
-    builder.addDoubleProperty("upPower", () -> upMotor.getMotorOutputPercent(), null);
-    builder.addDoubleProperty("downPower", () -> downMotor.getMotorOutputPercent(), null);
+    builder.addDoubleProperty("upRate", this::getUpEncoderRate, null);
+    builder.addDoubleProperty("downRate", this::getDownEncoderRate, null);
+    builder.addDoubleProperty("upPower", upMotor::getMotorOutputPercent, null);
+    builder.addDoubleProperty("downPower", downMotor::getMotorOutputPercent, null);
   }
 }

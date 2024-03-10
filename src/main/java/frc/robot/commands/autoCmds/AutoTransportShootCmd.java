@@ -20,7 +20,7 @@ public class AutoTransportShootCmd extends ParallelDeadlineGroup {
   public AutoTransportShootCmd(Drivebase drivebase, ShooterSubsystem shooterSubsystem,
       TransportSubsystem transportSubsystem) {
     super(new WaitCommand(1));
-    addCommands(new TransportShootCmd(transportSubsystem, shooterSubsystem.isEnoughRate(1))
-        .onlyWhile(() -> shooterSubsystem.isEnoughRate(1)));
+    addCommands(new TransportShootCmd(transportSubsystem, shooterSubsystem.isEnoughRate(0))
+        .onlyWhile(() -> shooterSubsystem.isEnoughRate(0)));
   }
 }
