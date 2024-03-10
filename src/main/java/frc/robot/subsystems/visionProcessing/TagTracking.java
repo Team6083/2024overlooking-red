@@ -1,8 +1,6 @@
 package frc.robot.subsystems.visionProcessing;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -19,10 +17,8 @@ public class TagTracking {
     private final AprilTagFieldLayout m_layout;
 
     private double v;
-    private double a;
     private double x;
     private double y;
-    private double area;
     private double ID;
     private double latency;
 
