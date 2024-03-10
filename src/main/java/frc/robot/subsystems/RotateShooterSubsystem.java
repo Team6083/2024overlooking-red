@@ -92,6 +92,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
     return currentDegree;
   }
 
+
   public Command setAutoAim() {
     Command cmd = Commands.runOnce(
         () -> setSetpoint(getAimDegree(getSetpoint())), this);
