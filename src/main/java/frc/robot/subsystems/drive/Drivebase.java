@@ -372,6 +372,10 @@ public class Drivebase extends SubsystemBase {
     drive(xSpeed, ySpeed, rot, true);
   }
 
+  public void driveToStage(){
+    
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

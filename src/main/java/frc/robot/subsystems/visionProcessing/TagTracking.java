@@ -1,6 +1,8 @@
 package frc.robot.subsystems.visionProcessing;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -284,6 +286,14 @@ public class TagTracking extends SubsystemBase {
         table.getEntry("priorityid").setNumber(priorityID);
     }
 
+    public List<Double> tagIDs(){
+        List<Double> ids = new ArrayList<Double>();
+        for(double ID :ids){
+            id = getTID();
+        }
+        return ids;
+    }
+    
     public void putDashboard() {
         SmartDashboard.putNumber("LimelightX", getTx());
         SmartDashboard.putNumber("LimelightY", getTy());
