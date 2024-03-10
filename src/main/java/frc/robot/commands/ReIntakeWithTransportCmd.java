@@ -17,6 +17,6 @@ public class ReIntakeWithTransportCmd extends ParallelCommandGroup {
   public ReIntakeWithTransportCmd(TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem) {
     addCommands(
         Commands.run(() -> transportSubsystem.reTransportIntakeCmd()),
-        Commands.run(()->intakeSubsystem.setReIntakingCmd()));
+        Commands.run(()->intakeSubsystem.reIntakeCmd()));
   }
 }

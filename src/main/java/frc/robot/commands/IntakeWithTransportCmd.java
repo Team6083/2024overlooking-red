@@ -17,6 +17,6 @@ public class IntakeWithTransportCmd extends ParallelDeadlineGroup {
   /** Creates a new IntakeAndTransportCmd. */
   public IntakeWithTransportCmd(TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem) {
     super(new TransportIntakeCmd(transportSubsystem));
-    addCommands(Commands.run(() -> intakeSubsystem.setIntakingCmd()));
+    addCommands(Commands.run(() -> intakeSubsystem.intakeCmd()));
   }
 }

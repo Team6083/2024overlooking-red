@@ -78,19 +78,22 @@ public class RotateIntakeSubsystem extends SubsystemBase {
   }
 
   public Command upIntakeCmd() {
-    Command upCmd = Commands.runOnce(() -> upIntake(), this);
+    Command upCmd = Commands.runOnce(
+      this::upIntake, this);
     upCmd.setName("upIntakeCmd");
     return upCmd;
   }
 
   public Command downIntakeCmd() {
-    Command downCmd = Commands.runOnce(() -> downIntake(), this);
+    Command downCmd = Commands.runOnce(
+        this::downIntake, this);
     downCmd.setName("downIntakeCmd");
     return downCmd;
   }
 
   public Command initIntakeCmd() {
-    Command initCmd = Commands.runOnce(() -> initIntake(), this);
+    Command initCmd = Commands.runOnce(
+      this::initIntake, this);
     initCmd.setName("initIntakeCmd");
     return initCmd;
   }
@@ -104,5 +107,6 @@ public class RotateIntakeSubsystem extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("rotatIntakeDegree", this::getAngleDegree, null);
+    pid.initSendable(builder);
   }
 }

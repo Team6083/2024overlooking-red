@@ -6,13 +6,13 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HookConstants;
@@ -20,8 +20,8 @@ import frc.robot.Constants.HookConstants;
 public class HookSubsystem extends SubsystemBase {
   /** Creates a new HookSubsystem. */
   private final PIDController linePID;
-  private final PIDController hookLeftMotorPID;
-  private final PIDController hookRightMotorPID;
+  private final PIDController hookLeftPID;
+  private final PIDController hookRightPID;
   private final CANSparkMax lineMotor;
   public final VictorSPX hookLeftMotor;
   public final VictorSPX hookRightMotor;
@@ -37,8 +37,8 @@ public class HookSubsystem extends SubsystemBase {
     hookLeftMotor = new VictorSPX(HookConstants.kHookLeftMotorChannel);
     hookRightMotor = new VictorSPX(HookConstants.kHookRightMotorChannel);
     linePID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
-    hookLeftMotorPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
-    hookRightMotorPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
+    hookLeftPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
+    hookRightPID = new PIDController(HookConstants.kP, HookConstants.kI, HookConstants.kD);
     lineEncoder = lineMotor.getEncoder();
     hookEncoder = new DutyCycleEncoder(HookConstants.kHookLeftEncoderChannel);
     lineEncoder.setPositionConversionFactor(HookConstants.kHookPositionConversionfactor);
@@ -48,24 +48,36 @@ public class HookSubsystem extends SubsystemBase {
     this.powerDistributionSubsystem = powerDistributionSubsystem;
   }
 
-  public Command runHookDownLeftManual() {
-    return this.startEnd(() -> this.manualControlLeftHookMotor(-HookConstants.kManualControlLeftHookMotorPower),
-        () -> this.stopHookLeftMotor());
+  public Command hookDownLeftManualCmd() {
+    Command cmd = this.runEnd(
+        () -> this.manualControlLeftHookMotor(-HookConstants.kManualControlLeftHookMotorPower),
+        this::stopHookLeftMotor);
+    cmd.setName("hookDownLeftManualCmd");
+    return cmd;
   }
 
-  public Command runHookDownRightManual() {
-    return this.startEnd(() -> this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),
-        () -> this.stopHookRightMotor());
+  public Command hookDownRightManualCmd() {
+    Command cmd = this.startEnd(
+        () -> this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),
+        this::stopHookRightMotor);
+    cmd.setName("hookDownRightManualCmd");
+    return cmd;
   }
 
-  public Command runHookUpLeftManual() {
-    return this.startEnd(() -> this.manualControlLeftHookMotor(-HookConstants.kManualControlRightHookMotorPower),
-        () -> this.stopHookLeftMotor());
+  public Command hookUpLeftManualCmd() {
+    Command cmd = this.startEnd(
+        () -> this.manualControlLeftHookMotor(-HookConstants.kManualControlRightHookMotorPower),
+        this::stopHookLeftMotor);
+    cmd.setName("hookUpLeftManualCmd");
+    return cmd;
   }
 
-  public Command runHookupRightManual() {
-    return this.startEnd(() -> this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),
-        () -> this.stopHookRightMotor());
+  public Command hookupRightManualCmd() {
+    Command cmd = this.startEnd(
+        () -> this.manualControlRightHookMotor(-HookConstants.kManualControlRightHookMotorPower),
+        this::stopHookRightMotor);
+    cmd.setName("hookupRightManualCmd");
+    return cmd;
   }
 
   public void manualControlLine(double hookControlSpeed) {
@@ -75,12 +87,12 @@ public class HookSubsystem extends SubsystemBase {
 
   public void manualControlLeftHookMotor(double speed) {
     setLeftHookMotorPower(HookConstants.kHookMotorLeftVoltage);
-    hookLeftMotorPID.setSetpoint(getLeftMotorPosition());
+    hookLeftPID.setSetpoint(getLeftMotorPosition());
   }
 
   public void manualControlRightHookMotor(double speed) {
     setRightHookMotorPower(HookConstants.kHookMotorRightVoltage);
-    hookRightMotorPID.setSetpoint(getRightMotorPosition());
+    hookRightPID.setSetpoint(getRightMotorPosition());
   }
 
   public double getLineSetpoint() {
@@ -88,11 +100,11 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public double getLeftHookSetpoint() {
-    return hookLeftMotorPID.getSetpoint();
+    return hookLeftPID.getSetpoint();
   }
 
   public double getRightHookSetpoint() {
-    return hookRightMotorPID.getSetpoint();
+    return hookRightPID.getSetpoint();
   }
 
   public void setLineSetpoint(double setpoint) {
@@ -114,7 +126,7 @@ public class HookSubsystem extends SubsystemBase {
     if (isExceedPhysicalLine(currentSetpoint) != 0) {
       return;
     }
-    hookLeftMotorPID.setSetpoint(currentSetpoint);
+    hookLeftPID.setSetpoint(currentSetpoint);
   }
 
   public void setRightHookMotorSetpoint(double RightMotorSetpoint) {
@@ -122,7 +134,7 @@ public class HookSubsystem extends SubsystemBase {
     if (isExceedPhysicalLine(currentSetpoint) != 0) {
       return;
     }
-    hookRightMotorPID.setSetpoint(currentSetpoint);
+    hookRightPID.setSetpoint(currentSetpoint);
   }
 
   public void linePIDControl() {
@@ -136,7 +148,7 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void hookLeftMotorPIDControl() {
-    double hookMotorLeftVoltage = hookLeftMotorPID.calculate(lineEncoder.getPosition(), getLeftHookSetpoint());
+    double hookMotorLeftVoltage = hookLeftPID.calculate(lineEncoder.getPosition(), getLeftHookSetpoint());
     if (Math.abs(hookMotorLeftVoltage) > HookConstants.kHookMotorLeftVoltage) {
       hookMotorLeftVoltage = HookConstants.kHookMotorLeftVoltage * (hookMotorLeftVoltage > 0 ? 1 : -1);
     }
@@ -146,7 +158,7 @@ public class HookSubsystem extends SubsystemBase {
   }
 
   public void hookRightMotorPIDControl() {
-    double hookMotorRightVoltage = hookLeftMotorPID.calculate(lineEncoder.getPosition(), getLeftHookSetpoint());
+    double hookMotorRightVoltage = hookLeftPID.calculate(lineEncoder.getPosition(), getLeftHookSetpoint());
     if (Math.abs(hookMotorRightVoltage) > HookConstants.kHookMotorRightVoltage) {
       hookMotorRightVoltage = HookConstants.kHookMotorRightVoltage * (hookMotorRightVoltage > 0 ? 1 : -1);
     }
@@ -249,15 +261,14 @@ public class HookSubsystem extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("HookSubsystem");
-    builder.addDoubleProperty("linepower", () -> lineMotor.get() * lineMotor.getBusVoltage(), null);
-    builder.addDoubleProperty("hookmotor1power", () -> hookLeftMotor.getMotorOutputVoltage(), null);
-    builder.addDoubleProperty("hookmotor2power", () -> hookRightMotor.getMotorOutputVoltage(), null);
-    builder.addDoubleProperty("LinePosition", () -> lineEncoder.getPosition(), null);
-    builder.addDoubleProperty("LeftPosition", () -> hookEncoder.get(), null);
-    builder.addDoubleProperty("RightPosition", () -> hookEncoder.get(), null);
+    builder.setSmartDashboardType("hookSubsystem");
+    builder.addDoubleProperty("lineVoltage", () -> lineMotor.get() * lineMotor.getBusVoltage(), null);
+    builder.addDoubleProperty("hookLeftMotorVoltage", hookLeftMotor::getMotorOutputVoltage, null);
+    builder.addDoubleProperty("hookRightMotorVoltage", hookRightMotor::getMotorOutputVoltage, null);
+    builder.addDoubleProperty("linePosition", lineEncoder::getPosition, null);
+    builder.addDoubleProperty("hookAbsolutePosition", hookEncoder::getAbsolutePosition, null);
     linePID.initSendable(builder);
-    hookLeftMotorPID.initSendable(builder);
-    hookRightMotorPID.initSendable(builder);
+    hookLeftPID.initSendable(builder);
+    hookRightPID.initSendable(builder);
   }
 }
