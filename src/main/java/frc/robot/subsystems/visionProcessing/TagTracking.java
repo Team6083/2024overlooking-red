@@ -28,6 +28,7 @@ public class TagTracking {
 
     private double[] bt; // botpose_targetspace
     private double[] ct; // camerapose_targetspace
+    public double[] ids;
 
     private double distance;
 
@@ -41,6 +42,7 @@ public class TagTracking {
         } catch (IOException err) {
             throw new RuntimeException();
         }
+        ids = new double[3];
     }
 
     /**
@@ -228,15 +230,14 @@ public class TagTracking {
         }
     }
 
-    public List<Double> getIDs() {
-        List<Double> ids = new ArrayList<>();
-        double id = getTv() == 1 ? getTID() : ids.get(1);
-        ids.add(0, id);
-        return ids;
-    }
-
-    public double getLastID() {
-        return getIDs().get(0);
+    public Pose2d getDesiredTagPose2d(double index) {
+        if (getTv() == 1) {
+            Optional<Pose3d> tag_Pose3d = m_layout.getTagPose((int) index);
+            Pose2d tagPose2d = tag_Pose3d.isPresent() ? tag_Pose3d.get().toPose2d() : new Pose2d();
+            return tagPose2d;
+        } else {
+            return new Pose2d();
+        }
     }
 
     /**
@@ -246,6 +247,22 @@ public class TagTracking {
      */
     public void setPriorityInViewTag(int priorityID) {
         table.getEntry("priorityid").setNumber(priorityID);
+    }
+
+    public double[] getIDs() {
+        int i = 0;
+        while (i < 3) {
+            if (i == 2 && ids[i - 1] == -1) {
+                break;
+            }
+            ids[i] = getTID();
+            i++;
+        }
+        return ids;
+    }
+
+    public double getLastID() {
+        return getIDs()[2];
     }
 
     public void putDashboard() {

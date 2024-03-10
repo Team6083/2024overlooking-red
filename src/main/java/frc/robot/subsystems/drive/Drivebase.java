@@ -226,7 +226,7 @@ public class Drivebase extends SubsystemBase {
    *                      using the wpi function to set the speed of the swerve
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-if (noteTrackingCondition) {
+    if (noteTrackingCondition) {
       rot = facingNoteRot(rot);
     }
     if (tagTrackingCondition) {
@@ -323,9 +323,9 @@ if (noteTrackingCondition) {
     double targetID = aprilTagTracking.getTID();
     if (hasTarget == 1 && targetID != 3.0 && targetID != 8.0) {
       double rot = -facingTagPID.calculate(offset, 0);
-    return rot;
-  }
-return currentRot;
+      return rot;
+    }
+    return currentRot;
   }
 
   /**
@@ -336,15 +336,15 @@ return currentRot;
   public double[] followingTag() {
     double offset = aprilTagTracking.getTx();
     double hasTarget = aprilTagTracking.getTv();
-double[] speed = new double[3];
+    double[] speed = new double[3];
     double xSpeed = 0;
     double ySpeed = 0;
     double rot = 0;
-double x_dis = aprilTagTracking.getBT()[2];
+    double x_dis = aprilTagTracking.getBT()[2];
     if (hasTarget == 1) {
       rot = facingTagPID.calculate(offset, 0);
-          xSpeed = -followingTagPID.calculate(x_dis, 0.5);
-      }
+      xSpeed = -followingTagPID.calculate(x_dis, 0.5);
+    }
     speed[0] = xSpeed;
     speed[1] = ySpeed;
     speed[2] = rot;
@@ -382,9 +382,38 @@ double x_dis = aprilTagTracking.getBT()[2];
     drive(xSpeed, ySpeed, rot, true);
   }
 
-  public void driveToStage(){
-    Pose2d tagPose = aprilTagTracking.getTagPose2d();
-    
+  // choice: medium, left, right
+  public void driveToStage(String choice) {
+    Transform2d offset = new Transform2d();
+    switch (choice) {
+      case "middle":
+        Rotation2d rot1 = new Rotation2d(Math.toRadians(180));
+        offset = new Transform2d(0.42, 0, rot1);
+        break;
+      case "left":
+        Rotation2d rot2 = new Rotation2d(Math.toRadians(180));
+        offset = new Transform2d(0.42, 0.7, rot2);
+        break;
+      case "right":
+        Rotation2d rot3 = new Rotation2d(Math.toRadians(180));
+        offset = new Transform2d(0.42, -0.7, rot3);
+        break;
+    }
+    Pose2d tagPose = aprilTagTracking.getDesiredTagPose2d(aprilTagTracking.getLastID());
+    Pose2d goalPose = tagPose.plus(offset);
+    driveToSpecificPose2d(goalPose);
+  }
+
+  public Command driveToStageMiddleCmd(){
+    return Commands.runOnce(()-> driveToStage("middle"));
+  }
+
+  public Command driveToStageRightCmd(){
+    return Commands.runOnce(()->driveToStage("right"));
+  }
+  
+  public Command driveToStageLeftCmd(){
+    return Commands.runOnce(()->driveToStage("left"));
   }
 
   @Override
@@ -408,7 +437,7 @@ double x_dis = aprilTagTracking.getBT()[2];
     builder.addDoubleProperty("GyroResetCmd", null, null);
     builder.addDoubleProperty("PoseResetCmd", null, null);
     aprilTagTracking.putDashboard();
-    }
+  }
 
   // public void putDashboard() {
   // SmartDashboard.putNumber("frontLeft_speed",
@@ -423,7 +452,7 @@ double x_dis = aprilTagTracking.getBT()[2];
   // SmartDashboard.putBoolean("trackingCondition", trackingCondition);
   // aprilTagTracking.putDashboard();
   // SmartDashboard.putData(GyroResetCmd());
-    // SmartDashboard.putData(PoseResetCmd());
+  // SmartDashboard.putData(PoseResetCmd());
   // }
 
   public Command GyroResetCmd() {
