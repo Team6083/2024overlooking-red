@@ -383,6 +383,7 @@ double x_dis = aprilTagTracking.getBT()[2];
   }
 
   public void driveToStage(){
+    Pose2d tagPose = aprilTagTracking.getTagPose2d();
     
   }
 

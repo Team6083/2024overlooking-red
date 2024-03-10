@@ -150,7 +150,6 @@ public class TagTracking {
         return ct;
     }
 
-
     /**
      * Returns bot to tag's direct distance.
      * 
@@ -167,7 +166,8 @@ public class TagTracking {
     }
 
     public double getHorizontalDistanceByCT() {
-        double horDis = Math.sqrt((Math.pow(getCT()[2]+TagTrackingConstants.camToShooterDistance, 2.0) + Math.pow(getCT()[0], 2.0)));
+        double horDis = Math.sqrt(
+                (Math.pow(getCT()[2] + TagTrackingConstants.camToShooterDistance, 2.0) + Math.pow(getCT()[0], 2.0)));
         return horDis;
     }
 
@@ -226,6 +226,17 @@ public class TagTracking {
         } else {
             return new Pose3d();
         }
+    }
+
+    public List<Double> getIDs() {
+        List<Double> ids = new ArrayList<>();
+        double id = getTv() == 1 ? getTID() : ids.get(1);
+        ids.add(0, id);
+        return ids;
+    }
+
+    public double getLastID() {
+        return getIDs().get(0);
     }
 
     /**
