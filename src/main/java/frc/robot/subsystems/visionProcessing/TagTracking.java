@@ -166,8 +166,8 @@ public class TagTracking {
         return distance;
     }
 
-    public double getHorizontalDistanceBy() {
-        double horDis = Math.sqrt((Math.pow(getBT()[0], 2.0) + Math.pow(getBT()[2], 2.0)));
+    public double getHorizontalDistanceByCT() {
+        double horDis = Math.sqrt((Math.pow(getCT()[2]+TagTrackingConstants.camToShooterDistance, 2.0) + Math.pow(getCT()[0], 2.0)));
         return horDis;
     }
 
@@ -242,7 +242,7 @@ public class TagTracking {
         SmartDashboard.putNumber("LimelightY", getTy());
         SmartDashboard.putNumber("LimelightID", getTID());
         SmartDashboard.putNumber("latency", getTl());
-        SmartDashboard.putNumber("horDistance", getHorizontalDistanceBy());
+        SmartDashboard.putNumber("horDistance", getHorizontalDistanceByCT());
         SmartDashboard.putNumber("RealDistance", getDistance());
     }
 
