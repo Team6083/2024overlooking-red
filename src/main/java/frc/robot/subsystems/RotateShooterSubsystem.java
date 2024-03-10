@@ -44,7 +44,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
     rotatePID.enableContinuousInput(-180.0, 180.0);
   }
 
-  public void manualControl(double RotateSpeed) {
+  public void setManualControl(double RotateSpeed) {
     setMotor(RotateSpeed);
     rotatePID.setSetpoint(getAngleDegree());
   }
@@ -66,20 +66,19 @@ public class RotateShooterSubsystem extends SubsystemBase {
     rotatePID.setSetpoint(setpoint);
   }
 
-  public void pidControl() {
+  public void setPIDControl() {
     double rotateVoltage = rotatePID.calculate(getAngleDegree());
     double modifiedRotateVoltage = rotateVoltage;
     if (Math.abs(modifiedRotateVoltage) > RotateShooterConstants.kRotateVoltLimit) {
       modifiedRotateVoltage = RotateShooterConstants.kRotateVoltLimit * (rotateVoltage > 0 ? 1 : -1);
     }
     setMotor(modifiedRotateVoltage);
-    SmartDashboard.putNumber("rise_volt", modifiedRotateVoltage);
   }
 
   public double getAngleDegree() {
     double degree = (RotateShooterConstants.kEncoderInverted ? -1.0 : 1.0)
         * ((rotateEncoder.getAbsolutePosition() * 360.0) - 189.0);
-    SmartDashboard.putNumber("rotateShooterDegree", degree);
+    // SmartDashboard.putNumber("rotateShooterDegree", degree);
     return degree;
   }
 
@@ -93,8 +92,8 @@ public class RotateShooterSubsystem extends SubsystemBase {
     return currentDegree;
   }
 
-  public Command setAutoAim(){
-    Command autoAimCmd = Commands.runOnce(()->setSetpoint(getAimDegree(getSetpoint())), this);
+  public Command setAutoAim() {
+    Command autoAimCmd = Commands.runOnce(() -> setSetpoint(getAimDegree(getSetpoint())), this);
     autoAimCmd.setName("autoAimCommand");
     return autoAimCmd;
   }
@@ -134,8 +133,15 @@ public class RotateShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    pidControl();
+    setPIDControl();
     SmartDashboard.putData("rotate_PID", rotatePID);
-    SmartDashboard.putNumber("rotate_motor", rotateMotor.getOutputCurrent());
+    // SmartDashboard.putNumber("rotate_motor", rotateMotor.getOutputCurrent());
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("RotateShooterSubsystem");
+    builder.addDoubleProperty("rotateVoltage", () -> rotateMotor.get() * rotateMotor.getBusVoltage(), null);
+    builder.addDoubleProperty("roateAngelDegree", () -> this.getAimDegree(getAngleDegree()), null);
   }
 }

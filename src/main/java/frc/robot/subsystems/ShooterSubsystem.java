@@ -106,8 +106,8 @@ public class ShooterSubsystem extends SubsystemBase {
         + ratePIDController.calculate(getDownEncoderRate(), downRate);
     setUpMotorVoltage(upMotorVoltage);
     setDownMotorVoltage(downMotorVoltage);
-    SmartDashboard.putNumber("upMotorVoltage", upMotorVoltage);
-    SmartDashboard.putNumber("downMotorVoltage", downMotorVoltage);
+    // SmartDashboard.putNumber("upMotorVoltage", upMotorVoltage);
+    // SmartDashboard.putNumber("downMotorVoltage", downMotorVoltage);
   }
 
   public void stopUpMotor() {

@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,7 +46,7 @@ public class RotateIntakeSubsystem extends SubsystemBase {
     pid.setSetpoint(initDegree);
   }
 
-  public void pidControl() {
+  public void setPIDControl() {
     double rotateVoltage = pid.calculate(getAngleDegree());
     double modifiedRotateVoltage = rotateVoltage;
     if (Math.abs(modifiedRotateVoltage) > RotateIntakeConstants.kRotateVoltLimit) {
@@ -57,7 +58,7 @@ public class RotateIntakeSubsystem extends SubsystemBase {
   public double getAngleDegree() {
     double degree = (RotateIntakeConstants.kEncoderInverted ? -1.0 : 1.0)
         * ((rotateEncoder.getAbsolutePosition() * 360.0) - 189.0);
-    SmartDashboard.putNumber("rotateIntakeDegree", degree);
+    // SmartDashboard.putNumber("rotateIntakeDegree", degree);
     return degree;
   }
 
@@ -97,6 +98,11 @@ public class RotateIntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    pidControl();
+    setPIDControl();
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.addDoubleProperty("rotatIntakeDegree", this::getAngleDegree, null);
   }
 }

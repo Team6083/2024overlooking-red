@@ -27,13 +27,13 @@ public class AutoRotateShooterCmd extends Command {
   @Override
   public void execute() {
     rotateShooterSubsystem.setSetpoint(rotateShooterSubsystem.getAimDegree(rotateShooterSubsystem.getSetpoint()));
-    rotateShooterSubsystem.pidControl();
+    rotateShooterSubsystem.setPIDControl();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    rotateShooterSubsystem.pidControl();
+    rotateShooterSubsystem.setPIDControl();
   }
 
   // Returns true when the command should end.
