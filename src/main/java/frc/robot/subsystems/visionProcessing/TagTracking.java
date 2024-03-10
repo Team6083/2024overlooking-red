@@ -239,6 +239,16 @@ public class TagTracking {
         return getIDs().get(0);
     }
 
+    public Pose2d getDesiredTagPose2d(double index) {
+        if (getTv() == 1) {
+            Optional<Pose3d> tag_Pose3d = m_layout.getTagPose((int)index);
+            Pose2d tagPose2d = tag_Pose3d.isPresent() ? tag_Pose3d.get().toPose2d() : new Pose2d();
+            return tagPose2d;
+        } else {
+            return new Pose2d();
+        }
+    }
+
     /**
      * Set priority tag iD
      * 
