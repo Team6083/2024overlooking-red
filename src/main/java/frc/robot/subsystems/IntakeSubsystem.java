@@ -26,16 +26,20 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotor.setInverted(IntakeConstants.kIntakeInverted);
   }
 
-  public Command setIntakingCmd() {
-    Command setIntaking = Commands.startEnd(() -> setIntaking(), () -> stopMotor());
-    setIntaking.setName("setIntaking");
+  public Command intakeCmd() {
+    Command setIntaking = Commands.runEnd(
+        this::setIntaking,
+        this::stopMotor);
+    setIntaking.setName("intakeCmd");
     return setIntaking;
   }
 
-  public Command setReIntakingCmd(){
-  Command setReIntaking = Commands.startEnd(() -> setThrowing(), () -> stopMotor());
-  setReIntaking.setName("setRetaking");
-  return setReIntaking;
+  public Command reIntakeCmd() {
+    Command setReIntaking = Commands.runEnd(
+        this::setThrowing,
+        this::stopMotor);
+    setReIntaking.setName("reIntake");
+    return setReIntaking;
   }
 
   public void setIntaking() {
@@ -65,13 +69,13 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // SmartDashboard.getNumber("IntakeMotorBusVoltage", getIntakeMotorBusVoltage());
-
+    // SmartDashboard.getNumber("IntakeMotorBusVoltage",
+    // getIntakeMotorBusVoltage());
   }
 
   @Override
-  public void initSendable(SendableBuilder builder){
-    builder.setSmartDashboardType("IntakeSubsystem");
-    builder.addDoubleProperty("IntakeMotorBusVoltage",() -> getIntakeMotorBusVoltage(),null);
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("intakeSubsystem");
+    builder.addDoubleProperty("intakeVoltage", intakeMotor::getMotorOutputVoltage, null);
   }
 }

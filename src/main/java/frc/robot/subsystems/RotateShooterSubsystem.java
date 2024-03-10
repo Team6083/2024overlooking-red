@@ -93,13 +93,17 @@ public class RotateShooterSubsystem extends SubsystemBase {
   }
 
   public Command setAutoAim() {
-    Command autoAimCmd = Commands.runOnce(() -> setSetpoint(getAimDegree(getSetpoint())), this);
-    autoAimCmd.setName("autoAimCommand");
-    return autoAimCmd;
+    Command cmd = Commands.runOnce(
+        () -> setSetpoint(getAimDegree(getSetpoint())), this);
+    cmd.setName("autoAimCmd");
+    return cmd;
   }
 
-  public Command addErrorCommand(double error) {
-    return Commands.run(() -> addError(error), this);
+  public Command addErrorCmd(double error) {
+    Command cmd = Commands.run(
+        () -> addError(error), this);
+    cmd.setName("addErrorCmd");
+    return cmd;
   }
 
   public void addError(double error) {
@@ -134,7 +138,7 @@ public class RotateShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     setPIDControl();
-    SmartDashboard.putData("rotate_PID", rotatePID);
+    // SmartDashboard.putData("rotate_PID", rotatePID);
     // SmartDashboard.putNumber("rotate_motor", rotateMotor.getOutputCurrent());
   }
 
@@ -143,5 +147,6 @@ public class RotateShooterSubsystem extends SubsystemBase {
     builder.setSmartDashboardType("RotateShooterSubsystem");
     builder.addDoubleProperty("rotateVoltage", () -> rotateMotor.get() * rotateMotor.getBusVoltage(), null);
     builder.addDoubleProperty("roateAngelDegree", () -> this.getAimDegree(getAngleDegree()), null);
+    rotatePID.initSendable(builder);
   }
 }

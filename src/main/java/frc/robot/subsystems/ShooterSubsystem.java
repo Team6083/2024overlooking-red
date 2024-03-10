@@ -10,7 +10,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
@@ -21,7 +20,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private final VictorSPX downMotor;
   private final Encoder upEncoder;
   private final Encoder downEncoder;
-  private final PIDController ratePIDController;
+  private final PIDController ratePID;
   private final SimpleMotorFeedforward upMotorFeedForwardController;
   private final SimpleMotorFeedforward downMotorFeedForwardController;
   private final PowerDistributionSubsystem powerDistributionSubsystem;
@@ -36,7 +35,7 @@ public class ShooterSubsystem extends SubsystemBase {
     upEncoder.setReverseDirection(ShooterConstants.kUpEncoderInverted);
     downEncoder.setReverseDirection(ShooterConstants.kDownEncoderInverted);
 
-    ratePIDController = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
+    ratePID = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
 
     upMotor.setInverted(ShooterConstants.kUpMotorInverted);
     downMotor.setInverted(ShooterConstants.kDownMotorInverted);
@@ -53,19 +52,25 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public Command speakerShootPIDCmd() {
-    Command cmd = runEnd(this::speakerRate, this::stopAllMotor);
+    Command cmd = runEnd(
+        this::speakerRate,
+        this::stopAllMotor);
     cmd.setName("speakerShootPIDCmd");
     return cmd;
   }
 
   public Command ampShootPIDCmd() {
-    Command cmd = runEnd(this::ampRate, this::stopAllMotor);
+    Command cmd = runEnd(
+        this::ampRate,
+        this::stopAllMotor);
     cmd.setName("ampShootPIDCmd");
     return cmd;
   }
 
   public Command carryShootPIDCmd() {
-    Command cmd = runEnd(this::carryRate, this::stopAllMotor);
+    Command cmd = runEnd(
+        this::carryRate,
+        this::stopAllMotor);
     cmd.setName("carryShootPIDCmd");
     return cmd;
   }
@@ -101,9 +106,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setRateControl(double upRate, double downRate) {
     final double upMotorVoltage = upMotorFeedForwardController.calculate(upRate)
-        + ratePIDController.calculate(getUpEncoderRate(), upRate);
+        + ratePID.calculate(getUpEncoderRate(), upRate);
     final double downMotorVoltage = downMotorFeedForwardController.calculate(downRate)
-        + ratePIDController.calculate(getDownEncoderRate(), downRate);
+        + ratePID.calculate(getDownEncoderRate(), downRate);
     setUpMotorVoltage(upMotorVoltage);
     setDownMotorVoltage(downMotorVoltage);
     // SmartDashboard.putNumber("upMotorVoltage", upMotorVoltage);
@@ -197,5 +202,6 @@ public class ShooterSubsystem extends SubsystemBase {
     builder.addDoubleProperty("downRate", this::getDownEncoderRate, null);
     builder.addDoubleProperty("upVoltage", upMotor::getMotorOutputVoltage, null);
     builder.addDoubleProperty("downVoltage", downMotor::getMotorOutputVoltage, null);
+    ratePID.initSendable(builder);
   }
 }

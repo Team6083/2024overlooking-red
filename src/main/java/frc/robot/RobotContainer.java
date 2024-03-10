@@ -134,7 +134,7 @@ public class RobotContainer {
     // intake and transport
     mainController.y().toggleOnTrue(new IntakeWithTransportCmd(transport,
         intake)); // onTrue could be okay, too
-    mainController.x().whileTrue(intake.setReIntakingCmd());
+    mainController.x().whileTrue(intake.reIntakeCmd());
 
     // shooter
     mainController.b().toggleOnTrue(shooter.speakerShootPIDCmd());
