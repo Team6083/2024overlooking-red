@@ -138,6 +138,7 @@ public class RobotContainer {
 
     // shooter
     mainController.b().toggleOnTrue(shooter.speakerShootPIDCmd());
+    mainController.a().toggleOnTrue(transport.runTransportCmd());
     // mainController.a().toggleOnTrue(new ShootTransportCmd(transport,
     // shooter.getRate()));
 
